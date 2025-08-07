@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  faq-service:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - PORT=8001
+      - HOST=0.0.0.0
+    volumes:
+      - .:/app
+    restart: unless-stopped
+    networks:
+      - adoptafacil-network
+
+networks:
+  adoptafacil-network:
+    driver: bridge
