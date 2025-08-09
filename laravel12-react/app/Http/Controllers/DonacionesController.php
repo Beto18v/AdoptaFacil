@@ -8,6 +8,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
+/**
+ * DonacionesController - Controlador principal del módulo de donaciones
+ * 
+ * Este controlador gestiona todo el sistema de donaciones de AdoptaFácil:
+ * - Dashboard de donaciones personalizado por rol de usuario
+ * - Visualización de donaciones recibidas para refugios
+ * - Historial de donaciones realizadas para donantes
+ * - Procesamiento de nuevas donaciones con validación
+ * - Integración con refugios y causas específicas
+ * 
+ * Funcionalidades principales:
+ * - Vista diferenciada para aliados (refugios) y clientes (donantes)
+ * - Filtrado de donaciones por refugio y donante
+ * - Registro de nuevas donaciones con datos completos
+ * - Integración con sistema de refugios
+ * - Dashboard con estadísticas y métricas
+ * - Gestión de donaciones anónimas y públicas
+ * 
+ * @author Equipo AdoptaFácil
+ * @version 1.0.0
+ * @since 2024
+ * @package App\Http\Controllers
+ */
+
 class DonacionesController extends Controller
 {
     public function index()

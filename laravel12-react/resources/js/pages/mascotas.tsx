@@ -1,3 +1,31 @@
+/**
+ * Página del catálogo público de mascotas
+ *
+ * Esta vista permite a los visitantes (autenticados y no autenticados) explorar
+ * todas las mascotas disponibles para adopción en la plataforma:
+ *
+ * Características principales:
+ * - Catálogo completo de mascotas con filtros por especie
+ * - Sistema de favoritos para usuarios autenticados
+ * - Modal de galería de imágenes con carousel
+ * - Diseño responsive con cards informativos
+ * - Hero section con estadísticas y filtros
+ *
+ * Funcionalidades de filtrado:
+ * - Filtro por especie (perros, gatos, otros)
+ * - Parámetros URL para navegación directa
+ * - Contadores dinámicos por categoría
+ *
+ * Interacciones:
+ * - Sistema de favoritos con notificaciones
+ * - Galería de imágenes múltiples por mascota
+ * - Información completa de contacto
+ *
+ * @author Equipo AdoptaFácil
+ * @version 1.0.0
+ * @since 2024
+ */
+
 import Footer from '@/components/landing/footer';
 import Header from '@/components/landing/header';
 import PetCard from '@/components/mascotas/pet-card';

@@ -1,3 +1,33 @@
+/**
+ * Página del catálogo público de productos
+ *
+ * Esta vista permite a los visitantes explorar todos los productos disponibles
+ * en el marketplace de AdoptaFácil, ofrecidos por aliados comerciales:
+ *
+ * Características principales:
+ * - Catálogo completo de productos con información detallada
+ * - Sistema de filtros por categoría, precio y vendedor
+ * - Modal de galería para visualizar múltiples imágenes
+ * - Información de contacto del vendedor/aliado
+ * - Diseño responsive optimizado para todos los dispositivos
+ *
+ * Funcionalidades de filtrado:
+ * - Filtro por rango de precios
+ * - Búsqueda por nombre de producto
+ * - Filtro por vendedor/aliado específico
+ * - Ordenamiento por precio y fecha
+ *
+ * Interacciones:
+ * - Galería de imágenes con carousel
+ * - Información completa del producto
+ * - Datos de contacto para compra directa
+ * - Integración con sistema de whatsapp/teléfono
+ *
+ * @author Equipo AdoptaFácil
+ * @version 1.0.0
+ * @since 2024
+ */
+
 import Footer from '@/components/landing/footer';
 import Header from '@/components/landing/header';
 import ProductCard from '@/components/productos/product-card';

@@ -13,8 +13,27 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 /**
- * MascotaController - Gestión de mascotas para adopción
- * Maneja vistas públicas, cliente y registro con múltiples imágenes
+ * MascotaController - Controlador principal del módulo de gestión de mascotas
+ * 
+ * Este controlador maneja todas las operaciones relacionadas con mascotas en AdoptaFácil:
+ * - Vista pública del catálogo de mascotas para visitantes no autenticados
+ * - Vista del dashboard para usuarios autenticados con sus mascotas
+ * - Registro de nuevas mascotas con sistema de múltiples imágenes (hasta 3)
+ * - Edición y actualización de mascotas existentes
+ * - Eliminación segura con verificación de permisos
+ * - Gestión automática de cálculo de edad basado en fecha de nacimiento
+ * 
+ * Funcionalidades principales:
+ * - Sistema de múltiples imágenes por mascota
+ * - Validación de datos mediante Form Requests personalizados
+ * - Autorización basada en políticas (MascotaPolicy)
+ * - Integración con Inertia.js para experiencia SPA
+ * - Cálculo automático de edad al guardar datos
+ * 
+ * @author Equipo AdoptaFácil
+ * @version 1.0.0
+ * @since 2024
+ * @package App\Http\Controllers
  */
 class MascotaController extends Controller
 {

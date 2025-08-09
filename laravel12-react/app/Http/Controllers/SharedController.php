@@ -9,8 +9,27 @@ use App\Models\Post;
 use Inertia\Inertia;
 
 /**
- * Controlador para manejar enlaces compartidos de publicaciones
- * Permite generar enlaces únicos y mostrar publicaciones compartidas
+ * SharedController - Controlador del módulo de enlaces compartidos
+ * 
+ * Este controlador gestiona el sistema de compartir contenido de la comunidad:
+ * - Generación de enlaces únicos para publicaciones específicas
+ * - Visualización pública de posts compartidos sin autenticación
+ * - Gestión de tokens temporales con expiración configurable
+ * - Tracking de clicks y estadísticas de compartido
+ * - Validación de enlaces activos y caducidad
+ * 
+ * Funcionalidades principales:
+ * - Creación de enlaces únicos con tokens seguros
+ * - Reutilización de enlaces existentes válidos
+ * - Vista pública optimizada para redes sociales
+ * - Conteo de accesos y estadísticas de uso
+ * - Manejo de enlaces expirados y errores 404
+ * - Integración con meta tags para sharing social
+ * 
+ * @author Equipo AdoptaFácil
+ * @version 1.0.0
+ * @since 2024
+ * @package App\Http\Controllers
  */
 class SharedController extends Controller
 {

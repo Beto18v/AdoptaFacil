@@ -11,25 +11,28 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * CommunityController - Gestión de la comunidad de AdoptaFácil
+ * CommunityController - Controlador principal del módulo de comunidad y red social
  * 
- * Este controlador maneja toda la funcionalidad social de la plataforma:
- * - Visualización de posts de la comunidad
- * - Creación de nuevos posts con imágenes
- * - Sistema de likes/me gusta en posts
- * - Sistema de comentarios en posts
- * - Eliminación de posts propios
- * - Gestión de contenido activo/inactivo
+ * Este controlador maneja toda la funcionalidad social de AdoptaFácil:
+ * - Feed principal de la comunidad con publicaciones ordenadas
+ * - Creación de nuevos posts con soporte para imágenes
+ * - Sistema completo de likes/me gusta en publicaciones
+ * - Gestión de comentarios anidados en posts
+ * - Eliminación autorizada de contenido propio
+ * - Moderación y gestión de contenido activo/inactivo
  * 
  * Funcionalidades principales:
- * - Feed social con posts ordenados por fecha
- * - Subida y almacenamiento de imágenes
- * - Interacciones sociales (likes, comentarios)
- * - Autorización de acciones por usuario
- * - Integración con sistema de avatares
+ * - Feed social paginado con carga optimizada
+ * - Upload y almacenamiento seguro de imágenes
+ * - Interacciones sociales en tiempo real (likes, comentarios)
+ * - Sistema de autorización granular por usuario
+ * - Integración completa con perfiles y avatares
+ * - Soporte para diferentes tipos de contenido
  * 
  * @author Equipo AdoptaFácil
  * @version 1.0.0
+ * @since 2024
+ * @package App\Http\Controllers
  */
 class CommunityController extends Controller
 {

@@ -7,6 +7,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
+/**
+ * ShelterController - Controlador del módulo de gestión de refugios
+ * 
+ * Este controlador maneja todas las operaciones relacionadas con refugios de animales:
+ * - Directorio público de refugios registrados
+ * - Registro de nuevos refugios por usuarios verificados
+ * - Gestión de información de contacto y ubicación
+ * - Integración con sistema de donaciones
+ * - Ordenamiento por popularidad y donaciones recibidas
+ * 
+ * Funcionalidades principales:
+ * - Vista pública del directorio de refugios
+ * - Registro de refugios con validación de datos
+ * - Información de contacto y geolocalización
+ * - Conteo de donaciones por refugio
+ * - Sistema de verificación de refugios legítimos
+ * 
+ * @author Equipo AdoptaFácil
+ * @version 1.0.0
+ * @since 2024
+ * @package App\Http\Controllers
+ */
+
 class ShelterController extends Controller
 {
     /**

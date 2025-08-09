@@ -7,6 +7,29 @@ use App\Models\Mascota;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+/**
+ * MapaController - Controlador del módulo de geolocalización y mapas
+ * 
+ * Este controlador maneja la visualización geográfica de refugios y mascotas en AdoptaFácil:
+ * - Mapa interactivo de refugios con coordenadas exactas
+ * - Filtrado de mascotas por especie en el mapa
+ * - Agrupación de datos por refugio individual
+ * - Información detallada de cada refugio y sus mascotas
+ * - Integración con servicios de mapas para visualización
+ * 
+ * Funcionalidades principales:
+ * - Visualización de refugios georreferenciados
+ * - Filtros dinámicos por especie de mascota
+ * - Markers informativos con datos del refugio
+ * - Conteo de mascotas por refugio y especie
+ * - Información de contacto para cada ubicación
+ * 
+ * @author Equipo AdoptaFácil
+ * @version 1.0.0
+ * @since 2024
+ * @package App\Http\Controllers
+ */
+
 class MapaController extends Controller
 {
     /**
@@ -57,7 +80,7 @@ class MapaController extends Controller
                     $totalMascotas = $shelters->sum(function ($shelter) {
                         return $shelter->user->mascotas->count();
                     });
-                    
+
                     return [
                         'city' => $city,
                         'count' => $totalMascotas,
@@ -83,7 +106,7 @@ class MapaController extends Controller
             $locationsData = $mascotasPorCiudad->map(function ($item) use ($coordenadasCiudades) {
                 $city = $item['city'];
                 $coordinates = $coordenadasCiudades[$city] ?? ['lat' => 4.6097, 'lng' => -74.0817];
-                
+
                 return [
                     'id' => uniqid(),
                     'city' => $city,

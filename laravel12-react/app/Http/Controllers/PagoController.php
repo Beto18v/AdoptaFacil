@@ -9,6 +9,30 @@ use MercadoPago\SDK;
 use MercadoPago\Preference;
 use MercadoPago\Item;
 
+/**
+ * PagoController - Controlador del módulo de procesamiento de pagos
+ * 
+ * Este controlador maneja toda la integración con pasarelas de pago en AdoptaFácil:
+ * - Procesamiento de pagos para productos del marketplace
+ * - Integración con MercadoPago para transacciones seguras
+ * - Cálculo de comisiones y descuentos automáticos
+ * - Manejo de callbacks y confirmaciones de pago
+ * - Gestión de estados de transacciones
+ * 
+ * Funcionalidades principales:
+ * - Inicialización de procesos de pago con MercadoPago
+ * - Cálculo automático de comisiones (15% para la plataforma)
+ * - Configuración de URLs de retorno (éxito/error)
+ * - Procesamiento de webhooks de confirmación
+ * - Actualización de estados de solicitudes post-pago
+ * - Integración con sistema de productos y solicitudes
+ * 
+ * @author Equipo AdoptaFácil
+ * @version 1.0.0
+ * @since 2024
+ * @package App\Http\Controllers
+ */
+
 class PagoController extends Controller
 {
     public function iniciarPago(Request $request)
