@@ -1,8 +1,11 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
+// Console Commands para AdoptaFácil
+// Aquí se pueden definir comandos Artisan personalizados para el proyecto
+
 use Illuminate\Support\Facades\Artisan;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+// Ejemplo: Comando para limpiar datos antiguos
+// Artisan::command('adoptafacil:cleanup', function () {
+//     $this->info('Limpiando datos antiguos...');
+// })->purpose('Limpiar datos antiguos del sistema');
