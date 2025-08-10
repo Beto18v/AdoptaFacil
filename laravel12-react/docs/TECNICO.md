@@ -1,8 +1,18 @@
-# Documentación Completa del Proyecto AdoptaFácil 📚
+# Documentación Técnica de AdoptaFácil 🔧
 
-## Descripción General del Proyecto
+## Arquitectura del Sistema
 
-AdoptaFácil es una plataforma integral de adopción de mascotas que combina funcionalidades de red social, marketplace y sistema de gestión. El proyecto está desarrollado con **Laravel 12** en el backend y **React con TypeScript** en el frontend, utilizando **Inertia.js** para crear una experiencia de aplicación de página única (SPA).
+AdoptaFácil está desarrollado con **Laravel 12** en el backend y **React con TypeScript** en el frontend, utilizando **Inertia.js** para crear una experiencia de aplicación de página única (SPA).
+
+### Stack Tecnológico
+
+```
+Frontend (React/TypeScript)
+       ↕ Inertia.js
+Backend (Laravel 12/PHP)
+       ↕ Eloquent ORM
+Base de Datos (MySQL)
+```
 
 ### Tecnologías Principales
 
@@ -13,65 +23,6 @@ AdoptaFácil es una plataforma integral de adopción de mascotas que combina fun
 - **Autenticación**: Laravel Breeze
 - **Pagos**: MercadoPago SDK
 - **Mapas**: Integración con servicios de geolocalización
-
----
-
-## Arquitectura del Sistema
-
-### Estructura Modular
-
-El proyecto está organizado en **6 módulos principales**, cada uno con responsabilidades específicas:
-
-1. **[Módulo de Gestión de Mascotas](./MODULO_MASCOTAS.md)** 🐕🐱
-2. **[Módulo de Gestión de Productos](./MODULO_PRODUCTOS.md)** 🛍️
-3. **[Módulo de Gestión de Usuarios](./MODULO_USUARIOS.md)** 👥
-4. **[Módulo de Solicitudes de Adopción](./MODULO_SOLICITUDES.md)** 📋
-5. **[Módulo de Comunidad y Red Social](./MODULO_COMUNIDAD.md)** 💬
-6. **[Módulo de Dashboard y Analytics](./MODULO_DASHBOARD.md)** 📊
-
-### Módulos Complementarios
-
-- **[Módulo de Donaciones y Pagos](./MODULO_DONACIONES.md)** 💰
-- Sistema de Favoritos
-- Sistema de Refugios
-- Sistema de Mapas y Geolocalización
-- Sistema de Enlaces Compartidos
-
----
-
-## Flujo de Usuario Principal
-
-### 1. Visitante No Autenticado
-
-```
-Landing Page → Catálogos Públicos → Registro → Verificación Email → Dashboard
-     ↓              ↓                    ↓
- Mascotas      Productos           Comunidad
-```
-
-### 2. Usuario Adoptante
-
-```
-Dashboard → Ver Mascotas → Solicitar Adopción → Seguimiento → Adopción Exitosa
-    ↓           ↓              ↓              ↓
-Favoritos   Filtros      Formulario     Notificaciones
-```
-
-### 3. Aliado Comercial
-
-```
-Dashboard → Registrar Producto → Gestionar Inventario → Recibir Contactos
-    ↓           ↓                    ↓
-Mascotas   Múltiples Imágenes    Estadísticas
-```
-
-### 4. Refugio/Organización
-
-```
-Registro → Verificación → Recibir Donaciones → Mapa de Ubicación
-    ↓           ↓              ↓
-Perfil    Datos Contacto   Dashboard
-```
 
 ---
 
@@ -161,55 +112,40 @@ Perfil    Datos Contacto   Dashboard
 
 ---
 
-## Funcionalidades Clave por Módulo
+## Estructura de Base de Datos
 
-### 🐕 Gestión de Mascotas
+### Tablas Principales
 
-- ✅ Registro con múltiples imágenes (hasta 3)
-- ✅ Cálculo automático de edad
-- ✅ Filtros por especie, edad, ubicación
-- ✅ Sistema de favoritos
-- ✅ Autorización por propietario
+- **users** - Usuarios del sistema
+- **mascotas** - Mascotas para adopción
+- **mascota_images** - Imágenes múltiples de mascotas
+- **products** - Productos del marketplace
+- **product_images** - Imágenes de productos
+- **solicitudes** - Solicitudes de adopción
+- **posts** - Publicaciones de la comunidad
+- **comments** - Comentarios en posts
+- **post_likes** - Likes en publicaciones
+- **donations** - Donaciones realizadas
+- **favoritos** - Favoritos de usuarios
 
-### 🛍️ Marketplace de Productos
+### Relaciones Principales
 
-- ✅ Catálogo público de productos
-- ✅ Sistema de múltiples imágenes
-- ✅ Gestión de inventario y stock
-- ✅ Información de contacto de vendedores
-- ✅ Dashboard unificado con mascotas
+```sql
+-- Un usuario puede tener múltiples mascotas
+users (1) → (N) mascotas
 
-### 👥 Gestión de Usuarios
+-- Una mascota puede tener múltiples imágenes
+mascotas (1) → (N) mascota_images
 
-- ✅ Registro diferenciado por roles
-- ✅ Verificación de email obligatoria
-- ✅ Perfiles personalizables
-- ✅ Sistema de roles (user, commercial_ally, admin)
-- ✅ Autenticación segura con Laravel Breeze
+-- Una mascota puede recibir múltiples solicitudes
+mascotas (1) → (N) solicitudes
 
-### 📋 Solicitudes de Adopción
+-- Un usuario puede hacer múltiples solicitudes
+users (1) → (N) solicitudes
 
-- ✅ Formulario completo de solicitud
-- ✅ Sistema de estados (pendiente, aprobada, rechazada)
-- ✅ Dashboard diferenciado por rol
-- ✅ Notificaciones automáticas
-- ✅ Historial de comunicación
-
-### 💬 Red Social
-
-- ✅ Feed de publicaciones con imágenes
-- ✅ Sistema de likes y comentarios
-- ✅ Tipos de contenido (historias, consejos, preguntas)
-- ✅ Enlaces compartidos públicos
-- ✅ Moderación de contenido
-
-### 📊 Dashboard y Analytics
-
-- ✅ Métricas principales de la plataforma
-- ✅ Gráficos interactivos
-- ✅ Comparaciones temporales
-- ✅ Actividad reciente
-- ✅ Estadísticas por módulo
+-- Un post puede tener múltiples comentarios
+posts (1) → (N) comments
+```
 
 ---
 
@@ -291,7 +227,171 @@ laravel12-react/
 
 ---
 
-## Contacto y Soporte
+## Configuración del Proyecto
+
+### Requisitos del Sistema
+
+- PHP 8.2+
+- Node.js 18+
+- MySQL 8.0+
+- Composer 2.x
+- NPM/Yarn
+
+### Instalación
+
+```bash
+# Clonar repositorio
+git clone [url-del-repo]
+cd laravel12-react
+
+# Instalar dependencias PHP
+composer install
+
+# Instalar dependencias Node.js
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env
+php artisan key:generate
+
+# Migrar base de datos
+php artisan migrate --seed
+
+# Compilar assets
+npm run build
+
+# Iniciar servidores
+php artisan serve
+npm run dev
+```
+
+### Variables de Entorno Principales
+
+```env
+# Base de datos
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=adoptafacil
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Configuración de archivos
+FILESYSTEM_DISK=public
+MAX_MASCOTA_IMAGES=3
+MAX_PRODUCT_IMAGES=3
+```
+
+---
+
+## Testing y Calidad
+
+### Estrategia de Testing
+
+- **Unit Tests**: Modelos y funciones individuales
+- **Feature Tests**: Flujos completos de usuario
+- **Integration Tests**: Comunicación entre módulos
+- **Browser Tests**: Interfaz de usuario (Dusk)
+
+### Comandos de Testing
+
+```bash
+# Ejecutar todos los tests
+php artisan test
+
+# Tests por módulo específico
+php artisan test --filter=MascotaTest
+php artisan test --filter=ProductTest
+php artisan test --filter=SolicitudTest
+
+# Coverage report
+php artisan test --coverage
+```
+
+### Estándares de Código
+
+- PSR-12 para PHP
+- ESLint + Prettier para TypeScript/React
+- PHPStan nivel 8 para análisis estático
+- Conventional Commits para mensajes de git
+
+---
+
+## Deployment y Producción
+
+### Ambientes
+
+- **Local**: Desarrollo con Docker/Vagrant
+- **Staging**: Testing con datos similares a producción
+- **Production**: Servidor de producción con SSL
+
+### CI/CD Pipeline
+
+```yaml
+# .github/workflows/
+- lint.yml # Linting y formato de código
+- tests.yml # Ejecución de test suite
+- deploy.yml # Deployment automático
+```
+
+### Consideraciones de Producción
+
+- **Performance**: Cache Redis, CDN para imágenes
+- **Seguridad**: SSL, headers de seguridad, rate limiting
+- **Monitoring**: Logs centralizados, métricas de aplicación
+- **Backups**: Base de datos y archivos de usuario
+
+---
+
+## Mantenimiento y Soporte
+
+### Comandos Artisan Personalizados
+
+```bash
+# Limpiar datos antiguos
+php artisan cleanup:old-data
+
+# Actualizar estadísticas
+php artisan stats:update
+
+# Procesar donaciones pendientes
+php artisan donations:process
+
+# Enviar notificaciones
+php artisan notifications:send
+```
+
+### Logs Importantes
+
+- `laravel.log` - Errores generales de la aplicación
+- `payments.log` - Transacciones y pagos
+- `security.log` - Intentos de acceso y seguridad
+- `performance.log` - Métricas de rendimiento
+
+---
+
+## Contribución al Proyecto
+
+### Workflow de Desarrollo
+
+1. Fork del repositorio
+2. Crear branch para feature: `git checkout -b feature/nueva-funcionalidad`
+3. Implementar cambios con tests
+4. Commit siguiendo Conventional Commits
+5. Pull Request con descripción detallada
+
+### Estructura de Commits
+
+```
+feat: agregar sistema de favoritos
+fix: corregir validación de email
+docs: actualizar documentación de API
+test: agregar tests para módulo de solicitudes
+```
+
+---
+
+## Contacto y Soporte Técnico
 
 ### Equipo de Desarrollo
 
@@ -305,12 +405,12 @@ laravel12-react/
 - **API Documentation**: En desarrollo
 - **Manual de Usuario**: Planificado
 
-### Soporte
+### Soporte Técnico
 
 Para dudas técnicas, problemas o sugerencias, crear un issue en el repositorio de GitHub o contactar al equipo de desarrollo.
 
 ---
 
 **Última actualización**: Agosto 2025  
-**Versión del proyecto**: 1.0.0  
+**Versión técnica**: 1.0.0  
 **Estado**: En desarrollo activo

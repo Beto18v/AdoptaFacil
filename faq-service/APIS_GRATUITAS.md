@@ -65,7 +65,7 @@ Ya tienes la key configurada, pero necesitas agregar balance:
 
 ---
 
-## 🏃‍♂️ **PASOS RÁPIDOS (Recomendado: Groq)**
+## 🏃‍♂️ **PASOS RÁPIDOS (Groq)**
 
 1. **Obtener Groq API Key**: https://console.groq.com/
 2. **Editar tu archivo `.env`**:
@@ -108,14 +108,3 @@ curl -X POST http://localhost:8001/generar-descripcion \
 ```
 
 ---
-
-## 💡 **RECOMENDACIÓN**
-
-**Usa Groq** porque:
-
-- Es completamente gratuito
-- Muy rápido (inferencia en milisegundos)
-- No requiere tarjeta de crédito
-- Modelos de alta calidad
-
-¡Solo necesitas 2 minutos para tener la API funcionando! 🚀
