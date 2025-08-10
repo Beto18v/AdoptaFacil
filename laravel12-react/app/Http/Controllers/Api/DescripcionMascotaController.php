@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Log;
  * - Manejo de errores y timeouts
  * - Logging de operaciones para debugging
  * 
- * Microservicio conectado: faq-service (Puerto 8001)
+ * Microservicio conectado: pet-detail-service (Puerto 8001)
  * APIs de IA soportadas: Groq, OpenAI, DeepSeek
  * 
  * @author Equipo AdoptaFácil
@@ -30,12 +30,12 @@ use Illuminate\Support\Facades\Log;
  */
 class DescripcionMascotaController extends Controller
 {
-    private $faqServiceUrl;
+    private $petDetailServiceUrl;
     private $client;
 
     public function __construct()
     {
-        $this->faqServiceUrl = env('FAQ_SERVICE_URL', 'http://localhost:8001');
+        $this->petDetailServiceUrl = env('PET_DETAIL_SERVICE_URL', 'http://localhost:8001');
         $this->client = new Client([
             'timeout' => 30,
             'connect_timeout' => 10,
@@ -81,7 +81,7 @@ class DescripcionMascotaController extends Controller
                 'descripcion_actual' => $request->descripcion_actual ?: '',
             ];
 
-            $response = $this->client->post($this->faqServiceUrl . '/generar-descripcion', [
+            $response = $this->client->post($this->petDetailServiceUrl . '/generar-descripcion', [
                 'json' => $mascotaData,
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -151,7 +151,7 @@ class DescripcionMascotaController extends Controller
     public function verificarServicio()
     {
         try {
-            $response = $this->client->get($this->faqServiceUrl . '/health', [
+            $response = $this->client->get($this->petDetailServiceUrl . '/health', [
                 'timeout' => 5
             ]);
 

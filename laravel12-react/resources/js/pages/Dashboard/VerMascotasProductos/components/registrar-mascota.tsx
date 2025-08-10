@@ -60,7 +60,7 @@ export default function RegistrarMascota({
     // Hook para generar descripciones con IA
     const {
         generandoDescripcion,
-        ultimaDescripcion,
+        ultimaDescripcion, // eslint-disable-line @typescript-eslint/no-unused-vars
         error: errorIA,
         generarDescripcionDesdeDatos,
         verificarServicio,
@@ -68,7 +68,7 @@ export default function RegistrarMascota({
     } = useDescripcionIA();
 
     // Estado para verificar si el servicio de IA está disponible
-    const [servicioIADisponible, setServicioIADisponible] = useState<boolean | null>(null);
+    const [servicioIADisponible, setServicioIADisponible] = useState<boolean | null>(null); // eslint-disable-line @typescript-eslint/no-unused-vars
 
     // Función para calcular edad basada en fecha de nacimiento
     const calcularEdad = (fechaNacimiento: string) => {
@@ -245,9 +245,6 @@ export default function RegistrarMascota({
             // Cargar datos cuando se abre en modo edición
             console.log('Cargando datos de mascota para editar:', mascotaEditar);
 
-            // Verificar servicio de IA
-            verificarServicio().then(setServicioIADisponible);
-
             // Resetear primero para limpiar cualquier estado previo
             reset();
 
@@ -285,11 +282,15 @@ export default function RegistrarMascota({
             reset();
             setImagenesExistentes([]);
             setEdadCalculada('');
-
-            // Verificar servicio de IA
-            verificarServicio().then(setServicioIADisponible);
         }
     }, [isOpen, modoEdicion, mascotaEditar, reset, setData]);
+
+    // Verificar servicio de IA solo una vez cuando se abre el modal
+    useEffect(() => {
+        if (isOpen) {
+            verificarServicio().then(setServicioIADisponible);
+        }
+    }, [isOpen, verificarServicio]); // Ahora verificarServicio está memoizado
 
     // Función para manejar múltiples imágenes (máximo 3)
     const handleAddImages = (files: FileList | null) => {

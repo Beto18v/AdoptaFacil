@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 interface MascotaParaDescripcion {
     nombre: string;
@@ -23,7 +23,7 @@ export const useDescripcionIA = () => {
     const [ultimaDescripcion, setUltimaDescripcion] = useState<string>('');
     const [error, setError] = useState<string>('');
 
-    const generarDescripcion = async (datosBasicos: MascotaParaDescripcion): Promise<string | null> => {
+    const generarDescripcion = useCallback(async (datosBasicos: MascotaParaDescripcion): Promise<string | null> => {
         setGenerandoDescripcion(true);
         setError('');
 
@@ -55,9 +55,9 @@ export const useDescripcionIA = () => {
         } finally {
             setGenerandoDescripcion(false);
         }
-    };
+    }, []);
 
-    const verificarServicio = async (): Promise<boolean> => {
+    const verificarServicio = useCallback(async (): Promise<boolean> => {
         try {
             const response = await fetch('/api/descripciones/verificar-servicio');
             const data = await response.json();
@@ -66,26 +66,31 @@ export const useDescripcionIA = () => {
             console.error('Error al verificar servicio:', error);
             return false;
         }
-    };
+    }, []);
 
     // Función específica para tu formulario de mascotas
-    const generarDescripcionDesdeDatos = (nombre: string, especie: string, raza: string, sexo: string, ciudad: string, descripcionActual: string) => {
-        // Construir los datos necesarios para la IA
-        const personalidad = descripcionActual || 'Mascota cariñosa y sociable';
-        const salud = 'En excelente estado de salud'; // Puedes mejorar esto con más datos del formulario
-        const observaciones = `${sexo === 'Macho' ? 'Es un' : 'Es una'} ${especie.toLowerCase()} ubicado en ${ciudad}`;
+    const generarDescripcionDesdeDatos = useCallback(
+        (nombre: string, especie: string, raza: string, sexo: string, ciudad: string, descripcionActual: string) => {
+            // Construir los datos necesarios para la IA
+            const personalidad = descripcionActual || 'Mascota cariñosa y sociable';
+            const salud = 'En excelente estado de salud'; // Puedes mejorar esto con más datos del formulario
+            const observaciones = `${sexo === 'Macho' ? 'Es un' : 'Es una'} ${especie.toLowerCase()} ubicado en ${ciudad}`;
 
-        return generarDescripcion({
-            nombre,
-            especie,
-            raza: raza || 'Mestiza',
-            sexo,
-            personalidad,
-            salud,
-            observaciones,
-            descripcion_actual: descripcionActual,
-        });
-    };
+            return generarDescripcion({
+                nombre,
+                especie,
+                raza: raza || 'Mestiza',
+                sexo,
+                personalidad,
+                salud,
+                observaciones,
+                descripcion_actual: descripcionActual,
+            });
+        },
+        [generarDescripcion],
+    );
+
+    const limpiarError = useCallback(() => setError(''), []);
 
     return {
         generandoDescripcion,
@@ -94,6 +99,6 @@ export const useDescripcionIA = () => {
         generarDescripcion,
         generarDescripcionDesdeDatos,
         verificarServicio,
-        limpiarError: () => setError(''),
+        limpiarError,
     };
 };
