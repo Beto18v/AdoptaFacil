@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
+import { getAvatarUrl } from '@/lib/avatar-utils';
 import { Heart, MessageCircle, Send } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -10,6 +11,7 @@ interface User {
     name: string;
     email: string;
     role?: string;
+    avatar?: string;
 }
 
 interface Comment {
@@ -274,7 +276,7 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
                         <div className="border-b border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-700 dark:bg-gray-800">
                             <div className="flex gap-4">
                                 <Avatar className="h-10 w-10 ring-2 ring-teal-300 dark:ring-teal-600">
-                                    <AvatarImage src={`https://i.pravatar.cc/150?u=${user.id}`} alt={user.name} />
+                                    <AvatarImage src={getAvatarUrl(user.avatar)} alt={user.name} />
                                     <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-200">
                                         {user.name.substring(0, 2)}
                                     </AvatarFallback>

@@ -75,6 +75,32 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
     const [comentarioRechazo, setComentarioRechazo] = useState('');
     const [isSubmittingReject, setIsSubmittingReject] = useState(false);
 
+    const handleApprove = async () => {
+        if (!selectedSolicitud) return;
+
+        try {
+            const response = await fetch(route('solicitudes.updateEstado', selectedSolicitud.id), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': (document.querySelector('meta[name=csrf-token]') as HTMLMetaElement)?.content || '',
+                },
+                body: JSON.stringify({ estado: 'Aprobada' }),
+            });
+
+            if (response.ok) {
+                setSelectedSolicitud({ ...selectedSolicitud, estado: 'Aprobada' });
+                window.location.reload();
+            } else {
+                throw new Error('Error en la respuesta del servidor');
+            }
+        } catch (error) {
+            console.error('Error al aprobar solicitud:', error);
+            alert('Error al aprobar la solicitud. Por favor, intenta de nuevo.');
+        }
+    };
+
     const handleRejectWithComment = async () => {
         if (!selectedSolicitud) return;
 
@@ -105,7 +131,8 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                 window.location.reload();
             }
         } catch (error) {
-            // Error handling silently
+            console.error('Error al rechazar solicitud:', error);
+            alert('Error al procesar la solicitud. Por favor, intenta de nuevo.');
         } finally {
             setIsSubmittingReject(false);
         }
@@ -450,21 +477,7 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                                             <button
                                                 type="button"
                                                 className="rounded-md bg-green-600 px-6 py-2 font-semibold text-white shadow-md transition hover:bg-green-700 disabled:opacity-50"
-                                                onClick={async () => {
-                                                    if (!selectedSolicitud) return;
-                                                    await fetch(route('solicitudes.updateEstado', selectedSolicitud.id), {
-                                                        method: 'POST',
-                                                        headers: {
-                                                            'Content-Type': 'application/json',
-                                                            'X-Requested-With': 'XMLHttpRequest',
-                                                            'X-CSRF-TOKEN':
-                                                                (document.querySelector('meta[name=csrf-token]') as HTMLMetaElement)?.content || '',
-                                                        },
-                                                        body: JSON.stringify({ estado: 'Aprobada' }),
-                                                    });
-                                                    setSelectedSolicitud({ ...selectedSolicitud, estado: 'Aprobada' });
-                                                    window.location.reload();
-                                                }}
+                                                onClick={handleApprove}
                                                 disabled={selectedSolicitud.estado === 'Aprobada'}
                                             >
                                                 Aprobar

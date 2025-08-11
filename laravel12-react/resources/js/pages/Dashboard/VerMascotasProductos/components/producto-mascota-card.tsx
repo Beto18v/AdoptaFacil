@@ -1,4 +1,5 @@
 // Tarjeta unificada para mostrar productos y mascotas con acciones específicas por rol
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { Heart, Pencil, ShoppingCart, Trash2 } from 'lucide-react';
@@ -14,7 +15,11 @@ export type CardItem = {
     precio: number | null;
     imagen?: string;
     user_id: number;
-    user?: { name: string };
+    user?: {
+        id: number;
+        name: string;
+        avatar?: string;
+    };
 };
 
 // Props del componente tarjeta
@@ -93,17 +98,29 @@ export default function ProductoMascotaCard({ item, onDelete, onEdit, onAction, 
                             : 'En Adopción'}
                     </div>
 
-                    {/* ✨ SECCIÓN "PUBLICADO POR" RESTAURADA ✨ */}
-                    <div className="mb-3 border-t border-gray-200 pt-3 text-right text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400">
+                    {/* ✨ SECCIÓN "PUBLICADO POR" CON AVATAR ✨ */}
+                    <div className="mb-3 border-t border-gray-200 pt-3 dark:border-gray-700">
                         {esPropietario ? (
-                            <span>
-                                Publicado por <span className="font-semibold">ti</span>
-                            </span>
+                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                                <Avatar className="h-6 w-6">
+                                    <AvatarImage src={user?.avatar ? `/storage/${user.avatar}` : undefined} alt={user?.name} />
+                                    <AvatarFallback className="text-xs">{user?.name?.substring(0, 2).toUpperCase() || 'TU'}</AvatarFallback>
+                                </Avatar>
+                                <span>
+                                    Publicado por <span className="font-semibold">ti</span>
+                                </span>
+                            </div>
                         ) : (
                             item.user?.name && (
-                                <span>
-                                    Publicado por: <span className="font-semibold">{item.user.name}</span>
-                                </span>
+                                <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                                    <Avatar className="h-6 w-6">
+                                        <AvatarImage src={item.user?.avatar ? `/storage/${item.user.avatar}` : undefined} alt={item.user.name} />
+                                        <AvatarFallback className="text-xs">{item.user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                    </Avatar>
+                                    <span>
+                                        Publicado por: <span className="font-semibold">{item.user.name}</span>
+                                    </span>
+                                </div>
                             )
                         )}
                     </div>

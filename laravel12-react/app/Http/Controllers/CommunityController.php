@@ -56,7 +56,7 @@ class CommunityController extends Controller
                     'id' => $post->id,
                     'author' => [
                         'name' => $post->user->name,
-                        'avatarUrl' => 'https://i.pravatar.cc/150?u=' . $post->user->id,
+                        'avatarUrl' => $post->user->avatar ? asset('storage/' . $post->user->avatar) : null,
                     ],
                     'timestamp' => $post->created_at->diffForHumans(),
                     'content' => $post->content,
@@ -113,7 +113,7 @@ class CommunityController extends Controller
                         'id' => $post->id,
                         'author' => [
                             'name' => $post->user->name,
-                            'avatarUrl' => 'https://i.pravatar.cc/150?u=' . $post->user->id,
+                            'avatarUrl' => $post->user->avatar ? asset('storage/' . $post->user->avatar) : null,
                         ],
                         'timestamp' => $post->created_at->diffForHumans(),
                         'content' => $post->content,
@@ -243,7 +243,7 @@ class CommunityController extends Controller
                     'created_at' => $comment->created_at->diffForHumans(),
                     'user' => [
                         'name' => $comment->user->name,
-                        'avatarUrl' => 'https://i.pravatar.cc/150?u=' . $comment->user->id,
+                        'avatarUrl' => $comment->user->avatar ? asset('storage/' . $comment->user->avatar) : null,
                     ],
                 ]
             ]);
@@ -268,7 +268,7 @@ class CommunityController extends Controller
                     'created_at' => $comment->created_at->diffForHumans(),
                     'user' => [
                         'name' => $comment->user->name,
-                        'avatarUrl' => 'https://i.pravatar.cc/150?u=' . $comment->user->id,
+                        'avatarUrl' => $comment->user->avatar ? asset('storage/' . $comment->user->avatar) : null,
                     ],
                 ];
             });

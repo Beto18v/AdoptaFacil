@@ -115,6 +115,7 @@ export default function Mascotas({ mascotas = [] }: MascotasProps) {
                 imageUrl: images[0], // Primera imagen como principal
                 images: images, // <-- AÑADIDO: todas las imágenes
                 shelter: mascota.user.name,
+                user: mascota.user, // <-- AÑADIDO: información completa del usuario
             };
         });
     }, [mascotas]);

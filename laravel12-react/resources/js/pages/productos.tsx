@@ -71,6 +71,7 @@ export default function Productos({ productos = [] }: ProductosProps) {
             descripcion: producto.descripcion || '',
             seller: producto.user?.name || 'Usuario',
             shelter: producto.user?.name || 'Usuario',
+            user: producto.user,
         }));
     }, [productos]);
 

@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { getAvatarUrl } from '@/lib/avatar-utils';
 import { router } from '@inertiajs/react';
 import { CheckCircle, ImagePlus, LogIn, Send, Video, XCircle } from 'lucide-react';
 import { useState } from 'react';
@@ -13,6 +14,7 @@ interface User {
     name: string;
     email: string;
     role?: string;
+    avatar?: string;
 }
 
 interface CreatePostProps {
@@ -168,7 +170,7 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
             <form onSubmit={handleSubmit}>
                 <div className="flex items-start">
                     <Avatar>
-                        <AvatarImage src={`https://i.pravatar.cc/150?u=${user.id}`} alt={user.name} />
+                        <AvatarImage src={getAvatarUrl(user.avatar)} alt={user.name} />
                         <AvatarFallback>{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div className="ml-4 flex-1">

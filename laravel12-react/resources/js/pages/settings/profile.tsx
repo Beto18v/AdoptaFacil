@@ -110,7 +110,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
 
             <SettingsLayout>
                 <div className="space-y-6">
-                    <HeadingSmall title="Información de perfil" description="Actualice su nombre, dirección de correo electrónico y foto de perfil" />
+                    <HeadingSmall title="Información de perfil" description="Mantenga su información actualizada" />
 
                     <form onSubmit={submit} className="space-y-6">
                         {/* Campo de foto de perfil */}

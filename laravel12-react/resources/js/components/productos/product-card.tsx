@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Heart, ShieldCheck } from 'lucide-react';
 
@@ -8,11 +9,16 @@ interface ProductCardProps {
     shelter: string;
     precio: number;
     imageUrl: string;
+    user?: {
+        id: number;
+        name: string;
+        avatar?: string;
+    };
     onImageClick?: () => void;
     onViewDetails?: () => void;
 }
 
-export default function ProductCard({ nombre, shelter, descripcion, precio, imageUrl, onImageClick, onViewDetails }: ProductCardProps) {
+export default function ProductCard({ nombre, shelter, descripcion, precio, imageUrl, user, onImageClick, onViewDetails }: ProductCardProps) {
     return (
         <div className="group relative overflow-hidden rounded-lg shadow-lg transition-all hover:shadow-xl">
             <div className="cursor-pointer" onClick={onImageClick}>
@@ -25,6 +31,10 @@ export default function ProductCard({ nombre, shelter, descripcion, precio, imag
                         <p className="text-sm text-gray-500 dark:text-gray-400">{descripcion}</p>
                         <div className="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">
                             <ShieldCheck className="mr-1.5 h-4 w-4 text-green-500" />
+                            <Avatar className="mr-2 h-6 w-6">
+                                <AvatarImage src={user?.avatar ? `/storage/${user.avatar}` : undefined} alt={user?.name} />
+                                <AvatarFallback className="text-xs">{user?.name?.substring(0, 2).toUpperCase() || 'AL'}</AvatarFallback>
+                            </Avatar>
                             <span className="text-blue-600 dark:text-blue-400">Vendido por: {shelter}</span>
                         </div>
                     </div>

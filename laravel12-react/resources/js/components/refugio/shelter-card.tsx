@@ -1,7 +1,8 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { type SharedData, type Shelter } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { Building, Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 import { useState } from 'react';
 import FormularioDonacion from '../../pages/Dashboard/Donaciones/components/formulario-donacion';
 
@@ -27,9 +28,12 @@ export default function ShelterCard({ shelter }: ShelterCardProps) {
                 <div className="p-6">
                     <div className="mb-4 flex items-start justify-between">
                         <div className="flex items-center gap-4">
-                            <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-900/70">
-                                <Building className="h-6 w-6 text-blue-600 dark:text-blue-300" />
-                            </div>
+                            <Avatar className="h-12 w-12">
+                                <AvatarImage src={shelter.user?.avatar ? `/storage/${shelter.user.avatar}` : undefined} alt={shelter.user?.name} />
+                                <AvatarFallback className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                    {shelter.user?.name?.substring(0, 2).toUpperCase() || 'AL'}
+                                </AvatarFallback>
+                            </Avatar>
                             <div>
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">{shelter.name}</h3>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Registrado por: {shelter.user?.name || 'Aliado'}</p>
