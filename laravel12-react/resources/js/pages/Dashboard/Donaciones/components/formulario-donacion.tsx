@@ -17,7 +17,7 @@ interface FormularioDonacionProps {
     shelters: Shelter[];
 }
 
-type PaymentMethod = 'nequi' | 'daviplata';
+type PaymentMethod = 'pse' | 'tarjeta';
 
 export default function FormularioDonacion({ showModal, onClose, shelters }: FormularioDonacionProps) {
     const page = usePage();
@@ -224,24 +224,38 @@ export default function FormularioDonacion({ showModal, onClose, shelters }: For
                                     Selecciona tu método de pago
                                 </Label>
                                 <div className="mt-2 flex justify-center gap-4">
-                                    <button
-                                        type="button"
-                                        onClick={() => handlePaymentMethodSelect('nequi')}
-                                        className={`flex h-12 w-32 items-center justify-center gap-2 rounded-lg border-2 p-2 transition-all ${data.payment_method === 'nequi' ? 'border-purple-700 bg-purple-300 ring-2 ring-purple-700' : 'border-gray-300 dark:border-gray-600 dark:bg-gray-700'}`}
-                                    >
-                                        <img src="https://cdn.worldvectorlogo.com/logos/nequi-2.svg" alt="Nequi" className="h-6 w-auto" />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => handlePaymentMethodSelect('daviplata')}
-                                        className={`flex h-12 w-32 items-center justify-center gap-2 rounded-lg border-2 p-2 transition-all ${data.payment_method === 'daviplata' ? 'border-red-700 bg-red-300 ring-2 ring-red-700' : 'border-gray-300 dark:border-gray-600 dark:bg-gray-700'}`}
-                                    >
-                                        <img
-                                            src="https://res.cloudinary.com/komerciaacademico/image/upload/c_scale,w_500,q_auto:best,f_auto/v1606333767/Templates%20Modos%20de%20pago/5c89c897e1917d9209a762af_davi_qn90y9.png"
-                                            alt="Daviplata"
-                                            className="h-6 w-auto"
-                                        />
-                                    </button>
+                                    <div className="text-center">
+                                        <button
+                                            type="button"
+                                            onClick={() => handlePaymentMethodSelect('pse')}
+                                            className={`flex h-20 w-32 items-center justify-center rounded-lg border-2 p-3 transition-all ${data.payment_method === 'pse' ? 'border-blue-700 bg-blue-300 ring-2 ring-blue-700' : 'border-gray-300 dark:border-gray-600 dark:bg-gray-700'}`}
+                                        >
+                                            <img
+                                                src="https://d1ih8jugeo2m5m.cloudfront.net/2023/05/pse-1-300x300.png"
+                                                alt="PSE"
+                                                className="h-24 w-auto"
+                                            />
+                                        </button>
+                                        {data.payment_method === 'pse' && (
+                                            <p className="mt-2 text-sm font-semibold text-blue-600 dark:text-blue-400">PSE</p>
+                                        )}
+                                    </div>
+                                    <div className="text-center">
+                                        <button
+                                            type="button"
+                                            onClick={() => handlePaymentMethodSelect('tarjeta')}
+                                            className={`flex h-20 w-32 items-center justify-center rounded-lg border-2 p-3 transition-all ${data.payment_method === 'tarjeta' ? 'border-green-700 bg-green-300 ring-2 ring-green-700' : 'border-gray-300 dark:border-gray-600 dark:bg-gray-700'}`}
+                                        >
+                                            <img
+                                                src="https://images.vexels.com/media/users/3/263269/isolated/preview/a461aa900b9a0fc2c3b1533899ed29d0-icono-de-tarjetas-de-visita-de-dinero.png"
+                                                alt="Tarjeta"
+                                                className="h-16 w-auto"
+                                            />
+                                        </button>
+                                        {data.payment_method === 'tarjeta' && (
+                                            <p className="mt-2 text-sm font-semibold text-green-600 dark:text-green-400">Tarjeta</p>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 
