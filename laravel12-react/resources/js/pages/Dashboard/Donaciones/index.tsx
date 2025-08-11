@@ -150,10 +150,8 @@ export default function DonationsSummary() {
 
     const handleGenerateReport = () => {
         if (donations.length === 0) {
-            alert('No hay donaciones para generar un reporte.');
             return;
         }
-        // Temporary type assertion para evitar errores de ESLint
         const reportDonations = donations as unknown as {
             id: number;
             donor_name: string;

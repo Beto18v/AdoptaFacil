@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 
 /**
  * MascotaController - Controlador principal del módulo de gestión de mascotas
@@ -61,14 +60,8 @@ class MascotaController extends Controller
      */
     public function store(StoreMascotaRequest $request)
     {
-        // Debug: verificar qué datos están llegando
-        Log::info('Datos recibidos para registro de mascota:', $request->all());
-
         $data = $request->validated();
         $data['user_id'] = Auth::id();
-
-        // Debug: verificar datos validados
-        Log::info('Datos validados:', $data);
 
         // Primera imagen como imagen principal (compatibilidad con sistema anterior)
         if ($request->hasFile('imagenes') && count($request->file('imagenes')) > 0) {
@@ -77,9 +70,6 @@ class MascotaController extends Controller
         }
 
         $mascota = Mascota::create($data);
-
-        // Debug: verificar mascota creada
-        Log::info('Mascota creada:', $mascota->toArray());
 
         // Guardar todas las imágenes en tabla mascota_images con orden
         if ($request->hasFile('imagenes')) {
@@ -124,13 +114,6 @@ class MascotaController extends Controller
     public function update(UpdateMascotaRequest $request, Mascota $mascota)
     {
         Gate::authorize('update', $mascota);
-
-        // Debug: verificar qué datos están llegando para la actualización
-        Log::info('Datos recibidos para actualización de mascota:', [
-            'mascota_id' => $mascota->id,
-            'request_data' => $request->all(),
-            'validated_data' => $request->validated(),
-        ]);
 
         $data = $request->validated();
         $mascota->update($data);

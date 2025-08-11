@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 /**
  * StoreMascotaRequest - Validación para registro de mascotas
@@ -16,14 +15,6 @@ class StoreMascotaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // Debug para verificar autorización
-        $user = auth()->user();
-        Log::info('Verificando autorización para registro de mascota', [
-            'user_id' => $user?->id,
-            'user_role' => $user?->role,
-            'is_authenticated' => auth()->check(),
-        ]);
-
         return auth()->check() && auth()->user()->role === 'aliado';
     }
 

@@ -105,7 +105,7 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                 window.location.reload();
             }
         } catch (error) {
-            console.error('Error al rechazar solicitud:', error);
+            // Error handling silently
         } finally {
             setIsSubmittingReject(false);
         }

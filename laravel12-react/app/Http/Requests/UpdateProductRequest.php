@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 /**
  * UpdateProductRequest - Validación para actualización de productos
@@ -18,13 +17,6 @@ class UpdateProductRequest extends FormRequest
     {
         $user = auth()->user();
         $product = $this->route('product');
-
-        Log::info('Verificando autorización para actualización de producto', [
-            'user_id' => $user?->id,
-            'user_role' => $user?->role,
-            'product_user_id' => $product?->user_id,
-            'is_authenticated' => auth()->check(),
-        ]);
 
         return auth()->check() &&
             ($user->role === 'admin' || $user->id === $product->user_id);

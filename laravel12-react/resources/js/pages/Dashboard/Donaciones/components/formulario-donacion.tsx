@@ -63,7 +63,6 @@ export default function FormularioDonacion({ showModal, onClose, shelters }: For
         e.preventDefault();
         // Ahora, al enviar el formulario, el backend recibirá el 'payment_method' seleccionado
         // y podrá iniciar el proceso con la pasarela de pago correspondiente.
-        console.log('Enviando donación con los siguientes datos:', data);
         post(route('donaciones.store'), {
             preserveScroll: true,
             onSuccess: () => {

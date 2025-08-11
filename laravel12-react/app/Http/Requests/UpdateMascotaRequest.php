@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 /**
  * UpdateMascotaRequest - Validación para actualización de mascotas
@@ -19,20 +18,8 @@ class UpdateMascotaRequest extends FormRequest
         $user = auth()->user();
         $mascota = $this->route('mascota');
 
-        Log::info('Verificando autorización para actualización de mascota', [
-            'user_id' => $user?->id,
-            'user_role' => $user?->role,
-            'mascota_user_id' => $mascota?->user_id,
-            'is_authenticated' => auth()->check(),
-            'mascota_id' => $mascota?->id,
-        ]);
-
-        $authorized = auth()->check() &&
+        return auth()->check() &&
             ($user->role === 'admin' || $user->role === 'aliado' || $user->id === $mascota->user_id);
-
-        Log::info('Resultado de autorización:', ['authorized' => $authorized]);
-
-        return $authorized;
     }
 
     /**
@@ -40,13 +27,6 @@ class UpdateMascotaRequest extends FormRequest
      */
     public function rules(): array
     {
-        Log::info('UpdateMascotaRequest - Datos recibidos para validación:', [
-            'all_data' => $this->all(),
-            'validated_keys' => array_keys($this->all()),
-            'request_method' => $this->method(),
-            'content_type' => $this->header('Content-Type'),
-        ]);
-
         return [
             'nombre' => 'required|string|max:255',
             'especie' => 'required|string|max:100',

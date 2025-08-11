@@ -103,8 +103,6 @@ export default function RegistrarProducto({ isOpen, onClose, setMensaje, product
             reset();
         } else if (isOpen && modoEdicion && productoEditar) {
             // Cargar datos cuando se abre en modo edición
-            console.log('Cargando datos de producto para editar:', productoEditar);
-
             // Resetear primero para limpiar cualquier estado previo
             reset();
 

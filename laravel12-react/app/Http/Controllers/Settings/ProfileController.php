@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -53,15 +54,43 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validatedData = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Manejar la subida del avatar
+        if ($request->hasFile('avatar')) {
+            // Eliminar el avatar anterior si existe
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            // Subir el nuevo avatar
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $validatedData['avatar'] = $avatarPath;
         }
 
-        $request->user()->save();
+        // Si no hay archivo pero sí hay un valor avatar null, eliminar avatar actual
+        if (!$request->hasFile('avatar') && $request->has('avatar') && is_null($request->avatar) && $user->avatar) {
+            if (Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $validatedData['avatar'] = null;
+        }
 
-        return to_route('profile.edit');
+        // Si no se envió avatar, no incluirlo en la actualización
+        if (!$request->hasFile('avatar') && !$request->has('avatar')) {
+            unset($validatedData['avatar']);
+        }
+
+        $user->fill($validatedData);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return to_route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
