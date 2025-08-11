@@ -1,7 +1,7 @@
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler, useRef, useState } from 'react';
+import { FormEventHandler, useEffect, useRef, useState } from 'react';
 
 import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
@@ -32,12 +32,40 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
     const { auth } = usePage<SharedData>().props;
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(auth.user.avatar ? `/storage/${auth.user.avatar}` : null);
+    const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+    const [manualSuccess, setManualSuccess] = useState<boolean>(false);
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<ProfileForm>({
+    const { data, setData, patch, post, errors, processing, recentlySuccessful, clearErrors, setError } = useForm<ProfileForm>({
         name: auth.user.name || '',
         email: auth.user.email || '',
         avatar: null,
     });
+
+    // Detectar si hubo un cambio exitoso usando el status de Laravel y estado manual
+    const wasSuccessful = recentlySuccessful || status === 'profile-updated' || manualSuccess;
+
+    // Mostrar mensaje de éxito y ocultarlo después de 3 segundos
+    useEffect(() => {
+        if (wasSuccessful) {
+            setShowSuccessMessage(true);
+            const timer = setTimeout(() => {
+                setShowSuccessMessage(false);
+            }, 3000); // 3 segundos
+
+            return () => clearTimeout(timer);
+        } else {
+            setShowSuccessMessage(false);
+        }
+    }, [wasSuccessful]);
+
+    // Actualizar previewUrl cuando cambie el avatar del usuario (después de actualización)
+    useEffect(() => {
+        if (auth.user.avatar) {
+            setPreviewUrl(`/storage/${auth.user.avatar}`);
+        } else {
+            setPreviewUrl(null);
+        }
+    }, [auth.user.avatar]);
 
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -63,44 +91,108 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
     };
 
     const handleRemoveAvatar = () => {
-        setData('avatar', null);
-        setPreviewUrl(null);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+        // Si hay un preview temporal, solo limpiarlo
+        if (data.avatar) {
+            setData('avatar', null);
+            setPreviewUrl(auth.user.avatar ? `/storage/${auth.user.avatar}` : null);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            return;
+        }
+
+        // Si el usuario tenía un avatar guardado, enviar la actualización para eliminarlo
+        if (auth.user.avatar) {
+            router.post(
+                route('profile.update'),
+                {
+                    name: data.name,
+                    email: data.email,
+                    avatar: null,
+                    _method: 'PATCH',
+                },
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        // Activar el estado manual de éxito
+                        setManualSuccess(true);
+                        setTimeout(() => setManualSuccess(false), 500);
+                    },
+                    onError: (errors) => {
+                        // Manejar errores si los hay
+                        setManualSuccess(false);
+                        setShowSuccessMessage(false);
+                    },
+                },
+            );
         }
     };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        // Si hay avatar, usar post con FormData, sino usar patch normal
         if (data.avatar) {
-            // Cuando hay avatar, necesitamos usar POST con _method=PATCH
+            // Cuando hay avatar, usar router.post con FormData
             router.post(
                 route('profile.update'),
                 {
-                    ...data,
-                    _method: 'PATCH', // Laravel necesita esto para interpretar como PATCH
+                    name: data.name,
+                    email: data.email,
+                    avatar: data.avatar,
+                    _method: 'PATCH',
                 },
                 {
                     preserveScroll: true,
                     forceFormData: true,
                     onSuccess: () => {
+                        // Resetear solo el campo avatar del formulario
                         setData('avatar', null);
+
+                        // Limpiar el input file
                         if (fileInputRef.current) {
                             fileInputRef.current.value = '';
                         }
-                        setTimeout(() => {
-                            setPreviewUrl(null);
-                        }, 100);
+
+                        // Activar el estado manual de éxito
+                        setManualSuccess(true);
+                        setTimeout(() => setManualSuccess(false), 500);
+                    },
+                    onError: (errors) => {
+                        // Sincronizar errores con el hook useForm
+                        Object.keys(errors).forEach(key => {
+                            setError(key as keyof ProfileForm, errors[key] as string);
+                        });
+                        setManualSuccess(false);
+                        setShowSuccessMessage(false);
                     },
                 },
             );
         } else {
-            // Sin avatar, usar patch normal
-            patch(route('profile.update'), {
-                preserveScroll: true,
-            });
+            // Sin avatar, usar router.post pero con datos específicos para mejor manejo de errores
+            router.post(
+                route('profile.update'),
+                {
+                    name: data.name,
+                    email: data.email,
+                    _method: 'PATCH',
+                },
+                {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        // Activar el estado manual de éxito
+                        setManualSuccess(true);
+                        setTimeout(() => setManualSuccess(false), 500);
+                    },
+                    onError: (errors) => {
+                        // Sincronizar errores con el hook useForm
+                        Object.keys(errors).forEach(key => {
+                            setError(key as keyof ProfileForm, errors[key] as string);
+                        });
+                        setManualSuccess(false);
+                        setShowSuccessMessage(false);
+                    },
+                },
+            );
         }
     };
 
@@ -227,7 +319,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                             </Button>
 
                             <Transition
-                                show={recentlySuccessful}
+                                show={showSuccessMessage}
                                 enter="transition ease-in-out"
                                 enterFrom="opacity-0"
                                 leave="transition ease-in-out"
