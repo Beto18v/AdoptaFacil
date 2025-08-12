@@ -52,7 +52,6 @@ export function FavoritesProvider({
             if (response.status === 401) {
                 // Usuario no autenticado - esto es normal, no redirigir aquí
                 setFavoriteIds([]);
-                console.log('Usuario no autenticado, favoritos vacíos');
                 return;
             }
 
@@ -62,21 +61,16 @@ export function FavoritesProvider({
                     try {
                         const data = await response.json();
                         setFavoriteIds(data.favorite_ids || []);
-                        console.log('Favoritos cargados:', data.favorite_ids || []);
                     } catch (jsonError) {
-                        console.error('Error al parsear JSON en favoritos:', jsonError);
                         setFavoriteIds([]);
                     }
                 } else {
-                    console.error('Respuesta no es JSON:', await response.text());
                     setFavoriteIds([]);
                 }
             } else {
-                console.error('Error en respuesta:', response.status, response.statusText);
                 setFavoriteIds([]);
             }
         } catch (error) {
-            console.error('Error al obtener favoritos:', error);
             setFavoriteIds([]);
         } finally {
             setIsLoading(false);

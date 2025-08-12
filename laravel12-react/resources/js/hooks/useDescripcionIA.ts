@@ -1,5 +1,27 @@
+/**
+ * Hook optimizado para integración con IA de generación de descripciones
+ *
+ * Proporciona funcionalidades completas para generar descripciones automáticas
+ * de mascotas utilizando inteligencia artificial, con manejo robusto de errores
+ * y verificación de disponibilidad del servicio.
+ *
+ * Características:
+ * - Generación automática de descripciones basadas en datos de mascota
+ * - Verificación de salud del servicio de IA
+ * - Manejo de estados de carga y errores
+ * - Funciones memoizadas para optimización de rendimiento
+ * - Integración con CSRF tokens para seguridad
+ *
+ * @author Equipo AdoptaFácil
+ * @version 2.0.0 - Optimizado para producción
+ * @since 2024
+ */
+
 import { useCallback, useState } from 'react';
 
+/**
+ * Interfaces TypeScript para tipado fuerte de datos
+ */
 interface MascotaParaDescripcion {
     nombre: string;
     especie: string;
@@ -18,11 +40,23 @@ interface DescripcionResponse {
     error?: string;
 }
 
+/**
+ * Hook principal con estado memoizado y funciones optimizadas
+ */
 export const useDescripcionIA = () => {
+    /**
+     * Estados del hook con tipado fuerte
+     */
     const [generandoDescripcion, setGenerandoDescripcion] = useState(false);
     const [ultimaDescripcion, setUltimaDescripcion] = useState<string>('');
     const [error, setError] = useState<string>('');
 
+    /**
+     * Función memoizada para generar descripción automática
+     * Optimizada con useCallback para evitar re-creaciones innecesarias
+     * @param datosBasicos - Datos de la mascota para generar descripción
+     * @returns Descripción generada o null en caso de error
+     */
     const generarDescripcion = useCallback(async (datosBasicos: MascotaParaDescripcion): Promise<string | null> => {
         setGenerandoDescripcion(true);
         setError('');

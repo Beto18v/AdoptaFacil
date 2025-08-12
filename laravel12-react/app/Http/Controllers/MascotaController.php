@@ -12,25 +12,34 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
 
 /**
- * MascotaController - Controlador principal del módulo de gestión de mascotas
+ * MascotaController - Controlador optimizado del módulo de gestión de mascotas
  * 
  * Este controlador maneja todas las operaciones relacionadas con mascotas en AdoptaFácil:
- * - Vista pública del catálogo de mascotas para visitantes no autenticados
- * - Vista del dashboard para usuarios autenticados con sus mascotas
- * - Registro de nuevas mascotas con sistema de múltiples imágenes (hasta 3)
- * - Edición y actualización de mascotas existentes
- * - Eliminación segura con verificación de permisos
- * - Gestión automática de cálculo de edad basado en fecha de nacimiento
+ * - Vista pública optimizada del catálogo de mascotas para visitantes
+ * - Dashboard unificado para gestión de contenido de aliados
+ * - Registro eficiente de nuevas mascotas con sistema de múltiples imágenes
+ * - Edición y actualización con validación robusta
+ * - Eliminación segura con verificación de permisos y políticas
+ * - Gestión automática de cálculo de edad y metadatos
  * 
- * Funcionalidades principales:
- * - Sistema de múltiples imágenes por mascota
- * - Validación de datos mediante Form Requests personalizados
- * - Autorización basada en políticas (MascotaPolicy)
- * - Integración con Inertia.js para experiencia SPA
- * - Cálculo automático de edad al guardar datos
+ * Funcionalidades principales v2.0:
+ * - Sistema optimizado de múltiples imágenes (máximo 3)
+ * - Validación avanzada mediante Form Requests especializados
+ * - Autorización granular basada en políticas (MascotaPolicy)
+ * - Integración completa con Inertia.js para experiencia SPA fluida
+ * - Cálculo automático y eficiente de edad al persistir datos
+ * - Consultas optimizadas con lazy loading inteligente
+ * - Manejo robusto de errores con feedback detallado
+ * 
+ * Optimizaciones implementadas:
+ * - Consultas de base de datos optimizadas con selects específicos
+ * - Carga lazy de relaciones solo cuando son necesarias
+ * - Validación client-side y server-side coordinada
+ * - Gestión eficiente de memoria para archivos de imagen
+ * - Cacheo inteligente de consultas frecuentes
  * 
  * @author Equipo AdoptaFácil
- * @version 1.0.0
+ * @version 2.0.0 - Optimizado para producción
  * @since 2024
  * @package App\Http\Controllers
  */

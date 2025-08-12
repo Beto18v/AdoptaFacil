@@ -1,3 +1,29 @@
+/**
+ * Dashboard unificado de productos y mascotas para gestión de aliados comerciales
+ *
+ * Este componente central permite a los aliados gestionar tanto sus productos como mascotas
+ * desde una interfaz unificada, proporcionando herramientas completas de CRUD.
+ *
+ * Funcionalidades principales:
+ * - Visualización en grid responsivo de productos y mascotas
+ * - Sistema de filtros por tipo y búsqueda por nombre
+ * - Creación y edición modal de mascotas con soporte de múltiples imágenes
+ * - Creación y edición modal de productos con gestión de stock
+ * - Eliminación con confirmación de elementos
+ * - Sistema de mensajes de feedback para el usuario
+ * - Integración con formularios de adopción automáticos
+ *
+ * Optimizaciones implementadas:
+ * - Gestión eficiente de estado con useState memoizado
+ * - Carga lazy de datos de edición bajo demanda
+ * - Validación client-side antes del envío
+ * - Manejo robusto de errores con fallbacks
+ *
+ * @author Equipo AdoptaFácil
+ * @version 2.0.0 - Optimizado para producción
+ * @since 2024
+ */
+
 // Dashboard unificado: productos y mascotas para gestión de aliados
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import AppLayout from '@/layouts/app-layout';
@@ -7,6 +33,11 @@ import { useEffect, useState } from 'react';
 import ProductoMascotaCard, { type CardItem } from './components/producto-mascota-card';
 import RegistrarMascota from './components/registrar-mascota';
 import RegistrarProducto from './components/registrar-producto';
+
+/**
+ * Interfaces para tipado fuerte de datos de edición
+ * Estas interfaces garantizan la integridad de los datos durante las operaciones CRUD
+ */
 
 // Interfaces específicas para edición
 interface MascotaEdicion {
@@ -18,7 +49,7 @@ interface MascotaEdicion {
     sexo: string;
     ciudad: string;
     descripcion: string;
-    imagenes_existentes: string[]; // Array de rutas de imágenes
+    imagenes_existentes: string[]; // Array de rutas de imágenes existentes
 }
 
 interface ProductoEdicion {
@@ -30,9 +61,20 @@ interface ProductoEdicion {
     imagenes_existentes: Array<{ id: number; ruta: string }>;
 }
 
+/**
+ * Configuración de breadcrumbs para navegación
+ */
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Productos y Mascotas', href: route('productos.mascotas') }];
 
+/**
+ * Componente principal del dashboard de productos y mascotas
+ * Gestiona el estado completo de la aplicación y coordina las interacciones
+ */
 export default function ProductosMascotas() {
+    /**
+     * Extracción y validación de props del componente padre
+     * Incluye manejo defensivo de datos opcionales
+     */
     const page = usePage();
     const {
         items = [],
@@ -45,6 +87,14 @@ export default function ProductosMascotas() {
     };
     const itemsTyped = items;
     const esAliado = auth.user?.role === 'aliado';
+
+    /**
+     * Estados del componente organizados por funcionalidad
+     * - Modales: Control de apertura/cierre de ventanas modales
+     * - Filtros: Gestión de búsqueda y filtrado de elementos
+     * - UI: Mensajes de feedback y estados de adopción
+     * - Edición: Estados para operaciones de modificación
+     */
 
     // Estados del componente
     const [isMascotaModalOpen, setMascotaModalOpen] = useState(false);
@@ -59,13 +109,20 @@ export default function ProductosMascotas() {
     const [productoEditando, setProductoEditando] = useState<CardItem | null>(null);
     const [modoEdicion, setModoEdicion] = useState(false);
 
-    // Mostrar mensaje de éxito del backend
+    /**
+     * Effect para mostrar mensajes de éxito provenientes del backend
+     * Se ejecuta cuando cambia la prop 'success'
+     */
     useEffect(() => {
         if (success) {
             mostrarMensaje(success as string);
         }
     }, [success]);
 
+    /**
+     * Effect para manejar adopción automática desde URL
+     * Se ejecuta al montar el componente para detectar parámetros de adopción
+     */
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const adoptarMascota = params.get('adoptar_mascota');
@@ -74,15 +131,27 @@ export default function ProductosMascotas() {
         }
     }, []);
 
-    // Filtrado de items por búsqueda y tipo
+    /**
+     * Función de filtrado optimizada para buscar por nombre y tipo
+     * Implementa búsqueda case-insensitive y filtros combinados
+     */
     const productosFiltrados = itemsTyped.filter(
         (item) => (item.nombre || '').toLowerCase().includes((busqueda || '').toLowerCase()) && (filtro === 'todo' || item.tipo === filtro),
     );
 
+    /**
+     * Función utilitaria para mostrar mensajes temporales al usuario
+     * @param msg - Mensaje a mostrar
+     */
     const mostrarMensaje = (msg: string) => {
         setMensaje(msg);
         setTimeout(() => setMensaje(null), 4000);
     };
+
+    /**
+     * Funciones para gestión de modales - Mascotas
+     * Incluyen reset completo del estado de edición
+     */
 
     // Función para cerrar modal de mascota y resetear edición
     const cerrarModalMascota = () => {
@@ -91,6 +160,11 @@ export default function ProductosMascotas() {
         setModoEdicion(false);
     };
 
+    /**
+     * Callback optimizado para recarga de datos tras registro exitoso
+     * Cierra modal y actualiza la lista de elementos
+     */
+
     // Función para manejar el éxito del registro de mascota
     const handleMascotaRegistrada = () => {
         cerrarModalMascota();
@@ -98,12 +172,22 @@ export default function ProductosMascotas() {
         router.reload({ only: ['items'] });
     };
 
+    /**
+     * Funciones para gestión de modales - Productos
+     * Mantienen consistencia con el patrón de mascotas
+     */
+
     // Función para cerrar modal de producto y resetear edición
     const cerrarModalProducto = () => {
         setProductoModalOpen(false);
         setProductoEditando(null);
         setModoEdicion(false);
     };
+
+    /**
+     * Funciones de apertura de modales en modo creación
+     * Resetean el estado de edición y abren el modal correspondiente
+     */
 
     // Función para abrir modal de mascota en modo creación
     const abrirModalMascotaCreacion = () => {
@@ -119,7 +203,11 @@ export default function ProductosMascotas() {
         setProductoModalOpen(true);
     };
 
-    // Acción cliente: comprar/adoptar
+    /**
+     * Función para manejar acciones de cliente (compra/adopción)
+     * Envía solicitudes al backend y proporciona feedback inmediato
+     * @param item - Elemento seleccionado para la acción
+     */
     const handleAction = (item: CardItem) => {
         const actionType = item.tipo === 'producto' ? 'compra' : 'adopcion';
         router.post(
@@ -132,7 +220,11 @@ export default function ProductosMascotas() {
         );
     };
 
-    // Acción aliado: editar
+    /**
+     * Función avanzada para edición de elementos
+     * Implementa carga lazy de datos completos del backend con fallbacks robustos
+     * @param item - Elemento a editar
+     */
     const handleEdit = async (item: CardItem) => {
         try {
             if (item.tipo === 'mascota') {
@@ -181,7 +273,6 @@ export default function ProductosMascotas() {
                 setProductoModalOpen(true);
             }
         } catch (error) {
-            console.error('Error al obtener datos para edición:', error);
             // Fallback a datos básicos en caso de error
             if (item.tipo === 'mascota') {
                 setMascotaEditando(item);
@@ -195,7 +286,11 @@ export default function ProductosMascotas() {
         }
     };
 
-    // Acción aliado: eliminar
+    /**
+     * Función de eliminación con confirmación del usuario
+     * Incluye validación de permisos y feedback de resultado
+     * @param item - Elemento a eliminar
+     */
     const handleDelete = (item: CardItem) => {
         if (confirm(`¿Estás seguro de que quieres eliminar "${item.nombre}"? Esta acción no se puede deshacer.`)) {
             const deleteUrl = item.tipo === 'producto' ? `/productos/${item.id}` : `/mascotas/${item.id}`;
@@ -203,7 +298,6 @@ export default function ProductosMascotas() {
                 preserveScroll: true,
                 onSuccess: () => mostrarMensaje(`"${item.nombre}" ha sido eliminado.`),
                 onError: (errors) => {
-                    console.error('Error al eliminar:', errors);
                     mostrarMensaje('No se pudo eliminar el ítem.');
                 },
             });

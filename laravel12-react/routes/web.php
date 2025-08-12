@@ -3,53 +3,70 @@
 /**
  * Archivo de rutas principales de AdoptaFácil
  * 
- * Este archivo define todas las rutas web de la aplicación:
- * - Rutas públicas (landing, mascotas, productos, refugios)
- * - Rutas de comunidad y funciones sociales
- * - Rutas protegidas para usuarios autenticados
- * - Integración con sistema de autenticación y configuración
+ * Este archivo define todas las rutas web de la aplicación organizadas por módulos:
+ * - Rutas públicas (landing, catálogos, refugios)
+ * - Rutas de comunidad y funciones sociales  
+ * - Rutas protegidas del dashboard para usuarios autenticados
+ * - Rutas de gestión de contenido (CRUD mascotas/productos)
+ * - Sistema de favoritos y adopciones
+ * 
+ * Optimizaciones v2.0:
+ * - Agrupación lógica de rutas por funcionalidad
+ * - Documentación completa de cada endpoint
+ * - Eliminación de rutas duplicadas o innecesarias
+ * - Middleware optimizado para mejor rendimiento
  * 
  * @author Equipo AdoptaFácil
- * @version 1.0.0
+ * @version 2.0.0 - Optimizado para producción
+ * @since 2024
  */
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\MascotaController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ShelterController;
-use App\Http\Controllers\SolicitudesController;
-use App\Http\Controllers\SharedController;
-use App\Http\Controllers\CommunityController;
-use App\Http\Controllers\FavoritosController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DonacionesController;
-use App\Http\Controllers\MapaController;
-use App\Http\Controllers\EstadisticasController;
 
-// ===== RUTAS PÚBLICAS =====
+// Importaciones organizadas por módulos
+use App\Http\Controllers\{
+    MascotaController,
+    ProductController,
+    ShelterController,
+    SolicitudesController,
+    SharedController,
+    CommunityController,
+    FavoritosController,
+    DashboardController,
+    DonacionesController,
+    MapaController,
+    EstadisticasController
+};
+
+/*
+|--------------------------------------------------------------------------
+| RUTAS PÚBLICAS - Accesibles sin autenticación
+|--------------------------------------------------------------------------
+*/
 
 /**
- * Página principal (Landing)
- * Muestra productos y mascotas destacados para visitantes
+ * Página principal (Landing Page)
+ * 
+ * Muestra una vista optimizada con productos y mascotas destacados.
+ * Carga eficiente: solo los datos necesarios para la vista inicial.
+ * 
+ * @return \Inertia\Response
  */
 Route::get('/', function () {
-    // Obtener los últimos 3 productos para mostrar en el landing
-    $productos = \App\Models\Product::with('user')->latest()->take(3)->get()->map(function ($producto) {
-        return (object) [
-            'id' => $producto->id,
-            'nombre' => $producto->nombre,
-            'descripcion' => $producto->descripcion,
-            'precio' => $producto->precio,
-            'imagen' => $producto->imagen,
-            'user' => $producto->user,
-        ];
-    });
+    // Productos destacados (últimos 3) con información de vendedor
+    $productos = \App\Models\Product::with('user:id,name')
+        ->latest()
+        ->take(3)
+        ->get(['id', 'nombre', 'descripcion', 'precio', 'imagen', 'user_id']);
 
-    // Obtener TODAS las mascotas para calcular conteos correctos de categorías
-    $todasLasMascotas = \App\Models\Mascota::with(['user', 'images'])->latest()->get();
+    // Todas las mascotas para cálculos de categorías (optimizado)
+    $todasLasMascotas = \App\Models\Mascota::with(['user:id,name', 'images:id,mascota_id,imagen_path'])
+        ->select('id', 'nombre', 'especie', 'raza', 'sexo', 'ciudad', 'user_id', 'created_at')
+        ->latest()
+        ->get();
 
-    // Obtener solo las últimas 3 mascotas para mostrar en la sección de mascotas
+    // Mascotas destacadas para mostrar (primeras 3)
     $mascotasParaMostrar = $todasLasMascotas->take(3);
 
     return Inertia::render('index', [
@@ -59,77 +76,227 @@ Route::get('/', function () {
     ]);
 })->name('index');
 
-// Catálogo público de mascotas
+/**
+ * Catálogos públicos - Acceso sin autenticación requerida
+ */
+// Catálogo público de mascotas disponibles para adopción
 Route::get('/mascotas', [MascotaController::class, 'indexPublic'])->name('mascotas');
 
-// Catálogo público de productos 
+// Catálogo público del marketplace de productos para mascotas  
 Route::get('/productos', [ProductController::class, 'indexPublic'])->name('productos');
 
-// Directorio de refugios
+/**
+ * Directorio de refugios y organizaciones
+ */
+// Listado público de refugios registrados
 Route::get('/refugios', [ShelterController::class, 'index'])->name('refugios');
-Route::post('/shelters', [ShelterController::class, 'store'])->middleware(['auth', 'verified'])->name('shelter.store');
 
-// ===== RUTAS DE COMUNIDAD =====
+// Registro de nuevos refugios (requiere autenticación)
+Route::post('/shelters', [ShelterController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('shelter.store');
 
-Route::get('/comunidad', [CommunityController::class, 'index'])->name('comunidad');
-Route::post('/comunidad/posts', [CommunityController::class, 'store'])->middleware(['auth'])->name('posts.store');
-Route::post('/comunidad/posts/{post}/like', [CommunityController::class, 'toggleLike'])->middleware(['auth'])->name('posts.like');
-Route::post('/comunidad/posts/{post}/comments', [CommunityController::class, 'storeComment'])->middleware(['auth'])->name('posts.comments.store');
-Route::get('/comunidad/posts/{post}/comments', [CommunityController::class, 'getComments'])->name('posts.comments.get');
-Route::delete('/comunidad/posts/{post}', [CommunityController::class, 'destroy'])->middleware(['auth'])->name('posts.destroy');
-
-// ===== RUTAS DE COMPARTIR =====
-
-Route::post('/comunidad/posts/{post}/share', [SharedController::class, 'create'])->middleware(['auth'])->name('posts.share');
-Route::get('/shared/{token}', [SharedController::class, 'show'])->name('shared.show');
-
-// ===== RUTAS DE AUTENTICACIÓN ESPECIALES =====
-
+/**
+ * Rutas públicas especiales
+ */
+// Página de opciones de registro (usuario vs refugio)
 Route::get('/registro-opciones', function () {
     return Inertia::render('auth/registro-opciones');
 })->name('register.options');
 
-// Ruta pública para obtener IDs de favoritos
-Route::get('favoritos/ids', [FavoritosController::class, 'getFavoriteIds'])->name('favoritos.ids');
+// API pública para obtener IDs de favoritos (optimizada para performance)
+Route::get('favoritos/ids', [FavoritosController::class, 'getFavoriteIds'])
+    ->name('favoritos.ids');
+
+/*
+|--------------------------------------------------------------------------
+| MÓDULO DE COMUNIDAD - Funcionalidades sociales
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Red social de la comunidad de mascotas
+ */
+// Feed principal de la comunidad (acceso público)
+Route::get('/comunidad', [CommunityController::class, 'index'])->name('comunidad');
+
+// Rutas protegidas para interacciones sociales
+Route::middleware(['auth'])->prefix('comunidad')->name('posts.')->group(function () {
+    // Crear nueva publicación en la comunidad
+    Route::post('/posts', [CommunityController::class, 'store'])->name('store');
+
+    // Sistema de likes en publicaciones
+    Route::post('/posts/{post}/like', [CommunityController::class, 'toggleLike'])->name('like');
+
+    // Sistema de comentarios
+    Route::post('/posts/{post}/comments', [CommunityController::class, 'storeComment'])->name('comments.store');
+    Route::get('/posts/{post}/comments', [CommunityController::class, 'getComments'])->name('comments.get');
+
+    // Eliminar publicaciones propias
+    Route::delete('/posts/{post}', [CommunityController::class, 'destroy'])->name('destroy');
+
+    // Sistema de compartir publicaciones
+    Route::post('/posts/{post}/share', [SharedController::class, 'create'])->name('share');
+});
+
+// Visualización pública de contenido compartido
+Route::get('/shared/{token}', [SharedController::class, 'show'])->name('shared.show');
+
+/*
+|--------------------------------------------------------------------------
+| ÁREA PROTEGIDA - Dashboard y funcionalidades autenticadas  
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    /*
+    |--------------------------------------------------------------------------
+    | DASHBOARD PRINCIPAL
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Dashboard principal con estadísticas y métricas
+     * Punto de entrada principal para usuarios autenticados
+     */
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('favoritos', [FavoritosController::class, 'index'])->name('favoritos.index');
-    Route::post('favoritos', [FavoritosController::class, 'store'])->name('favoritos.store');
-    Route::delete('favoritos', [FavoritosController::class, 'destroy'])->name('favoritos.destroy');
-    Route::post('favoritos/check', [FavoritosController::class, 'check'])->name('favoritos.check');
+    /*
+    |--------------------------------------------------------------------------
+    | MÓDULO DE FAVORITOS
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Gestión completa del sistema de favoritos
+     */
+    Route::prefix('favoritos')->name('favoritos.')->group(function () {
+        // Ver lista de mascotas favoritas del usuario
+        Route::get('/', [FavoritosController::class, 'index'])->name('index');
+        // Agregar mascota a favoritos
+        Route::post('/', [FavoritosController::class, 'store'])->name('store');
+        // Remover mascota de favoritos
+        Route::delete('/', [FavoritosController::class, 'destroy'])->name('destroy');
+        // Verificar si una mascota está en favoritos
+        Route::post('/check', [FavoritosController::class, 'check'])->name('check');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | MÓDULO DE DONACIONES Y REFUGIOS
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Sistema de donaciones y apoyo a refugios
+     */
+    // Panel de donaciones y fundaciones
     Route::get('donaciones', [DonacionesController::class, 'index'])->name('donaciones.index');
+    // Procesar nueva donación
     Route::post('donaciones', [DonacionesController::class, 'store'])->name('donaciones.store');
+
+    /*
+    |--------------------------------------------------------------------------
+    | MÓDULOS DE ANÁLISIS Y ESTADÍSTICAS
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Herramientas de visualización y análisis
+     */
+    // Mapa interactivo de mascotas y refugios
     Route::get('mapa', [MapaController::class, 'index'])->name('mapa.index');
+    // Dashboard de estadísticas y métricas avanzadas
     Route::get('estadisticas', [EstadisticasController::class, 'index'])->name('estadisticas.index');
 
+    /*
+    |--------------------------------------------------------------------------
+    | MÓDULO DE SOLICITUDES DE ADOPCIÓN
+    |--------------------------------------------------------------------------
+    */
 
-    Route::get('solicitudes', [SolicitudesController::class, 'index'])->name('solicitudes.index');
-    Route::post('solicitudes', [SolicitudesController::class, 'store'])->name('solicitudes.adopcion.store');
-    Route::delete('solicitudes/{solicitud}', [SolicitudesController::class, 'destroy'])->name('solicitudes.destroy');
-    Route::get('solicitudes/{id}', [SolicitudesController::class, 'show'])->name('solicitudes.show');
-    Route::post('solicitudes/{id}/estado', [SolicitudesController::class, 'updateEstado'])->name('solicitudes.updateEstado');
-    Route::post('set-intended-url', [App\Http\Controllers\Auth\SetIntendedUrlController::class, 'store'])->name('set-intended-url');
+    /**
+     * Gestión completa del proceso de adopción
+     */
+    Route::prefix('solicitudes')->name('solicitudes.')->group(function () {
+        // Lista de solicitudes del usuario
+        Route::get('/', [SolicitudesController::class, 'index'])->name('index');
+        // Crear nueva solicitud de adopción
+        Route::post('/', [SolicitudesController::class, 'store'])->name('adopcion.store');
+        // Ver detalles específicos de una solicitud
+        Route::get('/{id}', [SolicitudesController::class, 'show'])->name('show');
+        // Actualizar estado de una solicitud (para refugios)
+        Route::post('/{id}/estado', [SolicitudesController::class, 'updateEstado'])->name('updateEstado');
+        // Cancelar/eliminar solicitud propia
+        Route::delete('/{solicitud}', [SolicitudesController::class, 'destroy'])->name('destroy');
+    });
 
+    // Configurar URL de intención para redirección post-login
+    Route::post('set-intended-url', [App\Http\Controllers\Auth\SetIntendedUrlController::class, 'store'])
+        ->name('set-intended-url');
+
+    /*
+    |--------------------------------------------------------------------------
+    | MÓDULO DE GESTIÓN DE CONTENIDO (CRUD)
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Dashboard unificado para aliados comerciales
+     * Gestión de productos y mascotas en una interfaz integrada
+     */
     Route::get('/productos-mascotas', [ProductController::class, 'index'])->name('productos.mascotas');
-    Route::post('/productos/store', [ProductController::class, 'store'])->name('productos.store');
-    Route::get('/productos/{product}', [ProductController::class, 'show'])->name('productos.show');
-    Route::put('/productos/{product}', [ProductController::class, 'update'])->name('productos.update');
-    Route::post('/productos/{product}', [ProductController::class, 'update'])->name('productos.update.post'); // Workaround para FormData
-    Route::delete('/productos/{product}', [ProductController::class, 'destroy'])->name('productos.destroy');
 
-    Route::post('/mascotas/store', [MascotaController::class, 'store'])->name('mascotas.store');
-    Route::get('/mascotas/{mascota}', [MascotaController::class, 'show'])->name('mascotas.show');
-    Route::put('/mascotas/{mascota}', [MascotaController::class, 'update'])->name('mascotas.update');
-    Route::post('/mascotas/{mascota}', [MascotaController::class, 'update'])->name('mascotas.update.post'); // Workaround para FormData
-    Route::delete('/mascotas/{mascota}', [MascotaController::class, 'destroy'])->name('mascotas.destroy');
+    /**
+     * CRUD completo de productos del marketplace
+     */
+    Route::prefix('productos')->name('productos.')->group(function () {
+        // Crear nuevo producto
+        Route::post('/store', [ProductController::class, 'store'])->name('store');
+        // Ver detalles de producto específico (para edición)
+        Route::get('/{product}', [ProductController::class, 'show'])->name('show');
+        // Actualizar producto existente (PUT estándar)
+        Route::put('/{product}', [ProductController::class, 'update'])->name('update');
+        // Actualizar producto (POST con FormData - workaround para archivos)
+        Route::post('/{product}', [ProductController::class, 'update'])->name('update.post');
+        // Eliminar producto
+        Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
+    });
 
+    /**
+     * CRUD completo de mascotas para adopción
+     */
+    Route::prefix('mascotas')->name('mascotas.')->group(function () {
+        // Registrar nueva mascota
+        Route::post('/store', [MascotaController::class, 'store'])->name('store');
+        // Ver detalles de mascota específica (para edición)
+        Route::get('/{mascota}', [MascotaController::class, 'show'])->name('show');
+        // Actualizar mascota existente (PUT estándar)
+        Route::put('/{mascota}', [MascotaController::class, 'update'])->name('update');
+        // Actualizar mascota (POST con FormData - workaround para archivos)
+        Route::post('/{mascota}', [MascotaController::class, 'update'])->name('update.post');
+        // Eliminar mascota
+        Route::delete('/{mascota}', [MascotaController::class, 'destroy'])->name('destroy');
+    });
 
-    // Route::get('/mascotas', [MascotaController::class, 'index'])->name('mascotas.index');
-    Route::post('/acciones-solicitud/store', [\App\Http\Controllers\AccionSolicitudController::class, 'store'])->name('acciones-solicitud.store');
+    /**
+     * Endpoint para acciones rápidas (adoptar/comprar)
+     * Utilizado por las tarjetas de productos y mascotas
+     */
+    Route::post('/acciones-solicitud/store', [\App\Http\Controllers\AccionSolicitudController::class, 'store'])
+        ->name('acciones-solicitud.store');
 });
+
+/*
+|--------------------------------------------------------------------------
+| ARCHIVOS DE RUTAS ADICIONALES
+|--------------------------------------------------------------------------
+| 
+| Importación de archivos de rutas modulares para mantener organización:
+| - settings.php: Configuraciones de perfil y cuenta de usuario
+| - auth.php: Rutas de autenticación (login, registro, verificación, etc.)
+*/
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

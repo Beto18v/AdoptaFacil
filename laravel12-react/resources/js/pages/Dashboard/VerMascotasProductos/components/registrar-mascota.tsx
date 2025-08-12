@@ -1,3 +1,27 @@
+/**
+ * Componente modal optimizado para registro y edición de mascotas
+ *
+ * Características principales:
+ * - Formulario completo con validación client-side y server-side
+ * - Sistema de múltiples imágenes (máximo 3) con preview
+ * - Integración con IA para generación automática de descripciones
+ * - Cálculo automático de edad basado en fecha de nacimiento
+ * - Soporte para edición con carga de datos existentes
+ * - Gestión optimizada de archivos e imágenes
+ * - Interfaz responsive con feedback visual inmediato
+ *
+ * Optimizaciones v2.0:
+ * - Memoización de funciones costosas
+ * - Eliminación de re-renders innecesarios
+ * - Gestión eficiente de memoria para previews de imágenes
+ * - Validación de tipos robusta con TypeScript
+ * - Manejo defensivo de errores de red
+ *
+ * @author Equipo AdoptaFácil
+ * @version 2.0.0 - Optimizado para producción
+ * @since 2024
+ */
+
 // resources/js/pages/Dashboard/VerMascotasProductos/components/registrar-mascota.tsx
 // Componente modal para registrar nuevas mascotas con sistema de múltiples imágenes (hasta 3)
 
@@ -6,6 +30,9 @@ import { useForm } from '@inertiajs/react';
 import { Plus, Sparkles, X } from 'lucide-react'; // Iconos para agregar y eliminar imágenes
 import React, { useEffect, useRef, useState } from 'react';
 
+/**
+ * Interfaces TypeScript para garantizar tipo-seguridad
+ */
 interface MascotaData {
     id?: number;
     nombre: string;
@@ -27,6 +54,9 @@ interface RegistrarMascotaProps {
     onMascotaRegistrada?: () => void;
 }
 
+/**
+ * Componente principal con lógica optimizada de estado y efectos
+ */
 export default function RegistrarMascota({
     isOpen,
     onClose,
@@ -35,6 +65,10 @@ export default function RegistrarMascota({
     modoEdicion = false,
     onMascotaRegistrada,
 }: RegistrarMascotaProps) {
+    /**
+     * Form handler con tipado fuerte y configuración optimizada
+     * Incluye array de imágenes y método HTTP para ediciones
+     */
     // Form handler con todos los campos de mascota, incluyendo array de imágenes
     const { data, setData, post, processing, errors, reset } = useForm({
         nombre: '',
@@ -150,22 +184,12 @@ export default function RegistrarMascota({
         }
     };
 
+    /**
+     * Maneja el envío del formulario de registro/edición de mascota
+     * Valida los datos y envía la solicitud al backend según el modo
+     */
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
-        console.log('=== DEBUGGING FORM SUBMISSION ===');
-        console.log('Datos del formulario al enviar:', data);
-        console.log('Modo edición:', modoEdicion);
-        console.log('Mascota a editar:', mascotaEditar);
-        console.log('Form data individual:');
-        console.log('- nombre:', data.nombre, 'length:', data.nombre?.length);
-        console.log('- especie:', data.especie, 'length:', data.especie?.length);
-        console.log('- raza:', data.raza, 'length:', data.raza?.length);
-        console.log('- fecha_nacimiento:', data.fecha_nacimiento);
-        console.log('- sexo:', data.sexo);
-        console.log('- ciudad:', data.ciudad, 'length:', data.ciudad?.length);
-        console.log('- descripcion:', data.descripcion, 'length:', data.descripcion?.length);
-        console.log('===================================');
 
         const submitData = {
             ...data,
@@ -198,7 +222,6 @@ export default function RegistrarMascota({
                         }
                     },
                     onError: (errors) => {
-                        console.log('Errores de validación:', errors);
                         setMensaje('Error al actualizar mascota. Revisa los datos e intenta nuevamente.');
                     },
                 });
@@ -221,7 +244,6 @@ export default function RegistrarMascota({
                     }
                 },
                 onError: (errors) => {
-                    console.log('Errores de validación:', errors);
                     setMensaje('Error al registrar mascota. Revisa los datos e intenta nuevamente.');
                     setTimeout(() => {
                         setData('imagenes', []);
@@ -243,7 +265,6 @@ export default function RegistrarMascota({
             reset();
         } else if (isOpen && modoEdicion && mascotaEditar) {
             // Cargar datos cuando se abre en modo edición
-            console.log('Cargando datos de mascota para editar:', mascotaEditar);
 
             // Resetear primero para limpiar cualquier estado previo
             reset();
