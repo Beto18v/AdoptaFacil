@@ -22,15 +22,18 @@ interface Location {
 }
 
 interface MapPageProps {
-    locations: Location[];
+    locations: Location[] | null | undefined;
     totalMascotas: number;
     totalCiudades: number;
     [key: string]: unknown;
 }
 
 export default function AdoptionMap() {
-    const { locations, totalMascotas, totalCiudades } = usePage<MapPageProps>().props;
+    const { locations: rawLocations, totalMascotas, totalCiudades } = usePage<MapPageProps>().props;
     const [selectedFilter, setSelectedFilter] = useState('all');
+
+    // Asegurar que locations sea siempre un array
+    const locations = Array.isArray(rawLocations) ? rawLocations : [];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -120,7 +123,7 @@ export default function AdoptionMap() {
                                 </div>
                                 <div className="text-center">
                                     <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                                        {locations ? locations.reduce((acc, loc) => acc + loc.shelters, 0) : 0}
+                                        {Array.isArray(locations) && locations.length > 0 ? locations.reduce((acc, loc) => acc + loc.shelters, 0) : 0}
                                     </p>
                                     <p className="text-sm text-gray-600 dark:text-gray-400">Refugios activos</p>
                                 </div>

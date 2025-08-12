@@ -76,16 +76,24 @@ class MapaController extends Controller
                 ->whereNotNull('city')
                 ->get()
                 ->groupBy('city')
-                ->map(function ($shelters, $city) {
-                    $totalMascotas = $shelters->sum(function ($shelter) {
-                        return $shelter->user->mascotas->count();
-                    });
+                ->map(function ($shelters, $city) use ($especie) {
+                    $mascotas = collect();
+                    foreach ($shelters as $shelter) {
+                        $shelterMascotas = $shelter->user->mascotas;
+                        if ($especie) {
+                            $shelterMascotas = $shelterMascotas->where('especie', strtolower($especie));
+                        }
+                        $mascotas = $mascotas->merge($shelterMascotas);
+                    }
 
                     return [
                         'city' => $city,
-                        'count' => $totalMascotas,
+                        'count' => $mascotas->count(),
                         'shelters' => $shelters->count()
                     ];
+                })
+                ->filter(function ($item) {
+                    return $item['count'] > 0; // Solo mostrar ciudades con mascotas de la especie filtrada
                 })
                 ->values();
 
@@ -117,15 +125,18 @@ class MapaController extends Controller
                     'lng' => $coordinates['lng'],
                     'address' => null,
                 ];
-            });
+            })->values(); // Asegurar que sea una colección con índices secuenciales
         }
 
         // (Log temporal eliminado)
 
+        // Convertir la Collection a array para asegurar compatibilidad con JavaScript
+        $locationsArray = $locationsData->values()->toArray();
+
         return Inertia::render('Dashboard/Mapa/index', [
-            'locations' => $locationsData,
-            'totalMascotas' => $locationsData->sum('count'),
-            'totalCiudades' => $locationsData->count(),
+            'locations' => $locationsArray,
+            'totalMascotas' => is_array($locationsArray) ? array_sum(array_column($locationsArray, 'count')) : 0,
+            'totalCiudades' => is_array($locationsArray) ? count($locationsArray) : 0,
         ]);
     }
 }
