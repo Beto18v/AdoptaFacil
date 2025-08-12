@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_likes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('post_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
+        if (!Schema::hasTable('post_likes')) {
+            Schema::create('post_likes', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->foreignId('post_id')->constrained()->onDelete('cascade');
+                $table->timestamps();
 
-            // Evitar likes duplicados del mismo usuario en el mismo post
-            $table->unique(['user_id', 'post_id']);
-        });
+                // Evitar likes duplicados del mismo usuario en el mismo post
+                $table->unique(['user_id', 'post_id']);
+            });
+        }
     }
 
     /**

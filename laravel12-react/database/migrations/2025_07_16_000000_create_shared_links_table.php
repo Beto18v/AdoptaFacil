@@ -8,13 +8,15 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('shared_links', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('post_id')->constrained('posts')->onDelete('cascade');
-            $table->string('token', 32)->unique();
-            $table->timestamp('expires_at');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('shared_links')) {
+            Schema::create('shared_links', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('post_id')->constrained('posts')->onDelete('cascade');
+                $table->string('token', 32)->unique();
+                $table->timestamp('expires_at');
+                $table->timestamps();
+            });
+        }
     }
 
     public function down()

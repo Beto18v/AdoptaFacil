@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('donations', function (Blueprint $table) {
-            $table->id();
-            $table->string('donor_name');
-            $table->string('donor_email');
-            $table->decimal('amount', 10, 2);
-            $table->foreignId('shelter_id')->nullable()->constrained()->onDelete('set null');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('donations')) {
+            Schema::create('donations', function (Blueprint $table) {
+                $table->id();
+                $table->string('donor_name');
+                $table->string('donor_email');
+                $table->decimal('amount', 10, 2);
+                $table->foreignId('shelter_id')->nullable()->constrained()->onDelete('set null');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

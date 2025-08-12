@@ -11,19 +11,13 @@ mkdir -p /app/storage/framework/views
 mkdir -p /app/storage/logs
 mkdir -p /app/storage/app/public
 
-# Asignar los permisos correctos
+# Asignar los permisos correctos (muy importante)
 chmod -R 775 /app/storage
 chown -R www-data:www-data /app/storage
 
-# Revisar si la tabla shared_links existe
-echo "Checking if 'shared_links' table exists..."
-if php /app/artisan db:query "SHOW TABLES LIKE 'shared_links';" | grep -q "shared_links"; then
-    echo "'shared_links' table found. Running migrate:fresh..."
-    php /app/artisan migrate:fresh --force
-else
-    echo "'shared_links' table not found. Running normal migrate..."
-    php /app/artisan migrate --force
-fi
+# Ejecutar las migraciones de la base de datos
+echo "Running database migrations..."
+php /app/artisan migrate --force
 
 # Crear el enlace simbólico para las imágenes públicas
 echo "Linking storage..."

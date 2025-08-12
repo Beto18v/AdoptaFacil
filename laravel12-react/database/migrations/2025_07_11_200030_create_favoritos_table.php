@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('favoritos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('mascota_id')->constrained('mascotas')->onDelete('cascade');
-            $table->timestamps();
+        if (!Schema::hasTable('favoritos')) {
+            Schema::create('favoritos', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->foreignId('mascota_id')->constrained('mascotas')->onDelete('cascade');
+                $table->timestamps();
 
-            // Evitar duplicados: un usuario no puede marcar la misma mascota como favorita múltiples veces
-            $table->unique(['user_id', 'mascota_id']);
-        });
+                // Evitar duplicados: un usuario no puede marcar la misma mascota como favorita múltiples veces
+                $table->unique(['user_id', 'mascota_id']);
+            });
+        }
     }
 
     /**

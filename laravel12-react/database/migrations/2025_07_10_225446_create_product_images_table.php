@@ -11,16 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_images', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('product_id');
-            $table->string('image_path');
-            $table->integer('order')->default(1); // Para ordenar las imágenes
-            $table->timestamps();
+        if (!Schema::hasTable('product_images')) {
+            Schema::create('product_images', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('product_id');
+                $table->string('image_path');
+                $table->integer('order')->default(1); // Para ordenar las imágenes
+                $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->index(['product_id', 'order']);
-        });
+                $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+                $table->index(['product_id', 'order']);
+            });
+        }
     }
 
     /**

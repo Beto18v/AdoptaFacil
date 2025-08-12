@@ -11,18 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->string('name'); // Cambiar de 'nombre' a 'name' para consistencia
-            $table->text('description')->nullable(); // Cambiar de 'descripcion' a 'description'
-            $table->decimal('price', 10, 2); // Cambiar de 'precio' a 'price'
-            $table->integer('stock')->default(0); // Campo de stock consolidado
-            $table->string('imagen')->nullable(); // Imagen principal para compatibilidad
-            $table->unsignedBigInteger('user_id');
-            $table->timestamps();
+        if (!Schema::hasTable('products')) {
+            Schema::create('products', function (Blueprint $table) {
+                $table->id();
+                $table->string('name'); // Cambiar de 'nombre' a 'name' para consistencia
+                $table->text('description')->nullable(); // Cambiar de 'descripcion' a 'description'
+                $table->decimal('price', 10, 2); // Cambiar de 'precio' a 'price'
+                $table->integer('stock')->default(0); // Campo de stock consolidado
+                $table->string('imagen')->nullable(); // Imagen principal para compatibilidad
+                $table->unsignedBigInteger('user_id');
+                $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
     }
 
     /**
