@@ -58,7 +58,7 @@ Route::get('/', function () {
     $productos = \App\Models\Product::with('user:id,name')
         ->latest()
         ->take(3)
-        ->get(['id', 'nombre', 'descripcion', 'precio', 'imagen', 'user_id']);
+        ->get(['id', 'name', 'description', 'price', 'imagen', 'user_id']);
 
     // Todas las mascotas para cálculos de categorías (optimizado)
     $todasLasMascotas = \App\Models\Mascota::with(['user:id,name', 'images:id,mascota_id,imagen_path'])
