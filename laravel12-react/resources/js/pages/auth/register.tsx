@@ -54,7 +54,7 @@ export default function Register({ role }: { role: string }) {
                     <img src={Logo} alt="Logo" className="mx-auto mb-8 h-36 w-56" />
                 </Link>
 
-                <Head title="Register" />
+                <Head title="Registro | Adoptafacil" />
                 <form className="flex flex-col gap-6" onSubmit={submit}>
                     {/* Añade un campo oculto para el rol */}
                     <input type="hidden" value={data.role} onChange={(e) => setData('role', e.target.value)} />

@@ -55,6 +55,237 @@ interface RegistrarMascotaProps {
 }
 
 /**
+ * Constantes para las razas de perros y gatos
+ */
+const RAZAS_PERROS = [
+    'Labrador Retriever',
+    'Golden Retriever',
+    'Pastor Alemán',
+    'Bulldog Francés',
+    'Bulldog Inglés',
+    'Beagle',
+    'Poodle',
+    'Rottweiler',
+    'Yorkshire Terrier',
+    'Dachshund',
+    'Siberian Husky',
+    'Shih Tzu',
+    'Boston Terrier',
+    'Pomerania',
+    'Border Collie',
+    'Cocker Spaniel',
+    'Boxer',
+    'Chihuahua',
+    'Maltés',
+    'Schnauzer',
+    'Jack Russell Terrier',
+    'Pitbull',
+    'Akita',
+    'Doberman',
+    'San Bernardo',
+    'Mestizo',
+    'Otro',
+];
+
+const RAZAS_GATOS = [
+    'Persa',
+    'Siamés',
+    'Maine Coon',
+    'Británico de Pelo Corto',
+    'Ragdoll',
+    'Bengalí',
+    'Abisinio',
+    'Birmano',
+    'Sphynx',
+    'Scottish Fold',
+    'Russian Blue',
+    'Oriental',
+    'Devon Rex',
+    'Cornish Rex',
+    'Manx',
+    'Angora Turco',
+    'Noruego del Bosque',
+    'Exótico de Pelo Corto',
+    'Bombay',
+    'Mestizo',
+    'Criollo',
+    'Otro',
+];
+
+/**
+ * Ciudades principales de Colombia organizadas por departamentos
+ */
+const CIUDADES_COLOMBIA = [
+    // Antioquia
+    'Medellín',
+    'Bello',
+    'Itagüí',
+    'Envigado',
+    'Apartadó',
+    'Turbo',
+    'Rionegro',
+    'Sabaneta',
+    'La Estrella',
+    'Copacabana',
+
+    // Atlántico
+    'Barranquilla',
+    'Soledad',
+    'Malambo',
+    'Sabanalarga',
+    'Puerto Colombia',
+
+    // Bogotá D.C.
+    'Bogotá',
+
+    // Bolívar
+    'Cartagena',
+    'Magangué',
+    'Turbaco',
+    'Arjona',
+
+    // Boyacá
+    'Tunja',
+    'Duitama',
+    'Sogamoso',
+    'Chiquinquirá',
+
+    // Caldas
+    'Manizales',
+    'La Dorada',
+    'Chinchiná',
+    'Villamaría',
+
+    // Caquetá
+    'Florencia',
+    'San Vicente del Caguán',
+
+    // Casanare
+    'Yopal',
+    'Aguazul',
+    'Villanueva',
+
+    // Cauca
+    'Popayán',
+    'Santander de Quilichao',
+    'Puerto Tejada',
+
+    // César
+    'Valledupar',
+    'Aguachica',
+    'Codazzi',
+
+    // Chocó
+    'Quibdó',
+    'Istmina',
+
+    // Córdoba
+    'Montería',
+    'Lorica',
+    'Cereté',
+    'Sahagún',
+
+    // Cundinamarca
+    'Soacha',
+    'Girardot',
+    'Zipaquirá',
+    'Facatativá',
+    'Chía',
+    'Mosquera',
+    'Fusagasugá',
+    'Madrid',
+    'Funza',
+    'Cajicá',
+
+    // Huila
+    'Neiva',
+    'Pitalito',
+    'Garzón',
+
+    // La Guajira
+    'Riohacha',
+    'Maicao',
+    'San Juan del Cesar',
+
+    // Magdalena
+    'Santa Marta',
+    'Ciénaga',
+    'Fundación',
+
+    // Meta
+    'Villavicencio',
+    'Acacías',
+    'Granada',
+
+    // Nariño
+    'Pasto',
+    'Tumaco',
+    'Ipiales',
+
+    // Norte de Santander
+    'Cúcuta',
+    'Ocaña',
+    'Villa del Rosario',
+    'Los Patios',
+
+    // Putumayo
+    'Mocoa',
+    'Puerto Asís',
+
+    // Quindío
+    'Armenia',
+    'Calarcá',
+    'La Tebaida',
+    'Montenegro',
+
+    // Risaralda
+    'Pereira',
+    'Dosquebradas',
+    'Santa Rosa de Cabal',
+    'La Virginia',
+
+    // San Andrés y Providencia
+    'San Andrés',
+    'Providencia',
+
+    // Santander
+    'Bucaramanga',
+    'Floridablanca',
+    'Girón',
+    'Piedecuesta',
+    'Barrancabermeja',
+    'San Gil',
+    'Socorro',
+    'Málaga',
+
+    // Sucre
+    'Sincelejo',
+    'Corozal',
+
+    // Tolima
+    'Ibagué',
+    'Espinal',
+    'Melgar',
+    'Honda',
+
+    // Valle del Cauca
+    'Cali',
+    'Palmira',
+    'Buenaventura',
+    'Tulua',
+    'Cartago',
+    'Buga',
+    'Jamundí',
+    'Yumbo',
+
+    // Vaupés
+    'Mitú',
+
+    // Vichada
+    'Puerto Carreño',
+];
+
+/**
  * Componente principal con lógica optimizada de estado y efectos
  */
 export default function RegistrarMascota({
@@ -104,6 +335,17 @@ export default function RegistrarMascota({
     // Estado para verificar si el servicio de IA está disponible
     const [servicioIADisponible, setServicioIADisponible] = useState<boolean | null>(null); // eslint-disable-line @typescript-eslint/no-unused-vars
 
+    // Efecto para limpiar la raza cuando cambie la especie
+    useEffect(() => {
+        if (data.especie && data.raza) {
+            // Verificar si la raza actual es válida para la nueva especie
+            const razasDisponibles = data.especie === 'perro' ? RAZAS_PERROS : RAZAS_GATOS;
+            if (!razasDisponibles.includes(data.raza)) {
+                setData('raza', '');
+            }
+        }
+    }, [data.especie, data.raza, setData]);
+
     // Función para calcular edad basada en fecha de nacimiento
     const calcularEdad = (fechaNacimiento: string) => {
         if (!fechaNacimiento) {
@@ -119,28 +361,57 @@ export default function RegistrarMascota({
             return;
         }
 
+        // Calcular años, meses y días exactos
         let años = hoy.getFullYear() - nacimiento.getFullYear();
-        const meses = hoy.getMonth() - nacimiento.getMonth();
+        let meses = hoy.getMonth() - nacimiento.getMonth();
+        let días = hoy.getDate() - nacimiento.getDate();
 
-        if (meses < 0 || (meses === 0 && hoy.getDate() < nacimiento.getDate())) {
-            años--;
+        // Ajustar si los días son negativos
+        if (días < 0) {
+            meses--;
+            // Obtener el último día del mes anterior
+            const ultimoDiaMesAnterior = new Date(hoy.getFullYear(), hoy.getMonth(), 0).getDate();
+            días += ultimoDiaMesAnterior;
         }
 
-        // Calcular meses exactos
-        const fechaTemporal = new Date(nacimiento);
-        fechaTemporal.setFullYear(nacimiento.getFullYear() + años);
-        const mesesRestantes = Math.floor((hoy.getTime() - fechaTemporal.getTime()) / (1000 * 60 * 60 * 24 * 30.44));
+        // Ajustar si los meses son negativos
+        if (meses < 0) {
+            años--;
+            meses += 12;
+        }
+
+        // Construir el string de edad según los casos
+        const partes = [];
 
         if (años > 0) {
-            setEdadCalculada(
-                años === 1
-                    ? `1 año${mesesRestantes > 0 ? ` y ${mesesRestantes} ${mesesRestantes === 1 ? 'mes' : 'meses'}` : ''}`
-                    : `${años} años${mesesRestantes > 0 ? ` y ${mesesRestantes} ${mesesRestantes === 1 ? 'mes' : 'meses'}` : ''}`,
-            );
-        } else {
-            const mesesTotales = Math.floor((hoy.getTime() - nacimiento.getTime()) / (1000 * 60 * 60 * 24 * 30.44));
-            setEdadCalculada(mesesTotales === 1 ? '1 mes' : `${mesesTotales} meses`);
+            partes.push(años === 1 ? '1 año' : `${años} años`);
         }
+
+        if (meses > 0) {
+            partes.push(meses === 1 ? '1 mes' : `${meses} meses`);
+        }
+
+        if (días > 0) {
+            partes.push(días === 1 ? '1 día' : `${días} días`);
+        }
+
+        // Si no hay años, meses ni días (mismo día de nacimiento)
+        if (partes.length === 0) {
+            setEdadCalculada('Recién nacido');
+            return;
+        }
+
+        // Unir las partes con " y " para el último elemento y ", " para los demás
+        let edadTexto = '';
+        if (partes.length === 1) {
+            edadTexto = partes[0];
+        } else if (partes.length === 2) {
+            edadTexto = partes.join(' y ');
+        } else {
+            edadTexto = partes.slice(0, -1).join(', ') + ' y ' + partes[partes.length - 1];
+        }
+
+        setEdadCalculada(edadTexto);
     };
 
     // Cierra el modal al hacer clic fuera
@@ -396,19 +667,32 @@ export default function RegistrarMascota({
                                 <option value="perro">Perro</option>
                                 <option value="gato">Gato</option>
                             </select>
-                            {errors.especie && <p className="mt-1 text-sm text-red-600">{errors.especie}</p>}
+                            {errors.especie && <p className="mt-1 text-sm text-red-600">{errors.especie}</p>}1{' '}
                         </div>
                         {/* Campo Raza */}
                         <div>
-                            <input
+                            <select
                                 id="raza"
                                 name="raza"
-                                type="text"
                                 value={data.raza}
                                 onChange={(e) => setData('raza', e.target.value)}
-                                placeholder="Raza"
-                                className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            />
+                                disabled={!data.especie}
+                                className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-600"
+                            >
+                                <option value="">{!data.especie ? 'Agrega una especie' : 'Selecciona una raza'}</option>
+                                {data.especie === 'perro' &&
+                                    RAZAS_PERROS.map((raza) => (
+                                        <option key={raza} value={raza}>
+                                            {raza}
+                                        </option>
+                                    ))}
+                                {data.especie === 'gato' &&
+                                    RAZAS_GATOS.map((raza) => (
+                                        <option key={raza} value={raza}>
+                                            {raza}
+                                        </option>
+                                    ))}
+                            </select>
                             {errors.raza && <p className="mt-1 text-sm text-red-600">{errors.raza}</p>}
                         </div>
                     </div>
@@ -469,15 +753,20 @@ export default function RegistrarMascota({
                         </div>
                         {/* Campo Ciudad */}
                         <div>
-                            <input
+                            <select
                                 id="ciudad"
                                 name="ciudad"
-                                type="text"
                                 value={data.ciudad}
                                 onChange={(e) => setData('ciudad', e.target.value)}
-                                placeholder="Ciudad"
                                 className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            />
+                            >
+                                <option value="">Selecciona una ciudad</option>
+                                {CIUDADES_COLOMBIA.map((ciudad) => (
+                                    <option key={ciudad} value={ciudad}>
+                                        {ciudad}
+                                    </option>
+                                ))}
+                            </select>
                             {errors.ciudad && <p className="mt-1 text-sm text-red-600">{errors.ciudad}</p>}
                         </div>
                     </div>
