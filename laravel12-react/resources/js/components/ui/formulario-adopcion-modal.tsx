@@ -69,7 +69,7 @@ const FormSection = ({ title, children }: { title: string; children: React.React
 export default function FormularioAdopcionModal({ mascota, show, onClose }: FormularioAdopcionModalProps) {
     const page = usePage();
     const auth = (page.props as { auth?: { user?: { name?: string; email?: string } } }).auth;
-    
+
     // Obtener el nombre de la mascota de forma flexible
     const nombreMascota = mascota.name || mascota.nombre || 'Mascota';
 
@@ -148,7 +148,7 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
                 >
                     <X className="h-6 w-6" />
                 </button>
-                
+
                 <div className="max-h-[90vh] overflow-y-auto p-8">
                     <div className="mb-6 text-center">
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -176,25 +176,13 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
 
                             <div className="space-y-2">
                                 <Label htmlFor="cedula">Número de Cédula *</Label>
-                                <Input
-                                    id="cedula"
-                                    type="text"
-                                    value={data.cedula}
-                                    onChange={(e) => setData('cedula', e.target.value)}
-                                    required
-                                />
+                                <Input id="cedula" type="text" value={data.cedula} onChange={(e) => setData('cedula', e.target.value)} required />
                                 <InputError message={errors.cedula} />
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="email">Correo Electrónico *</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
-                                    required
-                                />
+                                <Input id="email" type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} required />
                                 <InputError message={errors.email} />
                             </div>
 
@@ -285,8 +273,8 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
                             {viviendaAlquilada && (
                                 <div className="space-y-2 md:col-span-2">
                                     <Label>¿El propietario permite mascotas? *</Label>
-                                    <RadioGroup 
-                                        value={data.permiten_mascotas_alquiler} 
+                                    <RadioGroup
+                                        value={data.permiten_mascotas_alquiler}
                                         onValueChange={(value) => setData('permiten_mascotas_alquiler', value)}
                                     >
                                         <div className="flex items-center space-x-2">
@@ -349,10 +337,7 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
 
                             <div className="space-y-2 md:col-span-2">
                                 <Label>¿Todos en la familia están de acuerdo con la adopción? *</Label>
-                                <RadioGroup 
-                                    value={data.todos_acuerdo_adopcion} 
-                                    onValueChange={(value) => setData('todos_acuerdo_adopcion', value)}
-                                >
+                                <RadioGroup value={data.todos_acuerdo_adopcion} onValueChange={(value) => setData('todos_acuerdo_adopcion', value)}>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="si" id="acuerdo_si" />
                                         <Label htmlFor="acuerdo_si">Sí</Label>
@@ -370,10 +355,7 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
                         <FormSection title="🐾 Experiencia con Mascotas">
                             <div className="space-y-2">
                                 <Label>¿Tiene otras mascotas actualmente? *</Label>
-                                <RadioGroup 
-                                    value={data.tiene_otras_mascotas} 
-                                    onValueChange={(value) => setData('tiene_otras_mascotas', value)}
-                                >
+                                <RadioGroup value={data.tiene_otras_mascotas} onValueChange={(value) => setData('tiene_otras_mascotas', value)}>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="si" id="otras_si" />
                                         <Label htmlFor="otras_si">Sí</Label>
@@ -401,10 +383,7 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
 
                             <div className="space-y-2">
                                 <Label>¿Tuvo mascotas antes? *</Label>
-                                <RadioGroup 
-                                    value={data.tuvo_mascotas_antes} 
-                                    onValueChange={(value) => setData('tuvo_mascotas_antes', value)}
-                                >
+                                <RadioGroup value={data.tuvo_mascotas_antes} onValueChange={(value) => setData('tuvo_mascotas_antes', value)}>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="si" id="tuvo_si" />
                                         <Label htmlFor="tuvo_si">Sí</Label>
@@ -440,6 +419,7 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
                                     placeholder="Comparte tus motivaciones..."
                                     value={data.porque_adopta}
                                     onChange={(e) => setData('porque_adopta', e.target.value)}
+                                    className="whitespace-pre-wrap"
                                     required
                                 />
                                 <InputError message={errors.porque_adopta} />
@@ -452,6 +432,7 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
                                     placeholder="Describe qué esperas de vivir con tu nueva mascota..."
                                     value={data.que_espera_convivencia}
                                     onChange={(e) => setData('que_espera_convivencia', e.target.value)}
+                                    className="whitespace-pre-wrap"
                                     required
                                 />
                                 <InputError message={errors.que_espera_convivencia} />
@@ -464,6 +445,7 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
                                     placeholder="Explica cómo manejarías problemas de comportamiento..."
                                     value={data.que_haria_problemas_comportamiento}
                                     onChange={(e) => setData('que_haria_problemas_comportamiento', e.target.value)}
+                                    className="whitespace-pre-wrap"
                                     required
                                 />
                                 <InputError message={errors.que_haria_problemas_comportamiento} />
@@ -471,8 +453,8 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
 
                             <div className="space-y-2">
                                 <Label>¿Aceptas visitas de seguimiento? *</Label>
-                                <RadioGroup 
-                                    value={data.acepta_visitas_seguimiento} 
+                                <RadioGroup
+                                    value={data.acepta_visitas_seguimiento}
                                     onValueChange={(value) => setData('acepta_visitas_seguimiento', value)}
                                 >
                                     <div className="flex items-center space-x-2">
@@ -531,19 +513,10 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
 
                         {/* Botones */}
                         <div className="flex flex-col gap-4 pt-6 sm:flex-row sm:justify-end">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={onClose}
-                                className="w-full sm:w-auto"
-                            >
+                            <Button type="button" variant="outline" onClick={onClose} className="w-full sm:w-auto">
                                 Cancelar
                             </Button>
-                            <Button
-                                type="submit"
-                                disabled={processing}
-                                className="w-full bg-green-600 hover:bg-green-700 sm:w-auto"
-                            >
+                            <Button type="submit" disabled={processing} className="w-full bg-green-600 hover:bg-green-700 sm:w-auto">
                                 {processing ? 'Enviando...' : 'Enviar Solicitud de Adopción'}
                             </Button>
                         </div>

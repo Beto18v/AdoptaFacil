@@ -3,8 +3,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { Heart, Pencil, ShoppingCart, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import FormularioAdopcion from './formulario-adopcion';
 
 // Tipo para items de producto/mascota
 export type CardItem = {
@@ -37,17 +35,6 @@ export default function ProductoMascotaCard({ item, onDelete, onEdit, onAction, 
     const { auth } = usePage<SharedData>().props;
     const user = auth.user;
 
-    // Control del modal de adopción
-    const [showAdoptionModal, setShowAdoptionModal] = useState(false);
-
-    // Abrir automáticamente el modal si autoOpenAdopcion es true
-    useEffect(() => {
-        if (autoOpenAdopcion) {
-            setShowAdoptionModal(true);
-            if (onAutoOpenHandled) onAutoOpenHandled();
-        }
-    }, [autoOpenAdopcion, onAutoOpenHandled]);
-
     // Determinación de roles y permisos
     const esPropietario = user.role === 'aliado' && user.id === item.user_id;
     const esAdmin = user.role === 'admin';
@@ -58,7 +45,8 @@ export default function ProductoMascotaCard({ item, onDelete, onEdit, onAction, 
     // Manejador de acción diferenciado por tipo
     const handleActionClick = () => {
         if (item.tipo === 'mascota') {
-            setShowAdoptionModal(true); // Abre el modal de adopción para mascotas
+            // Para mascotas, simplemente ejecuta la acción (puede ser abrir un modal desde el componente padre)
+            onAction(item);
         } else {
             onAction(item); // Compra directa para productos
         }
@@ -174,9 +162,6 @@ export default function ProductoMascotaCard({ item, onDelete, onEdit, onAction, 
                     </div>
                 </div>
             </div>
-
-            {/* Renderizado condicional del modal de adopción */}
-            {item.tipo === 'mascota' && <FormularioAdopcion mascota={item} show={showAdoptionModal} onClose={() => setShowAdoptionModal(false)} />}
         </>
     );
 }

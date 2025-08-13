@@ -616,18 +616,6 @@ export default function CarouselModal({ isOpen, onClose, items, initialIndex }: 
                                                     <Heart className="mr-2 h-5 w-5" />
                                                     Iniciar proceso de adopción
                                                 </Button>
-                                                <Button
-                                                    variant="outline"
-                                                    size="lg"
-                                                    className="w-full py-4"
-                                                    onClick={() => {
-                                                        // Question logic
-                                                        console.log('Asking about pet:', currentItem);
-                                                    }}
-                                                >
-                                                    <MessageCircle className="mr-2 h-4 w-4" />
-                                                    Preguntar sobre esta mascota
-                                                </Button>
                                             </>
                                         )}
                                     </div>

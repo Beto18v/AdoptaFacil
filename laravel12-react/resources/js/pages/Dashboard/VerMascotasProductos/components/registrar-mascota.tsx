@@ -667,7 +667,7 @@ export default function RegistrarMascota({
                                 <option value="perro">Perro</option>
                                 <option value="gato">Gato</option>
                             </select>
-                            {errors.especie && <p className="mt-1 text-sm text-red-600">{errors.especie}</p>}1{' '}
+                            {errors.especie && <p className="mt-1 text-sm text-red-600">{errors.especie}</p>}
                         </div>
                         {/* Campo Raza */}
                         <div>
