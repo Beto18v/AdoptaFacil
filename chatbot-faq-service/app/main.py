@@ -21,7 +21,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 app.include_router(chat.router)
+
+# Handler explícito para OPTIONS en /chat/
+from fastapi import Response
+@app.options("/chat/")
+async def chat_options():
+    return Response(status_code=204)
 
 @app.get("/")
 async def root():

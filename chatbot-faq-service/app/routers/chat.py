@@ -1,5 +1,5 @@
 # Define los endpoints relacionados con el chatbot FAQ, procesando preguntas y generando respuestas.
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from ..schemas import ChatRequest, ChatResponse
 
 router = APIRouter(prefix="/chat", tags=["chat"])
@@ -34,3 +34,8 @@ def get_chatbot_response(message: str) -> str:
 async def chat(request: ChatRequest):
     reply = get_chatbot_response(request.message)
     return ChatResponse(reply=reply)
+
+# Handler explícito para OPTIONS (preflight CORS)
+@router.options("/")
+async def chat_options():
+    return Response(status_code=204)
