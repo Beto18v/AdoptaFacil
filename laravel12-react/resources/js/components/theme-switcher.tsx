@@ -3,17 +3,24 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useAppearance } from '@/hooks/use-appearance';
 import { Monitor, Moon, Paintbrush, Sun } from 'lucide-react';
 
-export function ThemeSwitcher() {
+interface ThemeSwitcherProps {
+    hasChatbot?: boolean;
+}
+
+export function ThemeSwitcher({ hasChatbot = false }: ThemeSwitcherProps) {
     // Se desestructura updateAppearance en lugar de setTheme
     const { updateAppearance } = useAppearance();
 
     return (
-        <div className="fixed right-6 bottom-6 z-50">
+        <div className={`fixed bottom-6 z-50 ${hasChatbot ? 'right-20' : 'right-4'}`}>
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="secondary" size="icon" className="h-12 w-12 rounded-full shadow-lg">
+                    <Button
+                        variant="secondary"
+                        size="icon"
+                        className="h-12 w-12 rounded-full bg-gray-300 shadow-accent hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-700"
+                    >
                         <Paintbrush className="h-[1.5rem] w-[1.5rem] scale-100 rotate-0 transition-all" />
-                        <span className="sr-only">Cambiar tema</span>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">

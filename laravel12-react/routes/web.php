@@ -62,7 +62,7 @@ Route::get('/', function () {
 
     // Todas las mascotas para cálculos de categorías (optimizado)
     $todasLasMascotas = \App\Models\Mascota::with(['user:id,name', 'images:id,mascota_id,imagen_path'])
-        ->select('id', 'nombre', 'especie', 'raza', 'sexo', 'ciudad', 'user_id', 'created_at')
+        ->select('id', 'nombre', 'especie', 'raza', 'edad', 'descripcion', 'imagen', 'sexo', 'ciudad', 'user_id', 'created_at')
         ->latest()
         ->get();
 

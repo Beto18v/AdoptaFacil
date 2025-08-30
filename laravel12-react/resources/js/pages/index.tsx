@@ -87,11 +87,9 @@ export default function Welcome({ productos = [], mascotas = [], todasLasMascota
             .map((mascota) => ({
                 name: mascota.nombre,
                 breed: mascota.raza || mascota.especie,
-                age: `${mascota.edad} ${mascota.edad === 1 ? 'año' : 'años'}`,
+                age: mascota.edad ? `${mascota.edad} ${mascota.edad === 1 ? 'año' : 'años'}` : 'Edad no especificada',
                 description: mascota.descripcion,
-                imageUrl: mascota.imagen
-                    ? `/storage/${mascota.imagen}`
-                    : 'https://images.unsplash.com/photo-1534361960057-19889db9621e?fm=jpg&q=60&w=3000',
+                imageUrl: mascota.imagen ? `/storage/${mascota.imagen}` : 'null',
             }));
     }, [mascotas]);
 

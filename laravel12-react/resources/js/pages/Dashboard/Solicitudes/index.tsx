@@ -1,3 +1,4 @@
+import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -549,6 +550,7 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                     </div>
                 )}
             </main>
+            <ThemeSwitcher />
         </AppLayout>
     );
 }
