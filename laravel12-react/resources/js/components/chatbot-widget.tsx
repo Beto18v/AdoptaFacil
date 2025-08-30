@@ -25,7 +25,7 @@ const ChatbotWidget: React.FC = () => {
 
     const sendMessageToService = async (message: string): Promise<string> => {
         try {
-            const response = await fetch('https://chatbotaf.up.railway.app/', {
+            const response = await fetch('https://chatbotaf.up.railway.app/chat/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
