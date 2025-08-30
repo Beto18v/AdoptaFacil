@@ -29,6 +29,7 @@
  * @since 2024
  */
 
+import ChatbotWidget from '@/components/chatbot-widget';
 import Footer from '@/components/landing/footer';
 import Header from '@/components/landing/header';
 import ShelterCard from '@/components/refugio/shelter-card';
@@ -66,7 +67,8 @@ export default function Refugios() {
             </main>
 
             <Footer />
-            <ThemeSwitcher />
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
         </div>
     );
 }

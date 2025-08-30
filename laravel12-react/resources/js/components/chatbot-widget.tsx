@@ -12,6 +12,7 @@ const ChatbotWidget: React.FC = () => {
         { id: 1, text: '¡Hola! Soy tu asistente de adopciones. ¿En qué puedo ayudarte hoy? 🐶', sender: 'bot' },
     ]);
     const [inputValue, setInputValue] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
@@ -22,31 +23,56 @@ const ChatbotWidget: React.FC = () => {
         scrollToBottom();
     }, [messages]);
 
-    const handleSendMessage = () => {
-        if (inputValue.trim() === '') return;
+    const sendMessageToService = async (message: string): Promise<string> => {
+        try {
+            const response = await fetch('http://localhost:8002/chat/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message }),
+            });
 
-        const newMessage: Message = {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servicio');
+            }
+
+            const data = await response.json();
+            return data.reply;
+        } catch (error) {
+            console.error('Error al conectar con el servicio:', error);
+            return 'Lo siento, hay un problema con la conexión. Inténtalo de nuevo más tarde. 🐾';
+        }
+    };
+
+    const handleSendMessage = async () => {
+        if (inputValue.trim() === '' || isLoading) return;
+
+        const userMessage: Message = {
             id: messages.length + 1,
             text: inputValue,
             sender: 'user',
         };
 
-        setMessages((prev) => [...prev, newMessage]);
+        setMessages((prev) => [...prev, userMessage]);
         setInputValue('');
+        setIsLoading(true);
 
-        // Simular respuesta del bot
-        setTimeout(() => {
-            const botResponse: Message = {
-                id: messages.length + 2,
-                text: 'Gracias por tu mensaje. Estoy aquí para ayudarte con todo lo relacionado a adopciones. ¿Tienes alguna pregunta específica? 🐱',
-                sender: 'bot',
-            };
-            setMessages((prev) => [...prev, botResponse]);
-        }, 1000);
+        // Obtener respuesta del servicio
+        const botReply = await sendMessageToService(inputValue);
+
+        const botMessage: Message = {
+            id: messages.length + 2,
+            text: botReply,
+            sender: 'bot',
+        };
+
+        setMessages((prev) => [...prev, botMessage]);
+        setIsLoading(false);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !isLoading) {
             handleSendMessage();
         }
     };
@@ -119,6 +145,20 @@ const ChatbotWidget: React.FC = () => {
                                 )}
                             </div>
                         ))}
+                        {isLoading && (
+                            <div className="flex items-end justify-start space-x-2">
+                                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-500">
+                                    <span className="text-xs text-white">🐾</span>
+                                </div>
+                                <div className="max-w-xs rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-800 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                                    <div className="flex space-x-1">
+                                        <div className="h-2 w-2 animate-bounce rounded-full bg-gray-400"></div>
+                                        <div className="h-2 w-2 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: '0.1s' }}></div>
+                                        <div className="h-2 w-2 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: '0.2s' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                         <div ref={messagesEndRef} />
                     </div>
 
@@ -130,11 +170,21 @@ const ChatbotWidget: React.FC = () => {
                             onChange={(e) => setInputValue(e.target.value)}
                             onKeyPress={handleKeyPress}
                             placeholder="Escribe tu mensaje..."
-                            className="flex-1 rounded-l-xl border border-gray-300 px-4 py-3 transition-all focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                            disabled={isLoading}
+                            className={`flex-1 rounded-l-xl border px-4 py-3 transition-all focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                                isLoading
+                                    ? 'cursor-not-allowed border-gray-300 bg-gray-100 text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                                    : 'border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                            }`}
                         />
                         <button
                             onClick={handleSendMessage}
-                            className="rounded-r-xl bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-3 text-white transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                            disabled={isLoading}
+                            className={`rounded-r-xl px-4 py-3 text-white transition-all duration-200 ${
+                                isLoading
+                                    ? 'cursor-not-allowed bg-gray-400'
+                                    : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:scale-105 hover:shadow-lg'
+                            }`}
                         >
                             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

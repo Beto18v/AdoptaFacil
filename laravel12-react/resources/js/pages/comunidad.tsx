@@ -30,6 +30,7 @@
  * @since 2024
  */
 
+import ChatbotWidget from '@/components/chatbot-widget';
 import ComunityHero from '@/components/comunidad/comunity-hero';
 import CreatePost from '@/components/comunidad/create-post';
 import PostCard from '@/components/comunidad/post-card';
@@ -253,7 +254,8 @@ export default function Comunidad({ auth, posts: initialPosts, flash }: Comunida
             </main>
 
             <Footer />
-            <ThemeSwitcher />
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
         </div>
     );
 }

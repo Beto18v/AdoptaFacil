@@ -25,6 +25,7 @@ import { Head } from '@inertiajs/react';
 import { useMemo } from 'react';
 
 // 1. Importa los componentes de sección que acabamos de crear
+import ChatbotWidget from '@/components/chatbot-widget';
 import CategoriesSection from '@/components/landing/categories-section';
 import Footer from '@/components/landing/footer';
 import Header from '@/components/landing/header';
@@ -134,7 +135,8 @@ export default function Welcome({ productos = [], mascotas = [], todasLasMascota
             </main>
 
             <Footer />
-            <ThemeSwitcher />
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
         </>
     );
 }

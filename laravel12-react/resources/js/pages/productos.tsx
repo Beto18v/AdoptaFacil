@@ -28,6 +28,7 @@
  * @since 2024
  */
 
+import ChatbotWidget from '@/components/chatbot-widget';
 import Footer from '@/components/landing/footer';
 import Header from '@/components/landing/header';
 import ProductCard from '@/components/productos/product-card';
@@ -149,7 +150,8 @@ export default function Productos({ productos = [] }: ProductosProps) {
             </main>
 
             <Footer />
-            <ThemeSwitcher />
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
 
             <CarouselModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} items={filteredProducts} initialIndex={selectedIndex} />
         </div>

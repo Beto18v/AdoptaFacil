@@ -26,6 +26,7 @@
  * @since 2024
  */
 
+import ChatbotWidget from '@/components/chatbot-widget';
 import Footer from '@/components/landing/footer';
 import Header from '@/components/landing/header';
 import PetCard from '@/components/mascotas/pet-card';
@@ -330,7 +331,8 @@ export default function Mascotas({ mascotas = [] }: MascotasProps) {
                 </main>
 
                 <Footer />
-                <ThemeSwitcher />
+                <ThemeSwitcher hasChatbot={true} />
+                <ChatbotWidget />
                 <NotificationContainer />
 
                 <CarouselModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} items={filteredPets} initialIndex={selectedIndex} />
