@@ -13,7 +13,7 @@ def get_chatbot_response(message: str) -> str:
         (["registro", "registrar"], "Sí, el registro es completamente gratuito para todas las opciones de cuenta."),
         (["cambiar", "cuenta"], "Claro, solo necesitas completar información adicional para actualizar tu cuenta."),
         (["documento", "papeles"], "Depende del tipo de cuenta. Fundaciones deben adjuntar soporte legal."),
-        (["proceso", "adopción"], "El proceso incluye llenar un formulario, una entrevista y la firma del acuerdo de adopción."),
+        (["proceso", "adopción", "adopto", "adoptar"], "El proceso incluye llenar un formulario, una entrevista y la firma del acuerdo de adopción."),
         (["costo", "precio", "pagar"], "La adopción no tiene costo, pero pedimos cubrir vacunas y esterilización."),
         (["requisito", "necesito"], "Necesitas ser mayor de edad y completar los formularios correspondientes."),
         (["ubicación", "dónde"], "Puedes verificar donde se encuentran los refugios más cercanos registrandote y dirigiendote al apartado de mapa."),
