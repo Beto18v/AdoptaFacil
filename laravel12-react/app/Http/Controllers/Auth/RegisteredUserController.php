@@ -9,6 +9,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -72,7 +74,18 @@ class RegisteredUserController extends Controller
             ]);
         }
 
-        // 5. Iniciamos sesión y redirigimos
+        // 6. Enviar email de bienvenida al microservicio
+        try {
+            Http::post('http://localhost:8080/api/send-welcome-email', [
+                'email' => $user->email,
+                'name' => $user->name,
+            ]);
+        } catch (\Exception $e) {
+            // Log del error pero no fallar el registro
+            Log::error('Error enviando email de bienvenida: ' . $e->getMessage());
+        }
+
+        // 7. Iniciamos sesión y redirigimos
         event(new Registered($user));
         Auth::login($user);
 
