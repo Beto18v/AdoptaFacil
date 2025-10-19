@@ -30,7 +30,7 @@ interface ProductoMascotaCardProps {
     onAutoOpenHandled?: () => void;
 }
 
-export default function ProductoMascotaCard({ item, onDelete, onEdit, onAction, autoOpenAdopcion, onAutoOpenHandled }: ProductoMascotaCardProps) {
+export default function ProductoMascotaCard({ item, onDelete, onEdit, onAction }: ProductoMascotaCardProps) {
     // Obtenemos el usuario autenticado para determinar el rol
     const { auth } = usePage<SharedData>().props;
     const user = auth.user;
