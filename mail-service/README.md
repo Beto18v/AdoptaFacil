@@ -15,14 +15,20 @@ Este microservicio está integrado con el backend de Laravel para enviar emails 
 - Java 17 o superior
 - Maven 3.6+
 
+Este es un microservicio Spring Boot creado con Maven (Java 17+), que permite el envío de correos electrónicos tanto individuales (bienvenida) como masivos, integrándose fácilmente con otros sistemas como Laravel. Incluye las dependencias `spring-boot-starter-mail` y `spring-boot-starter-web`.
+
 ## Cómo ejecutar
 
 1. Clona o navega al directorio del proyecto.
 2. Ejecuta `mvn spring-boot:run` para iniciar la aplicación.
 
-## Estructura del proyecto
+## ¿Qué realiza este microservicio?
 
-- `src/main/java/com/example/demo/DemoApplication.java`: Clase principal de Spring Boot.
+- Envía **correos de bienvenida** personalizados a nuevos usuarios (integración típica con Laravel tras el registro).
+- Permite el **envío masivo de correos** personalizados a una lista de destinatarios, útil para notificaciones, campañas o avisos generales.
+- Expone endpoints REST para ambos casos, con validación y manejo de errores robusto.
+- Incluye pruebas unitarias para los servicios y controladores.
+- Soporta ejecución asíncrona para no bloquear el flujo de la aplicación.
 - `src/main/java/com/example/demo/EmailService.java`: Servicio para envío de emails.
 - `src/main/java/com/example/demo/WelcomeEmailController.java`: Controlador REST para envío de emails de bienvenida.
 - `src/main/java/com/example/demo/WelcomeEmailRequest.java`: DTO para solicitudes de email de bienvenida.
@@ -54,10 +60,42 @@ Envía un email de bienvenida personalizado.
 }
 ```
 
+### POST `/api/send-bulk-email`
+
+Envía un correo masivo personalizado a una lista de destinatarios.
+
+**Request Body:**
+
+```json
+{
+  "emails": ["correo1@dominio.com", "correo2@dominio.com"],
+  "subject": "Asunto del correo",
+  "description": "Mensaje o contenido del correo"
+}
+```
+
+```
+**Response:**
+
+- 200 OK: "Correos masivos enviados exitosamente a N destinatarios"
+- 400 Bad Request: Error en la solicitud
+- 500 Internal Server Error: Error al enviar los correos
+
+```
+
 **Response:**
 
 - 200 OK: "Email de bienvenida enviado exitosamente a usuario@email.com"
-- 400 Bad Request: Error en la solicitud
+
+## Servicios y clases principales
+
+- **EmailService**
+  - `sendWelcomeEmail(WelcomeEmailRequest request)`: Envía un email de bienvenida personalizado (HTML, con logo y botón de acción).
+  - `sendBulkEmail(BulkEmailRequest request)`: Envía un correo masivo a una lista de destinatarios, con asunto y mensaje personalizados.
+- **WelcomeEmailController**: Expone el endpoint `/api/send-welcome-email`.
+- **BulkEmailController**: Expone el endpoint `/api/send-bulk-email`.
+- **WelcomeEmailRequest**: DTO para solicitudes de bienvenida (`email`, `name`).
+- **BulkEmailRequest**: DTO para solicitudes masivas (`emails` [array], `subject`, `description`).
 - 500 Internal Server Error: Error al enviar el email
 
 ## Servicios disponibles
@@ -65,8 +103,7 @@ Envía un email de bienvenida personalizado.
 ### EmailService
 
 - `sendWelcomeEmail(WelcomeEmailRequest request)`: Envía un email de bienvenida personalizado al destinatario especificado.
-
-## Tests unitarios
+- `sendBulkEmail_ShouldSendToMultipleRecipients`: Verifica que el envío masivo funciona para todos los destinatarios.
 
 Se han implementado tests unitarios usando JUnit 5 y Mockito:
 
@@ -79,21 +116,11 @@ Se han implementado tests unitarios usando JUnit 5 y Mockito:
 
 Los tests del controlador están implementados pero requieren Mockito compatible con Java 24. Actualmente fallan debido a limitaciones de Byte Buddy (versión 1.14.10 soporta hasta Java 22).
 
-**Nota sobre compatibilidad:** Si encuentras errores con Mockito en Java 24, considera:
-
-- Actualizar Byte Buddy a una versión compatible
 - Usar Java 17 o 21 para desarrollo/testing
 - Configurar `-Dnet.bytebuddy.experimental=true` como propiedad JVM
 
-## Configuración SMTP
-
-## Configuración SMTP
-
 Configura las siguientes variables de entorno antes de ejecutar:
 
-- `MAIL_HOST`: Servidor SMTP (ej: smtp.gmail.com)
-- `MAIL_PORT`: Puerto SMTP (ej: 587)
-- `MAIL_USERNAME`: Usuario del correo
 - `MAIL_PASSWORD`: Contraseña o contraseña de aplicación
 
 ## Dependencias
@@ -108,7 +135,6 @@ Este proyecto incluye pruebas unitarias implementadas con **JUnit 5** y **Mockit
 
 ### ¿Qué herramientas se usan y por qué?
 
-- **JUnit 5**: Permite definir y ejecutar pruebas automatizadas en Java.
 - **Mockito**: Permite simular dependencias externas (como el envío de emails) para probar los componentes de forma aislada, sin efectos secundarios.
 
 ### ¿Cómo funcionan los tests?

@@ -6,11 +6,13 @@ interface PetCardProps {
     breed: string;
     age: string;
     description: string;
-    imageUrl: string;
+    imageUrl: string | null;
 }
 
 export default function PetCard({ name, breed, age, description, imageUrl }: PetCardProps) {
-    const [imageSrc, setImageSrc] = useState(imageUrl);
+    const [imageSrc, setImageSrc] = useState(
+        imageUrl || 'https://images.unsplash.com/photo-1598133894005-6d5c4b6f634d?auto=format&fit=crop&w=800&q=60',
+    );
     const defaultImage = 'https://images.unsplash.com/photo-1598133894005-6d5c4b6f634d?auto=format&fit=crop&w=800&q=60';
     const handleImageError = () => {
         setImageSrc(defaultImage);

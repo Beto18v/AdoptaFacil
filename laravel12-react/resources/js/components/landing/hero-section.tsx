@@ -2,8 +2,8 @@ export default function HeroSection() {
     return (
         <section className="relative bg-gradient-to-r from-green-400 to-blue-500 py-20 pt-35 dark:from-green-600 dark:to-blue-700">
             <div className="container mx-auto px-4 text-center">
-                <h2 className="mb-6 text-4xl font-bold">Encuentra a tu nuevo mejor amigo</h2>
-                <p className="mx-auto mb-8 max-w-2xl text-xl">Conectamos a mascotas necesitadas con hogares amorosos desde 2025</p>
+                <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">Encuentra a tu nuevo mejor amigo</h1>
+                <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-200">Conectamos a mascotas necesitadas con hogares amorosos desde 2025</p>
 
                 <form className="mx-auto flex max-w-2xl flex-col space-y-2 rounded-xl bg-white p-2 shadow-xl sm:flex-row sm:space-y-0 dark:bg-gray-800">
                     <input

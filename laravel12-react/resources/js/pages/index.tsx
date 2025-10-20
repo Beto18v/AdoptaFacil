@@ -90,7 +90,7 @@ export default function Welcome({ productos = [], mascotas = [], todasLasMascota
                 breed: mascota.raza || mascota.especie,
                 age: mascota.edad ? `${mascota.edad} ${mascota.edad === 1 ? 'año' : 'años'}` : 'Edad no especificada',
                 description: mascota.descripcion,
-                imageUrl: mascota.imagen ? `/storage/${mascota.imagen}` : 'null',
+                imageUrl: mascota.imagen ? `/storage/${mascota.imagen}` : null,
             }));
     }, [mascotas]);
 

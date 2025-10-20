@@ -7,7 +7,7 @@ interface Pet {
     breed: string;
     age: string;
     description: string;
-    imageUrl: string;
+    imageUrl: string | null;
 }
 
 export default function PetsSection({ pets }: { pets: Pet[] }) {
