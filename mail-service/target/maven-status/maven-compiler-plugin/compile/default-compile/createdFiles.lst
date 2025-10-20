@@ -1,4 +1,4 @@
-com\example\demo\WelcomeEmailRequest.class
 com\example\demo\DemoApplication.class
+com\example\demo\WelcomeEmailRequest.class
 com\example\demo\EmailService.class
 com\example\demo\WelcomeEmailController.class
