@@ -283,11 +283,11 @@ export default function GestionUsuarios() {
                         </div>
                     </div>
 
-                    <div className="rounded-lg bg-white/90 shadow-xl backdrop-blur-sm dark:bg-gray-800/90">
+                    <div className="overflow-hidden rounded-lg bg-white/90 shadow-xl backdrop-blur-sm dark:bg-gray-800/90">
                         <Table>
                             <TableHeader>
                                 <TableRow className="bg-gray-50/50 dark:bg-gray-700/50">
-                                    <TableHead className="w-12">
+                                    <TableHead className="w-12 rounded-tl-lg">
                                         <Checkbox
                                             checked={selectedUsers.length === filteredUsers.length && filteredUsers.length > 0}
                                             onCheckedChange={handleSelectAll}
@@ -297,7 +297,7 @@ export default function GestionUsuarios() {
                                     <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Nombre</TableHead>
                                     <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Email</TableHead>
                                     <TableHead className="font-semibold text-gray-900 dark:text-gray-100">Rol</TableHead>
-                                    <TableHead className="w-32 font-semibold text-gray-900 dark:text-gray-100">Acciones</TableHead>
+                                    <TableHead className="w-32 rounded-tr-lg font-semibold text-gray-900 dark:text-gray-100">Acciones</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
