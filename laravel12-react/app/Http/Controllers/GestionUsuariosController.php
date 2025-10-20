@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class GestionUsuariosController extends Controller
@@ -43,10 +44,11 @@ class GestionUsuariosController extends Controller
             abort(403, 'Acceso denegado');
         }
 
+        // Validar campos. La regla unique se limita a usuarios que NO están soft-deleted
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
+                'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->whereNull('deleted_at')],
                 'password' => 'required|string|min:8',
                 'role' => 'required|in:cliente,aliado,admin',
             ]);
@@ -55,12 +57,29 @@ class GestionUsuariosController extends Controller
             throw $e;
         }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => $request->role,
-        ]);
+        // Si existe un usuario soft-deleted con el mismo email, lo restauramos y actualizamos
+        $trashed = User::withTrashed()->where('email', $request->email)->first();
+        if ($trashed && $trashed->trashed()) {
+            Log::info('Usuario soft-deleted encontrado. Restaurando en lugar de crear uno nuevo.', ['email' => $request->email, 'trashed_id' => $trashed->id]);
+
+            $trashed->restore();
+            $trashed->update([
+                'name' => $request->name,
+                'password' => bcrypt($request->password),
+                'role' => $request->role,
+            ]);
+
+            $user = $trashed;
+            Log::info('Usuario restaurado y actualizado:', ['user_id' => $user->id, 'email' => $user->email]);
+        } else {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'role' => $request->role,
+            ]);
+            Log::info('Usuario creado exitosamente:', ['user_id' => $user->id, 'email' => $user->email]);
+        }
 
         Log::info('Usuario creado exitosamente:', ['user_id' => $user->id, 'email' => $user->email]);
 
@@ -94,7 +113,7 @@ class GestionUsuariosController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)->whereNull('deleted_at')],
             'role' => 'required|in:cliente,aliado,admin',
         ]);
 
