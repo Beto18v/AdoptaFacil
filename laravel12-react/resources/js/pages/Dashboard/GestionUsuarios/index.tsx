@@ -21,7 +21,7 @@ type User = {
 };
 
 export default function GestionUsuarios() {
-    const { usuarios } = usePage<{ usuarios: User[] }>().props;
+    const { usuarios, errors } = usePage<{ usuarios: User[]; errors?: Record<string, string> }>().props;
     const [filterRole, setFilterRole] = useState<string>('all');
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -131,6 +131,7 @@ export default function GestionUsuarios() {
                                             onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
                                             className="col-span-3"
                                         />
+                                        {errors?.name && <p className="col-span-3 col-start-2 text-sm text-red-500">{errors.name}</p>}
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="email" className="text-right">
@@ -143,6 +144,7 @@ export default function GestionUsuarios() {
                                             onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                                             className="col-span-3"
                                         />
+                                        {errors?.email && <p className="col-span-3 col-start-2 text-sm text-red-500">{errors.email}</p>}
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="password" className="text-right">
@@ -155,6 +157,7 @@ export default function GestionUsuarios() {
                                             onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                                             className="col-span-3"
                                         />
+                                        {errors?.password && <p className="col-span-3 col-start-2 text-sm text-red-500">{errors.password}</p>}
                                     </div>
                                     <div className="grid grid-cols-4 items-center gap-4">
                                         <Label htmlFor="role" className="text-right">
@@ -170,6 +173,7 @@ export default function GestionUsuarios() {
                                                 <SelectItem value="admin">Admin</SelectItem>
                                             </SelectContent>
                                         </Select>
+                                        {errors?.role && <p className="col-span-3 col-start-2 text-sm text-red-500">{errors.role}</p>}
                                     </div>
                                 </div>
                                 <div className="flex justify-end gap-2">
