@@ -86,24 +86,42 @@ export default function GestionUsuarios() {
         }
     };
 
-    const handleSendBulkEmail = () => {
-        router.post(
-            route('gestion.usuarios.send-bulk-email'),
-            {
-                user_ids: selectedUsers,
-                additional_recipients: additionalRecipients,
-                subject: emailSubject,
-                description: emailDescription,
-            },
-            {
-                onSuccess: () => {
-                    setIsEmailModalOpen(false);
-                    setEmailSubject('');
-                    setEmailDescription('');
-                    setAdditionalRecipients([]);
+    const handleSendBulkEmail = async () => {
+        const selectedEmails = selectedUsers
+            .map((userId) => {
+                const user = usuarios.find((u) => u.id === userId);
+                return user ? user.email : null;
+            })
+            .filter((email) => email !== null);
+
+        const allEmails = [...selectedEmails, ...additionalRecipients];
+
+        try {
+            const response = await fetch('http://localhost:8080/api/send-bulk-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-            },
-        );
+                body: JSON.stringify({
+                    emails: allEmails,
+                    subject: emailSubject,
+                    description: emailDescription,
+                }),
+            });
+
+            if (response.ok) {
+                alert('Correos enviados exitosamente');
+                setIsEmailModalOpen(false);
+                setEmailSubject('');
+                setEmailDescription('');
+                setAdditionalRecipients([]);
+            } else {
+                const errorText = await response.text();
+                alert('Error al enviar correos: ' + errorText);
+            }
+        } catch (error) {
+            alert('Error de conexión: ' + (error as Error).message);
+        }
     };
 
     const generateEmailHTML = (subject: string, description: string) => {

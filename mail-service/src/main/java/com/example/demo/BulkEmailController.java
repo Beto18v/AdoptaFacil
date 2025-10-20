@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,26 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class WelcomeEmailController {
+@RequestMapping("/api")
+public class BulkEmailController {
 
     @Autowired
     private EmailService emailService;
 
-    @GetMapping("/health")
-    public ResponseEntity<String> health() {
-        return ResponseEntity.ok("Microservicio funcionando correctamente");
-    }
-
-    @PostMapping("/send-welcome-email")
-    public ResponseEntity<String> sendWelcomeEmail(@Valid @RequestBody WelcomeEmailRequest request) {
+    @PostMapping("/send-bulk-email")
+    public ResponseEntity<String> sendBulkEmail(@Valid @RequestBody BulkEmailRequest request) {
         try {
-            emailService.sendWelcomeEmail(request);
-            return ResponseEntity.ok("Email de bienvenida enviado exitosamente a " + request.getEmail());
+            emailService.sendBulkEmail(request);
+            return ResponseEntity.ok("Correos masivos enviados exitosamente a " + request.getEmails().size() + " destinatarios");
         } catch (MailException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al enviar el email: " + e.getMessage());
+                    .body("Error al enviar los correos: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Solicitud inválida: " + e.getMessage());
