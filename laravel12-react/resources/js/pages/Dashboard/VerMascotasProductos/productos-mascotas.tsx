@@ -272,7 +272,7 @@ export default function ProductosMascotas() {
                 setModoEdicion(true);
                 setProductoModalOpen(true);
             }
-        } catch (error) {
+        } catch {
             // Fallback a datos básicos en caso de error
             if (item.tipo === 'mascota') {
                 setMascotaEditando(item);
@@ -297,7 +297,7 @@ export default function ProductosMascotas() {
             router.delete(deleteUrl, {
                 preserveScroll: true,
                 onSuccess: () => mostrarMensaje(`"${item.nombre}" ha sido eliminado.`),
-                onError: (errors) => {
+                onError: () => {
                     mostrarMensaje('No se pudo eliminar el ítem.');
                 },
             });
