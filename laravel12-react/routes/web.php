@@ -36,7 +36,8 @@ use App\Http\Controllers\{
     DashboardController,
     DonacionesController,
     MapaController,
-    EstadisticasController
+    EstadisticasController,
+    GestionUsuariosController
 };
 
 /*
@@ -161,6 +162,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
      * Punto de entrada principal para usuarios autenticados
      */
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    /**
+     * Gestión de usuarios (solo para admin)
+     */
+    Route::get('gestion-usuarios', [GestionUsuariosController::class, 'index'])->name('gestion.usuarios');
+    Route::post('gestion-usuarios', [GestionUsuariosController::class, 'store'])->name('gestion.usuarios.store');
+    Route::put('gestion-usuarios/{user}', [GestionUsuariosController::class, 'update'])->name('gestion.usuarios.update');
+    Route::delete('gestion-usuarios/{user}', [GestionUsuariosController::class, 'destroy'])->name('gestion.usuarios.destroy');
+    Route::post('gestion-usuarios/send-bulk-email', [GestionUsuariosController::class, 'sendBulkEmail'])->name('gestion.usuarios.send-bulk-email');
 
     /*
     |--------------------------------------------------------------------------

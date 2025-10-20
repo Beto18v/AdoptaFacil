@@ -3,7 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { BadgeDollarSign, BellRing, BookHeart, ChartSpline, LayoutGrid, MapPinned } from 'lucide-react';
+import { BadgeDollarSign, BellRing, BookHeart, ChartSpline, LayoutGrid, MapPinned, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 export function AppSidebar() {
@@ -63,6 +63,14 @@ export function AppSidebar() {
     } else {
         // Lógica para otros roles (El admin ve todo)
         finalNavItems = baseNavItems;
+        // Agregar Gestión de Usuarios solo para admin
+        if (user.role === 'admin') {
+            finalNavItems.push({
+                title: 'Gestión de Usuarios',
+                href: '/gestion-usuarios',
+                icon: Users,
+            });
+        }
     }
 
     return (
