@@ -6,6 +6,18 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+/**
+ * DatabaseSeeder - Orquestador principal de todos los seeders
+ *
+ * Este seeder coordina la ejecución de todos los seeders del sistema en el orden correcto:
+ * 1. UserSeeder - Crea usuarios base del sistema
+ * 2. ShelterSeeder - Crea refugios y mascotas
+ * 3. ProductSeeder - Crea productos para la tienda
+ * 4. PostSeeder - Crea publicaciones de comunidad
+ * 5. DashboardDataSeeder - Crea datos para métricas del dashboard
+ *
+ * El orden es importante debido a las dependencias entre modelos.
+ */
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -13,26 +25,29 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Ejecutar el seeder de usuarios primero
+        $this->call([
+            UserSeeder::class,
         ]);
 
-        User::factory()->create([
-            'name' => 'Fundación Huellitas Felices',
-            'email' => 'huellitas@example.com',
+        // Ejecutar el seeder de refugios y mascotas
+        $this->call([
+            ShelterSeeder::class,
         ]);
 
-        User::factory()->create([
-            'name' => 'Veterinaria El Arca',
-            'email' => 'elarca@example.com',
+        // Ejecutar el seeder de productos
+        $this->call([
+            ProductSeeder::class,
         ]);
 
         // Ejecutar el seeder de posts
         $this->call([
             PostSeeder::class,
+        ]);
+
+        // Ejecutar el seeder de datos del dashboard
+        $this->call([
+            DashboardDataSeeder::class,
         ]);
     }
 }
