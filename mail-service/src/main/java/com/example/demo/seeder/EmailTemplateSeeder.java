@@ -142,7 +142,7 @@ public class EmailTemplateSeeder implements CommandLineRunner {
                         "<p class=\"message\">Hola {{name}},<br>Hemos recibido una solicitud para restablecer tu contraseña.</p>" +
                         "<div class=\"token-box\">{{token}}</div>" +
                         "<p class=\"message\">Usa este código para crear una nueva contraseña. El código expira en 15 minutos.</p>" +
-                        "<a href=\"https://adoptafacil.com/reset-password?token={{token}}\" class=\"cta-button\">Restablecer Contraseña</a>" +
+                        "<a href=\"{{resetLink}}\" class=\"cta-button\">Restablecer Contraseña</a>" +
                         "<div class=\"warning\">" +
                             "<strong>Importante:</strong> Si no solicitaste este cambio, ignora este mensaje. Tu contraseña seguirá siendo segura." +
                         "</div>" +

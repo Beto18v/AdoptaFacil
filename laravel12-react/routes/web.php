@@ -21,6 +21,7 @@
  * @since 2024
  */
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -307,6 +308,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 | - settings.php: Configuraciones de perfil y cuenta de usuario
 | - auth.php: Rutas de autenticación (login, registro, verificación, etc.)
 */
+
+// Rutas personalizadas para recuperación de contraseña (React/Inertia)
+Route::middleware('guest')->group(function () {
+    Route::get('/auth/forgot-password', function () {
+        return Inertia::render('auth/forgot-password');
+    })->name('auth.forgot-password');
+
+    Route::get('/auth/reset-password/{email?}', function (Request $request, $email = null) {
+        return Inertia::render('auth/reset-password', [
+            'email' => $email
+        ]);
+    })->name('auth.reset-password');
+});
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

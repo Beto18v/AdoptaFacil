@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DescripcionMascotaController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +26,16 @@ Route::prefix('descripciones')->group(function () {
     Route::get('/verificar-servicio', [DescripcionMascotaController::class, 'verificarServicio']);
 });
 
+// Rutas para gestión de usuarios (para integración con Spring Boot)
+Route::prefix('users')->group(function () {
+    Route::post('/validate-email', [UserController::class, 'validateEmail']);
+    Route::post('/reset-password', [UserController::class, 'resetPassword']);
+});
+
 /*
 Endpoints disponibles:
 - POST /api/descripciones/generar
 - GET /api/descripciones/verificar-servicio
+- POST /api/users/validate-email
+- POST /api/users/reset-password
 */

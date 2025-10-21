@@ -38,6 +38,12 @@ public class RecoveryEmailStrategy implements EmailStrategy {
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("name", recoveryRequest.getName());
         placeholders.put("token", recoveryRequest.getToken());
+        placeholders.put("email", recoveryRequest.getEmail());
+        
+        // Construir el enlace de restablecimiento
+        String encodedEmail = java.net.URLEncoder.encode(recoveryRequest.getEmail(), java.nio.charset.StandardCharsets.UTF_8);
+        String resetLink = "http://127.0.0.1:8000/auth/reset-password/" + encodedEmail;
+        placeholders.put("resetLink", resetLink);
 
         // Procesar plantilla con placeholders
         String htmlContent = templateService.processTemplate(EmailTemplateType.RECOVERY, placeholders);
