@@ -1,22 +1,26 @@
-package com.example.demo;
+package com.example.demo.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public class WelcomeEmailRequest {
+public class NotificationEmailRequest implements EmailRequest {
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "El email debe tener un formato válido")
     private String email;
-    
+
     @NotBlank(message = "El nombre es obligatorio")
     private String name;
 
-    public WelcomeEmailRequest() {
+    @NotBlank(message = "El mensaje es obligatorio")
+    private String message;
+
+    public NotificationEmailRequest() {
     }
 
-    public WelcomeEmailRequest(String email, String name) {
+    public NotificationEmailRequest(String email, String name, String message) {
         this.email = email;
         this.name = name;
+        this.message = message;
     }
 
     public String getEmail() {
@@ -33,5 +37,13 @@ public class WelcomeEmailRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

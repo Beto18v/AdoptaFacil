@@ -1,4 +1,5 @@
+com\example\demo\controller\WelcomeEmailControllerTest$1.class
+com\example\demo\controller\WelcomeEmailControllerTest.class
 com\example\demo\DemoApplicationTests.class
-com\example\demo\EmailServiceTest.class
-com\example\demo\WelcomeEmailControllerTest$1.class
-com\example\demo\WelcomeEmailControllerTest.class
+com\example\demo\service\EmailServiceTest.class
+com\example\demo\strategy\WelcomeEmailStrategyTest.class

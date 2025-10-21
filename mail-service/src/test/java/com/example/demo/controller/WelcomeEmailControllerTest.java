@@ -1,5 +1,7 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.dto.WelcomeEmailRequest;
+import com.example.demo.service.EmailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,7 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.dto.RecoveryEmailRequest;
+import com.example.demo.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,19 +16,19 @@ import jakarta.validation.Valid;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api")
-public class BulkEmailController {
+public class RecoveryEmailController {
 
     @Autowired
     private EmailService emailService;
 
-    @PostMapping("/send-bulk-email")
-    public ResponseEntity<String> sendBulkEmail(@Valid @RequestBody BulkEmailRequest request) {
+    @PostMapping("/send-recovery-email")
+    public ResponseEntity<String> sendRecoveryEmail(@Valid @RequestBody RecoveryEmailRequest request) {
         try {
-            emailService.sendBulkEmail(request);
-            return ResponseEntity.ok("Correos masivos enviados exitosamente a " + request.getEmails().size() + " destinatarios");
+            emailService.sendRecoveryEmail(request);
+            return ResponseEntity.ok("Email de recuperación enviado exitosamente a " + request.getEmail());
         } catch (MailException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al enviar los correos: " + e.getMessage());
+                    .body("Error al enviar el email: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Solicitud inválida: " + e.getMessage());
