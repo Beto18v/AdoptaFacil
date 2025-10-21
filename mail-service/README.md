@@ -2,6 +2,23 @@
 
 Este es un proyecto Spring Boot creado con Maven, utilizando Java 17+. Incluye las dependencias `spring-boot-starter-mail` y `spring-boot-starter-web`.
 
+## 📚 Documentación
+
+### Patrón Strategy Implementado
+
+Este servicio utiliza el **Patrón Strategy** para manejar diferentes tipos de emails de manera modular y extensible. Para más detalles sobre la implementación, arquitectura y ejemplos de uso, consulta:
+
+**[📖 Documentación del Patrón Strategy](STRATEGY_PATTERN_DOCUMENTATION.md)**
+
+Esta documentación incluye:
+
+- Descripción completa del patrón Strategy
+- Estructura implementada (interfaces, estrategias concretas, contexto)
+- Flujo de ejecución y ejemplos de uso
+- Guía para agregar nuevas estrategias
+- Comparación con enfoque monolítico
+- Configuración y mejores prácticas
+
 ## Integración con Laravel
 
 Este microservicio está integrado con el backend de Laravel para enviar emails de bienvenida automáticamente cuando un usuario se registra.
