@@ -1,42 +1,33 @@
-# 🚀 MICROSERVICIO DE DESCRIPCIONES DE MASCOTAS##
 
-Este microservicio FastAPI genera descripciones emocionales para mascotas en adopción utilizando la API de Groq AI.
+# Pet Detail Service – Documentación Técnica
 
-## 🚀 Características
+Este microservicio, desarrollado con FastAPI (Python 3.8+), genera descripciones emocionales para mascotas en adopción usando la API de Groq AI. Está preparado para integrarse fácilmente con Laravel y React.
 
-- **API REST** con FastAPI
-- **Integración con Groq AI** para generar descripciones emotivas
-- **CORS configurado** para integración con Laravel
-- **Manejo de errores**
-- **Logging** detallado
-- **Validación de datos** con Pydantic
-- **Scripts de inicio automatizados** para Windows y Linux/Mac
-- **Integración completa** con Laravel y React
-- **Docker support** para containerización
+## Características principales
 
-## � Estructura del Proyecto
+- API REST robusta y validada (FastAPI)
+- Integración con Groq AI para descripciones emotivas
+- CORS configurable para integración multiplataforma
+- Logging detallado y manejo de errores
+- Validación de datos con Pydantic
+- Scripts de inicio para Windows y Linux/Mac
+- Integración lista para Laravel y React
+- Soporte Docker y Docker Compose
+
+## Estructura del Proyecto
 
 ```
-faq-service/
-├── main.py                     # Aplicación principal FastAPI
-├── config.py                   # Configuración avanzada
-├── requirements.txt            # Dependencias de Python
-├── Dockerfile                  # Para containerización
-├── docker-compose.yml         # Orquestación con Docker
-├── .env.example               # Plantilla de variables de entorno
-├── .gitignore                 # Archivos a ignorar en Git
-├── README.md                  # Documentación completa
-├── test_service.py            # Script de pruebas
-├── start.sh                   # Script de inicio para Linux/Mac
-├── start.bat                  # Script de inicio para Windows
-├── INTEGRACION_GUIA.js        # Guía de integración detallada
-├── laravel-integration/       # Archivos para Laravel
-│   ├── DescripcionMascotaController.php
-│   ├── api-routes.php
-│   └── laravel-env.txt
-└── react-integration/         # Archivos para React
-    ├── useDescripcionIA.ts
-    └── GeneradorDescripcion.tsx
+pet-detail-service/
+├── main.py                  # Aplicación principal FastAPI
+├── config.py                # Configuración avanzada
+├── requirements.txt         # Dependencias de Python
+├── Dockerfile               # Containerización
+├── docker-compose.yml       # Orquestación
+├── .env.example             # Variables de entorno
+├── test_service.py          # Pruebas automatizadas
+├── start.sh / start.bat     # Scripts de inicio
+├── laravel-integration/     # Integración Laravel
+└── react-integration/       # Integración React
 ```
 
 ## �📋 Requisitos
@@ -93,7 +84,8 @@ cp .env.example .env
 # Editar .env y agregar la GROQ_API_KEY
 ```
 
-## 🏃‍♂️ Ejecutar el servicio
+
+## Ejecución y desarrollo
 
 ### Desarrollo
 
@@ -109,7 +101,8 @@ uvicorn main:app --host 0.0.0.0 --port 8001
 
 El servicio estará disponible en: `http://localhost:8001`
 
-## 📖 API Endpoints
+
+## Endpoints principales
 
 ### GET /
 
@@ -144,7 +137,8 @@ Genera una descripción emocional para una mascota
 }
 ```
 
-## � INTEGRACIÓN CON LARAVEL
+
+## Integración con Laravel
 
 ### Controlador
 
@@ -200,7 +194,8 @@ $data = json_decode($response->getBody(), true);
 $descripcion = $data['descripcion'];
 ```
 
-## ⚛️ INTEGRACIÓN CON REACT
+
+## Integración con React
 
 ### Hook Personalizado
 
@@ -229,7 +224,8 @@ const { generarDescripcionAutomatica, generandoDescripcion, error } =
 }
 ```
 
-## 🐳 Docker
+
+## Docker y despliegue
 
 ### Desarrollo
 
@@ -260,7 +256,8 @@ docker-compose up
 docker-compose -f docker-compose.prod.yml up -d
 ```
 
-## 🧪 PRUEBAS
+
+## Pruebas
 
 ### Pruebas Automatizadas
 
@@ -278,7 +275,8 @@ curl -X POST http://localhost:8001/generar-descripcion \
   -d '{"nombre":"Max","especie":"Perro","raza":"Labrador","personalidad":"Juguetón","salud":"Perfecto","observaciones":"Ama a los niños"}'
 ```
 
-## 📝 Logs y Monitoreo
+
+## Logs y monitoreo
 
 Los logs se muestran en la consola durante la ejecución. Incluyen:
 
@@ -304,7 +302,8 @@ tail -f logs/app.log
 3. Revisar logs de errores
 4. Probar con test_service.py
 
-## 🔧 CONFIGURACIÓN AVANZADA
+
+## Configuración avanzada
 
 ### Variables de Entorno Disponibles
 
@@ -326,7 +325,8 @@ LOG_LEVEL=INFO
 ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8000
 ```
 
-## 🛠️ Desarrollo
+
+## Desarrollo y extensión
 
 Para agregar nuevas funcionalidades:
 
@@ -335,7 +335,8 @@ Para agregar nuevas funcionalidades:
 3. **Agregar validaciones** en los modelos Pydantic
 4. **Extender endpoints** según necesidades
 
-## ⚠️ Consideraciones de Producción
+
+## Consideraciones de producción
 
 ### Seguridad
 
@@ -365,7 +366,8 @@ Para agregar nuevas funcionalidades:
 4. **Scaling**: Usar múltiples instancias
 5. **Security**: Restringir CORS a dominios específicos
 
-## 🎯 RESULTADOS ESPERADOS
+
+## Resultados esperados
 
 ✅ **Microservicio funcionando** en puerto 8001  
 ✅ **Laravel integrado** con endpoints de API  
@@ -373,7 +375,8 @@ Para agregar nuevas funcionalidades:
 ✅ **Descripciones emotivas** generadas automáticamente  
 ✅ **Formulario mejorado** con funcionalidad de IA
 
-## 📞 SOPORTE Y TROUBLESHOOTING
+
+## Soporte y troubleshooting
 
 ### Estados del Servicio
 
@@ -388,7 +391,8 @@ Para agregar nuevas funcionalidades:
 3. **CORS error**: Configurar ALLOWED_ORIGINS
 4. **Timeout**: Ajustar timeouts en config.py
 
-## 📝 PRÓXIMOS PASOS
+
+## Próximos pasos
 
 1. Ejecutar `start.bat` en faq-service
 2. Configurar GROQ_API_KEY
@@ -396,4 +400,8 @@ Para agregar nuevas funcionalidades:
 4. Integrar hook de React en registrar-mascota.tsx
 5. Probar funcionalidad completa
 
+
+---
 **¡El microservicio está listo para generar descripciones emocionales de mascotas! 🐶🐱✨**
+
+**Última actualización:** Octubre 2025

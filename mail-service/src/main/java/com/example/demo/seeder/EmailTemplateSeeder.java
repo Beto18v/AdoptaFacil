@@ -27,13 +27,11 @@ public class EmailTemplateSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        logger.info("Iniciando seeding de plantillas de email...");
-
         seedWelcomeTemplate();
         seedRecoveryTemplate();
         seedNotificationTemplate();
 
-        logger.info("Seeding completado. Plantillas activas: {}",
+        logger.info("Seeding completado. Plantillas activas: {} ",
                    templateService.getActiveTemplateCount());
     }
 
@@ -42,7 +40,6 @@ public class EmailTemplateSeeder implements CommandLineRunner {
      */
     private void seedWelcomeTemplate() {
         if (templateService.templateExists(EmailTemplateType.WELCOME)) {
-            logger.debug("Plantilla de bienvenida ya existe, omitiendo...");
             return;
         }
 
@@ -105,7 +102,6 @@ public class EmailTemplateSeeder implements CommandLineRunner {
      */
     private void seedRecoveryTemplate() {
         if (templateService.templateExists(EmailTemplateType.RECOVERY)) {
-            logger.debug("Plantilla de recuperación ya existe, omitiendo...");
             return;
         }
 
@@ -160,7 +156,7 @@ public class EmailTemplateSeeder implements CommandLineRunner {
             EmailTemplateType.RECOVERY,
             "Recupera tu acceso a AdoptaFacil",
             htmlContent,
-            "Plantilla para recuperación de contraseña con token seguro"
+            "Plantilla para recuperacion de contraseña con token seguro"
         );
 
         templateService.saveTemplate(recoveryTemplate);
@@ -172,7 +168,6 @@ public class EmailTemplateSeeder implements CommandLineRunner {
      */
     private void seedNotificationTemplate() {
         if (templateService.templateExists(EmailTemplateType.NOTIFICATION)) {
-            logger.debug("Plantilla de notificación ya existe, omitiendo...");
             return;
         }
 
@@ -220,7 +215,7 @@ public class EmailTemplateSeeder implements CommandLineRunner {
             EmailTemplateType.NOTIFICATION,
             "Notificación de AdoptaFacil",
             htmlContent,
-            "Plantilla genérica para notificaciones del sistema"
+            "Plantilla generica para notificaciones del sistema"
         );
 
         templateService.saveTemplate(notificationTemplate);
