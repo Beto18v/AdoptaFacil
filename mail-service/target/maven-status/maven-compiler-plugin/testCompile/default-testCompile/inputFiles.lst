@@ -1,4 +1,9 @@
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\test\java\com\example\demo\controller\WelcomeEmailControllerTest.java
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\test\java\com\example\demo\DemoApplicationTests.java
+D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\test\java\com\example\demo\integration\EmailTemplateSystemIntegrationTest.java
+D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\test\java\com\example\demo\model\EmailTemplateTest.java
+D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\test\java\com\example\demo\model\EmailTemplateTypeTest.java
+D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\test\java\com\example\demo\seeder\EmailTemplateSeederTest.java
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\test\java\com\example\demo\service\EmailServiceTest.java
+D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\test\java\com\example\demo\service\EmailTemplateServiceTest.java
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\test\java\com\example\demo\strategy\WelcomeEmailStrategyTest.java

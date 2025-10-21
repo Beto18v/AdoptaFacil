@@ -144,7 +144,6 @@ Configura las siguientes variables de entorno antes de ejecutar:
 
 - Spring Boot Starter Web
 - Spring Boot Starter Mail
-- Spring Boot Starter Test (para pruebas)
 
 ## Pruebas unitarias y cómo funcionan
 
@@ -153,11 +152,7 @@ Este proyecto incluye pruebas unitarias implementadas con **JUnit 5** y **Mockit
 ### ¿Qué herramientas se usan y por qué?
 
 - **Mockito**: Permite simular dependencias externas (como el envío de emails) para probar los componentes de forma aislada, sin efectos secundarios.
-
-### ¿Cómo funcionan los tests?
-
 - Los tests de `EmailService` verifican que el servicio construya y envíe correctamente los emails de bienvenida, y que maneje adecuadamente los casos de error (por ejemplo, cuando el request es nulo).
-- Los tests de `WelcomeEmailController` simulan peticiones HTTP al endpoint `/api/send-welcome-email` y verifican que la respuesta sea la esperada, tanto en casos exitosos como de error.
 - Se usan mocks para evitar enviar correos reales durante las pruebas.
 
 ### ¿Cómo ejecutar los tests?

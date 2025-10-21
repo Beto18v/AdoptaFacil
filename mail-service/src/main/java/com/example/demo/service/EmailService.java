@@ -30,11 +30,15 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final String mailUsername;
+    private final EmailTemplateService templateService;
 
     @Autowired
-    public EmailService(JavaMailSender mailSender, @Value("${spring.mail.username}") String mailUsername) {
+    public EmailService(JavaMailSender mailSender,
+                       @Value("${spring.mail.username}") String mailUsername,
+                       EmailTemplateService templateService) {
         this.mailSender = mailSender;
         this.mailUsername = mailUsername;
+        this.templateService = templateService;
     }
 
     @Async
@@ -52,17 +56,17 @@ public class EmailService {
 
     @Async
     public void sendWelcomeEmail(WelcomeEmailRequest request) throws Exception {
-        sendEmail(new WelcomeEmailStrategy(), request);
+        sendEmail(new WelcomeEmailStrategy(templateService), request);
     }
 
     @Async
     public void sendRecoveryEmail(RecoveryEmailRequest request) throws Exception {
-        sendEmail(new RecoveryEmailStrategy(), request);
+        sendEmail(new RecoveryEmailStrategy(templateService), request);
     }
 
     @Async
     public void sendNotificationEmail(NotificationEmailRequest request) throws Exception {
-        sendEmail(new NotificationEmailStrategy(), request);
+        sendEmail(new NotificationEmailStrategy(templateService), request);
     }
 
     @Async

@@ -8,7 +8,11 @@ D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\ex
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\dto\NotificationEmailRequest.java
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\dto\RecoveryEmailRequest.java
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\dto\WelcomeEmailRequest.java
+D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\model\EmailTemplate.java
+D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\model\EmailTemplateType.java
+D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\seeder\EmailTemplateSeeder.java
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\service\EmailService.java
+D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\service\EmailTemplateService.java
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\strategy\EmailStrategy.java
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\strategy\NotificationEmailStrategy.java
 D:\Documentos\Repositories\Adoptafacil-laravel\mail-service\src\main\java\com\example\demo\strategy\RecoveryEmailStrategy.java
