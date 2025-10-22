@@ -105,28 +105,43 @@ class CommunityController extends Controller
 
             if ($request->category === 'Campaña') {
                 try {
-                    // Obtener los correos de los usuarios clientes
-                    $emails = \App\Models\User::pluck('email')->toArray();
+                    // Obtener los correos solo de usuarios con rol 'cliente'
+                    $emails = \App\Models\User::where('role', 'cliente')
+                        ->whereNotNull('email')
+                        ->pluck('email')
+                        ->filter() // elimina nulos o vacíos
+                        ->unique()
+                        ->toArray();
 
-                    // Preparar payload
-                    $payload = [
-                        'emails' => $emails,
-                        'subject' => 'Nueva campaña en AdoptaFácil: ',
-                        'description' => $request->content,
-                    ];
+                // Preparar payload
+                $payload = [
+                    'emails' => $emails,
+                    'subject' => 'Nueva campaña en AdoptaFácil 🐾',
+                    'description' => $request->content,
+                ];
 
-                    // Enviar al microservicio Java (endpoint correcto: /api/send-comunidad)
-                    $response = \Illuminate\Support\Facades\Http::post(
-                        'http://localhost:8080/api/send-comunidad',
-                        $payload
-                    );
+                // Envio al microservicio de java
+                $response = \Illuminate\Support\Facades\Http::post(
+                    'http://localhost:8080/api/send-comunidad',
+                    $payload
+                );
 
-                    \Log::info('Respuesta del microservicio de correo:', [
+                if ($response->failed()) {
+                    \Log::error('Error en respuesta del microservicio java :', [
                         'status' => $response->status(),
                         'body' => $response->body(),
                     ]);
-                } catch (\Exception $e) {
-                    \Log::error('Error al notificar campaña:', ['error' => $e->getMessage()]);
+                } else {
+                    \Log::info('Campaña enviada a usuarios tipo cliente correctamente.', [
+                        'status' => $response->status(),
+                        'total_emails' => count($emails),
+                    ]);
+                }
+
+            } catch (\Exception $e) {
+                    \Log::error('Error al enviar correos con la info de la campaña :', [
+                    'error' => $e->getMessage(),
+                    ]);
                 }
             }
 
