@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.BulkEmailRequest;
 import com.example.demo.dto.NotificationEmailRequest;
 import com.example.demo.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;

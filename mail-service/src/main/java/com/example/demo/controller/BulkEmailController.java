@@ -32,4 +32,15 @@ public class BulkEmailController {
                     .body("Solicitud inválida: " + e.getMessage());
         }
     }
+    
+    @PostMapping("/send-comunidad")
+    public String sendCommunityCampaign(@RequestBody BulkEmailRequest request) {
+        try {
+            emailService.sendBulkEmail(request);
+            return "Correos de campaña enviados con éxito";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error al enviar correos: " + e.getMessage();
+        }
+    }
 }

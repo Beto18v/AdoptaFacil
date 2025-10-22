@@ -103,6 +103,33 @@ class CommunityController extends Controller
                 'image_url' => $imageUrl,
             ]);
 
+            if ($request->category === 'Campaña') {
+                try {
+                    // Obtener los correos de los usuarios clientes
+                    $emails = \App\Models\User::pluck('email')->toArray();
+
+                    // Preparar payload
+                    $payload = [
+                        'emails' => $emails,
+                        'subject' => 'Nueva campaña en AdoptaFácil: ',
+                        'description' => $request->content,
+                    ];
+
+                    // Enviar al microservicio Java (endpoint correcto: /api/send-comunidad)
+                    $response = \Illuminate\Support\Facades\Http::post(
+                        'http://localhost:8080/api/send-comunidad',
+                        $payload
+                    );
+
+                    \Log::info('Respuesta del microservicio de correo:', [
+                        'status' => $response->status(),
+                        'body' => $response->body(),
+                    ]);
+                } catch (\Exception $e) {
+                    \Log::error('Error al notificar campaña:', ['error' => $e->getMessage()]);
+                }
+            }
+
             // Para requests AJAX, devolver JSON
             if ($request->wantsJson()) {
                 $post->load('user');
