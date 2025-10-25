@@ -192,6 +192,7 @@ export default function DonationsSummary() {
                             >
                                 Generar reporte
                             </button>
+                            
                         )}
                     </div>
                     {renderContentByRole()}

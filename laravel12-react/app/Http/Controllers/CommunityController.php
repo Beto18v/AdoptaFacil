@@ -122,7 +122,7 @@ class CommunityController extends Controller
 
                 // Envio al microservicio de java
                 $response = \Illuminate\Support\Facades\Http::post(
-                    'http://localhost:8080/api/send-comunidad',
+                    'http://127.0.0.1:8080/api/send-comunidad',
                     $payload
                 );
 

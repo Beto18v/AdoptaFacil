@@ -26,7 +26,7 @@ const ChatbotWidget: React.FC = () => {
     const sendMessageToService = async (message: string): Promise<string> => {
         try {
             // Llamada al servicio de chatbot
-            const response = await fetch('http://localhost:8001/chat/', {
+            const response = await fetch('http://127.0.0.1:8001/chat/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

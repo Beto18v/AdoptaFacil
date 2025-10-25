@@ -146,9 +146,6 @@ class GestionUsuariosController extends Controller
 
         $users = User::whereIn('id', $request->user_ids)->get();
 
-        // Aquí integrar con el microservicio de correo
-        // Por ejemplo, llamar a una API del mail-service
-
         // Simulación
         foreach ($users as $user) {
             // Enviar email
