@@ -31,7 +31,6 @@ import { ThemeSwitcher } from '@/components/theme-switcher';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { Chart } from '../components/chart';
 import { RecentTable } from '../components/recent-table';
 import { StatCard } from '../components/stat-card';
 
@@ -80,7 +79,7 @@ interface DashboardProps {
     actividadesRecientes: ActividadReciente[];
 }
 
-export default function Dashboard({ stats, distribucionTipos, adopcionesPorMes, actividadesRecientes }: DashboardProps) {
+export default function Dashboard({ stats, actividadesRecientes }: DashboardProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -120,54 +119,6 @@ export default function Dashboard({ stats, distribucionTipos, adopcionesPorMes, 
                             color="orange"
                             change={`${stats.cambioUsuarios >= 0 ? '+' : ''}${stats.cambioUsuarios}%`}
                         />
-                    </div>
-
-                    {/* Gráficos y tablas */}
-                    <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
-                        {/* Gráfico principal */}
-                        <div className="rounded-lg bg-white p-6 shadow-md lg:col-span-2 dark:bg-gray-800">
-                            <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Adopciones por mes</h2>
-                            <Chart data={adopcionesPorMes} />
-                        </div>
-
-                        {/* Estadísticas adicionales */}
-                        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
-                            <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Distribución por tipo</h2>
-                            <div className="space-y-4">
-                                {distribucionTipos.length > 0 ? (
-                                    distribucionTipos.map((item, index) => {
-                                        // Asignar colores según el tipo
-                                        const colores = [
-                                            'bg-blue-500',
-                                            'bg-green-500',
-                                            'bg-purple-500',
-                                            'bg-yellow-500',
-                                            'bg-red-500',
-                                            'bg-indigo-500',
-                                        ];
-                                        const color = colores[index % colores.length];
-
-                                        return (
-                                            <div key={index} className="flex flex-col">
-                                                <div className="mb-1 flex justify-between">
-                                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                        {item.name} ({item.total})
-                                                    </span>
-                                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.value}%</span>
-                                                </div>
-                                                <div className="h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700">
-                                                    <div className={`${color} h-2.5 rounded-full`} style={{ width: `${item.value}%` }}></div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })
-                                ) : (
-                                    <div className="text-center text-gray-500 dark:text-gray-400">
-                                        <p>No hay datos de mascotas disponibles</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
                     </div>
 
                     {/* Tabla de actividades recientes */}

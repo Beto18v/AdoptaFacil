@@ -2,6 +2,39 @@ import { ThemeSwitcher } from '@/components/theme-switcher';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
+import { Chart } from '../../../components/chart';
+
+interface MonthlyStat {
+    month: string;
+    adoptions: number;
+    returns: number;
+    success: number;
+}
+
+interface GeneralStats {
+    totalAdoptions: number;
+    averageMonthly: number;
+    successRate: number;
+    pendingRequests: number;
+}
+
+interface AdoptionData {
+    mes: string;
+    adopciones: number;
+}
+
+interface SpeciesDistribution {
+    name: string;
+    value: number;
+    total: number;
+}
+
+interface Props {
+    generalStats: GeneralStats;
+    monthlyStats: MonthlyStat[];
+    adopcionesPorMes: AdoptionData[];
+    distribucionTipos: SpeciesDistribution[];
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -10,30 +43,60 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function AdoptionStats() {
-    // Datos de ejemplo para estadísticas de adopción
-    const monthlyStats = [
-        { month: 'Enero', adoptions: 45, returns: 2, success: 95.6 },
-        { month: 'Febrero', adoptions: 38, returns: 1, success: 97.4 },
-        { month: 'Marzo', adoptions: 52, returns: 3, success: 94.2 },
-        { month: 'Abril', adoptions: 61, returns: 2, success: 96.7 },
-        { month: 'Mayo', adoptions: 57, returns: 4, success: 93.0 },
-        { month: 'Junio', adoptions: 64, returns: 1, success: 98.4 },
-    ];
-
-    // Estadísticas generales
-    const generalStats = {
-        totalAdoptions: 317,
-        averageMonthly: 52.8,
-        successRate: 96.2,
-        pendingRequests: 24,
-    };
-
+export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPorMes, distribucionTipos }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Estadísticas de Adopción" />
             <main className="flex-1 overflow-y-auto bg-gradient-to-r from-green-400 to-blue-500 p-6 dark:from-green-600 dark:to-blue-700">
                 <div className="container mx-auto">
+                    {/* Gráficos y tablas */}
+                    <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+                        {/* Gráfico principal */}
+                        <div className="rounded-lg bg-white p-6 shadow-md lg:col-span-2 dark:bg-gray-800">
+                            <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Adopciones por mes</h2>
+                            <Chart data={adopcionesPorMes} />
+                        </div>
+
+                        {/* Estadísticas adicionales */}
+                        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
+                            <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Distribución por tipo</h2>
+                            <div className="space-y-4">
+                                {distribucionTipos.length > 0 ? (
+                                    distribucionTipos.map((item, index) => {
+                                        // Asignar colores según el tipo
+                                        const colores = [
+                                            'bg-blue-500',
+                                            'bg-green-500',
+                                            'bg-purple-500',
+                                            'bg-yellow-500',
+                                            'bg-red-500',
+                                            'bg-indigo-500',
+                                        ];
+                                        const color = colores[index % colores.length];
+
+                                        return (
+                                            <div key={index} className="flex flex-col">
+                                                <div className="mb-1 flex justify-between">
+                                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                        {item.name} ({item.total})
+                                                    </span>
+                                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.value}%</span>
+                                                </div>
+                                                <div className="h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+                                                    <div className={`${color} h-2.5 rounded-full`} style={{ width: `${item.value}%` }}></div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                                ) : (
+                                    <div className="text-center text-gray-500 dark:text-gray-400">
+                                        <p>No hay datos de mascotas disponibles</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
                         <h1 className="mb-6 text-2xl font-bold text-gray-800 dark:text-white">Estadísticas de Adopción</h1>
 
