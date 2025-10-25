@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.example.demo.model.EmailTemplateTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.072 s -- in com.example.demo.model.EmailTemplateTest
+=======
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in com.example.demo.model.EmailTemplateTest
+>>>>>>> bd525c894559e6f49a29f3f09f792aad839bec54
