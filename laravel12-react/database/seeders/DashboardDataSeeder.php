@@ -70,7 +70,7 @@ class DashboardDataSeeder extends Seeder
                     [
                         'cedula' => '1234567890',
                         'email' => 'ana.rodriguez@email.com',
-                        'estado' => 'aprobada',
+                        'estado' => 'Aprobada',
                         'telefono' => '123456789',
                         'direccion_ciudad' => 'Bogotá',
                         'direccion_barrio' => 'Centro',
@@ -89,7 +89,7 @@ class DashboardDataSeeder extends Seeder
                     [
                         'cedula' => '0987654321',
                         'email' => 'pedro.martinez@email.com',
-                        'estado' => 'pending',
+                        'estado' => 'Enviada',
                         'telefono' => '987654321',
                         'direccion_ciudad' => 'Bogotá',
                         'direccion_barrio' => 'Chapinero',

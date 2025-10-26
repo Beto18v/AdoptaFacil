@@ -38,7 +38,7 @@ class PostSeeder extends Seeder
                     'category' => 'Campaña',
                     'likes_count' => 125,
                     'comments_count' => 12,
-                    'image_url' => 'https://images.unsplash.com/photo-1549483363-1c8b7be41523?q=80&w=870&auto=format&fit=crop',
+                    'image_url' => 'https://picsum.photos/seed/post1/400/300',
                 ]
             );
 
@@ -50,6 +50,7 @@ class PostSeeder extends Seeder
                     'category' => 'Noticia',
                     'likes_count' => 350,
                     'comments_count' => 45,
+                    'image_url' => 'https://picsum.photos/seed/post2/400/300',
                 ]
             );
 
@@ -61,6 +62,7 @@ class PostSeeder extends Seeder
                     'category' => 'Consejo',
                     'likes_count' => 88,
                     'comments_count' => 5,
+                    'image_url' => 'https://picsum.photos/seed/post3/400/300',
                 ]
             );
 
@@ -72,6 +74,7 @@ class PostSeeder extends Seeder
                     'category' => 'Campaña',
                     'likes_count' => 67,
                     'comments_count' => 23,
+                    'image_url' => 'https://picsum.photos/seed/post4/400/300',
                 ]
             );
 
@@ -83,6 +86,7 @@ class PostSeeder extends Seeder
                     'category' => 'Consejo',
                     'likes_count' => 234,
                     'comments_count' => 8,
+                    'image_url' => 'https://picsum.photos/seed/post5/400/300',
                 ]
             );
         }

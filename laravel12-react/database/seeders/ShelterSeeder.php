@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Mascota;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use App\Models\MascotaImage;
 
 /**
  * ShelterSeeder - Seeder para poblar la base de datos con refugios y mascotas de ejemplo
@@ -76,12 +77,22 @@ class ShelterSeeder extends Seeder
      */
     private function crearMascotasParaRefugio(int $userId, string $ciudad): void
     {
-        $especies = ['Perro', 'Gato', 'Conejo', 'Ave'];
+        // Obtener imágenes locales de perros y gatos
+        $imagenesPerros = glob(storage_path('app/public/mascotas/perros/*.{jpg,jpeg,png,gif,webp}'), GLOB_BRACE);
+        $imagenesGatos = glob(storage_path('app/public/mascotas/gatos/*.{jpg,jpeg,png,gif,webp}'), GLOB_BRACE);
+        $imagenesPerrosPublic = array_map(function($img) {
+            $filename = basename($img);
+            return "mascotas/perros/{$filename}";
+        }, $imagenesPerros);
+        $imagenesGatosPublic = array_map(function($img) {
+            $filename = basename($img);
+            return "mascotas/gatos/{$filename}";
+        }, $imagenesGatos);
+
+        $especies = ['Perro', 'Gato'];
         $razas = [
             'Perro' => ['Labrador', 'Golden Retriever', 'Bulldog', 'Pastor Alemán', 'Mestizo'],
             'Gato' => ['Siamés', 'Persa', 'Maine Coon', 'Angora', 'Mestizo'],
-            'Conejo' => ['Holandés', 'Angora', 'Rex', 'Mestizo'],
-            'Ave' => ['Canario', 'Periquito', 'Cacatúa', 'Loro'],
         ];
 
         $cantidadMascotas = rand(5, 15);
@@ -89,8 +100,13 @@ class ShelterSeeder extends Seeder
             $especie = $especies[array_rand($especies)];
             $raza = $razas[$especie][array_rand($razas[$especie])];
             $sexo = ['Macho', 'Hembra'][array_rand(['Macho', 'Hembra'])];
+            // Seleccionar imágenes aleatorias (1 a 3) según especie
+            $imagenes = $especie === 'Perro' ? $imagenesPerrosPublic : $imagenesGatosPublic;
+            shuffle($imagenes);
+            $imagenesSeleccionadas = array_slice($imagenes, 0, rand(1, min(3, count($imagenes))));
+            $imagenPrincipal = $imagenesSeleccionadas[0] ?? null;
 
-            Mascota::create([
+            $mascota = Mascota::create([
                 'nombre' => $this->generarNombreMascota(),
                 'especie' => $especie,
                 'raza' => $raza,
@@ -98,9 +114,18 @@ class ShelterSeeder extends Seeder
                 'sexo' => $sexo,
                 'ciudad' => $ciudad,
                 'descripcion' => "Hermosa mascota en busca de un hogar lleno de amor en {$ciudad}",
-                'imagen' => null,
+                'imagen' => $imagenPrincipal,
                 'user_id' => $userId,
             ]);
+
+            // Guardar imágenes en mascota_images
+            foreach ($imagenesSeleccionadas as $idx => $imgPath) {
+                MascotaImage::create([
+                    'mascota_id' => $mascota->id,
+                    'imagen_path' => $imgPath,
+                    'orden' => $idx + 1,
+                ]);
+            }
         }
     }
 

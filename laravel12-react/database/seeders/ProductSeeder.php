@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\ProductImage;
 
 /**
  * ProductSeeder - Seeder para poblar la base de datos con productos de ejemplo
@@ -30,6 +31,13 @@ class ProductSeeder extends Seeder
         $aliados = User::where('role', 'aliado')->get();
 
         if ($aliados->count() > 0) {
+            // Obtener imágenes locales de productos
+            $imagenes = glob(storage_path('app/public/productos/*.{jpg,jpeg,png,gif,webp}'), GLOB_BRACE);
+            $imagenesPublic = array_map(function($img) {
+                $filename = basename($img);
+                return "productos/{$filename}";
+            }, $imagenes);
+
             $productos = [
                 [
                     'name' => 'Alimento Premium para Perros Adultos',
@@ -84,14 +92,27 @@ class ProductSeeder extends Seeder
             foreach ($productos as $producto) {
                 // Asignar producto a un aliado aleatorio
                 $aliado = $aliados->random();
+                // Seleccionar imágenes aleatorias (1 a 3)
+                shuffle($imagenesPublic);
+                $imagenesSeleccionadas = array_slice($imagenesPublic, 0, rand(1, min(3, count($imagenesPublic))));
+                $imagenPrincipal = $imagenesSeleccionadas[0] ?? null;
 
-                Product::firstOrCreate(
+                $product = Product::firstOrCreate(
                     ['name' => $producto['name']],
                     array_merge($producto, [
                         'user_id' => $aliado->id,
-                        'imagen' => null, // Imagen opcional
+                        'imagen' => $imagenPrincipal,
                     ])
                 );
+
+                // Guardar imágenes en product_images
+                foreach ($imagenesSeleccionadas as $idx => $imgPath) {
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'image_path' => $imgPath,
+                        'order' => $idx + 1,
+                    ]);
+                }
             }
         }
     }
