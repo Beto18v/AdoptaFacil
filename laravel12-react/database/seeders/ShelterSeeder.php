@@ -80,11 +80,11 @@ class ShelterSeeder extends Seeder
         // Obtener imágenes locales de perros y gatos
         $imagenesPerros = glob(storage_path('app/public/mascotas/perros/*.{jpg,jpeg,png,gif,webp}'), GLOB_BRACE);
         $imagenesGatos = glob(storage_path('app/public/mascotas/gatos/*.{jpg,jpeg,png,gif,webp}'), GLOB_BRACE);
-        $imagenesPerrosPublic = array_map(function($img) {
+        $imagenesPerrosPublic = array_map(function ($img) {
             $filename = basename($img);
             return "mascotas/perros/{$filename}";
         }, $imagenesPerros);
-        $imagenesGatosPublic = array_map(function($img) {
+        $imagenesGatosPublic = array_map(function ($img) {
             $filename = basename($img);
             return "mascotas/gatos/{$filename}";
         }, $imagenesGatos);

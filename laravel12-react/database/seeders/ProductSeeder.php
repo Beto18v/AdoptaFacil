@@ -33,7 +33,7 @@ class ProductSeeder extends Seeder
         if ($aliados->count() > 0) {
             // Obtener imágenes locales de productos
             $imagenes = glob(storage_path('app/public/productos/*.{jpg,jpeg,png,gif,webp}'), GLOB_BRACE);
-            $imagenesPublic = array_map(function($img) {
+            $imagenesPublic = array_map(function ($img) {
                 $filename = basename($img);
                 return "productos/{$filename}";
             }, $imagenes);
