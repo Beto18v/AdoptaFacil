@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DescripcionMascotaController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\DonationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,7 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth')->get('/user', function (Request $request) {
     return $request->user();
 });
 
@@ -31,6 +32,8 @@ Route::prefix('users')->group(function () {
     Route::post('/validate-email', [UserController::class, 'validateEmail']);
     Route::post('/reset-password', [UserController::class, 'resetPassword']);
 });
+
+// Rutas API removidas - las donaciones se manejan en routes/web.php
 
 /*
 Endpoints disponibles:

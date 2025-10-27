@@ -34,7 +34,11 @@ export default function FormularioFundacion() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('shelter.store'));
+        post(route('shelter.store'), {
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            },
+        });
     };
 
     // Estilo unificado para los campos de entrada

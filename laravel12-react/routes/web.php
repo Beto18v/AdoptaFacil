@@ -36,6 +36,7 @@ use App\Http\Controllers\{
     FavoritosController,
     DashboardController,
     DonacionesController,
+    DonationController,
     MapaController,
     EstadisticasController,
     GestionUsuariosController
@@ -206,6 +207,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('donaciones', [DonacionesController::class, 'index'])->name('donaciones.index');
     // Procesar nueva donación
     Route::post('donaciones', [DonacionesController::class, 'store'])->name('donaciones.store');
+    // Importar donaciones desde Excel (solo para refugios)
+    Route::post('donaciones/import', [DonationController::class, 'importDonations'])->name('donaciones.import');
 
     /*
     |--------------------------------------------------------------------------

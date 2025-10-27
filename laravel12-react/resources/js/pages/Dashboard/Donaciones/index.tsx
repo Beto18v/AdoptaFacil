@@ -1,3 +1,4 @@
+import { ExcelImportComponent } from '@/components/donations';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import AppLayout from '@/layouts/app-layout';
 import { generateDonationsReport } from '@/lib/report-generator';
@@ -25,6 +26,7 @@ type DonationType = {
     donor_name?: string;
     amount: number;
     created_at: string;
+    description?: string;
 };
 
 const DonationsTable = ({ donations, userRole }: { donations: DonationType[]; userRole: string }) => (
@@ -44,6 +46,9 @@ const DonationsTable = ({ donations, userRole }: { donations: DonationType[]; us
                         )}
                         <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">Monto</th>
                         <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">Fecha</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                            Descripción
+                        </th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
@@ -61,8 +66,13 @@ const DonationsTable = ({ donations, userRole }: { donations: DonationType[]; us
                             <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
                                 <span className="font-medium text-green-600 dark:text-green-400">{formatCurrency(donation.amount)}</span>
                             </td>
+                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{donation.created_at}</td>
                             <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                                {new Date(donation.created_at).toLocaleDateString()}
+                                {donation.description ? (
+                                    <span className="text-sm">{donation.description}</span>
+                                ) : (
+                                    <span className="text-sm text-gray-400">Sin descripción</span>
+                                )}
                             </td>
                         </tr>
                     ))}
@@ -142,6 +152,11 @@ export default function DonationsSummary() {
     const { user } = auth;
     const [showDonationFormModal, setShowDonationFormModal] = useState(false);
 
+    const handleImportSuccess = () => {
+        // Refrescar la página para mostrar las nuevas donaciones
+        window.location.reload();
+    };
+
     const stats = {
         totalAmount: donations.reduce((acc: number, curr: DonationType) => acc + parseFloat(curr.amount.toString()), 0),
         donorsCount: new Set(donations.map((d: DonationType) => (d as unknown as { donor_email: string }).donor_email)).size,
@@ -186,13 +201,15 @@ export default function DonationsSummary() {
                             {user.role === 'aliado' && !user.shelter ? '' : 'Donaciones'}
                         </h1>
                         {!(user.role === 'aliado' && !user.shelter) && (
-                            <button
-                                onClick={handleGenerateReport}
-                                className="rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
-                            >
-                                Generar reporte
-                            </button>
-                            
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={handleGenerateReport}
+                                    className="rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
+                                >
+                                    Generar reporte
+                                </button>
+                                {user.role === 'aliado' && Boolean(user.shelter) && <ExcelImportComponent onImportSuccess={handleImportSuccess} />}
+                            </div>
                         )}
                     </div>
                     {renderContentByRole()}
