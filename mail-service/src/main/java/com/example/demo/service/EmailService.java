@@ -120,6 +120,12 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setFrom(mailUsername);
+            /*// Usar CC para que todos los destinatarios sean visibles
+            String[] ccArray = request.getEmails().toArray(new String[0]);
+            helper.setCc(ccArray);
+            helper.setSubject(request.getSubject());
+            helper.setText(htmlContent, true);
+             */
             // Usar BCC para mantener la privacidad de los destinatarios
             String[] bccArray = request.getEmails().toArray(new String[0]);
             helper.setBcc(bccArray);
@@ -128,6 +134,7 @@ public class EmailService {
             
             mailSender.send(message);
             logger.info("Email masivo enviado exitosamente a {} destinatarios", bccArray.length);
+            //logger.info("Email masivo enviado exitosamente a {} destinatarios", ccArray.length);
         } catch (Exception e) {
             logger.error("Error al enviar email masivo", e);
             throw new Exception("Error al enviar emails masivos", e);
