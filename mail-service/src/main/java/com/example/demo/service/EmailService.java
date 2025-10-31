@@ -114,31 +114,23 @@ public class EmailService {
             "</body>" +
     "</html>";
 
-        int successCount = 0;
-        int failCount = 0;
+    try {
+            logger.info("Enviando email masivo a {} destinatarios", request.getEmails().size());
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        for (String email : request.getEmails()) {
-            try {
-                logger.info("Enviando email masivo a: {}", email);
-                MimeMessage message = mailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-                helper.setFrom(mailUsername);
-                helper.setTo(email);
-                helper.setSubject(request.getSubject());
-                helper.setText(htmlContent, true);
-                mailSender.send(message);
-                logger.info("Email enviado exitosamente a: {}", email);
-                successCount++;
-            } catch (Exception e) {
-                logger.error("Error al enviar email a: {}", email, e);
-                failCount++;
-            }
-        }
-        logger.info("Envío de emails masivos completado. Exitosos: {}, Fallidos: {}", successCount, failCount);
-
-        if (failCount > 0) {
-            throw new Exception("Algunos emails no pudieron enviarse. Exitosos: " + successCount + ", Fallidos: " + failCount);
+            helper.setFrom(mailUsername);
+            // Usar BCC para mantener la privacidad de los destinatarios
+            String[] bccArray = request.getEmails().toArray(new String[0]);
+            helper.setBcc(bccArray);
+            helper.setSubject(request.getSubject());
+            helper.setText(htmlContent, true);
+            
+            mailSender.send(message);
+            logger.info("Email masivo enviado exitosamente a {} destinatarios", bccArray.length);
+        } catch (Exception e) {
+            logger.error("Error al enviar email masivo", e);
+            throw new Exception("Error al enviar emails masivos", e);
         }
     }
 }
