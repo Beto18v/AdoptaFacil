@@ -85,7 +85,7 @@ class GestionUsuariosController extends Controller
 
         // Enviar email de bienvenida al microservicio
         try {
-            $response = Http::timeout(5)->post('http://localhost:8080/api/send-welcome-email', [
+            $response = Http::timeout(5)->post('http://127.0.0.1:8080/api/send-welcome-email', [
                 'email' => $user->email,
                 'name' => $user->name,
             ]);

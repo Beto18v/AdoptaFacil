@@ -361,7 +361,7 @@ export default function GestionUsuarios() {
                                 </DialogContent>
                             </Dialog>
                             <Dialog open={isEmailModalOpen} onOpenChange={setIsEmailModalOpen}>
-                                <DialogContent className="max-w-4xl rounded-lg bg-white p-6 dark:bg-gray-800 dark:text-gray-100">
+                                <DialogContent className="max-w-4xl rounded-lg bg-white p-6 dark:bg-gray-800 dark:text-gray-100 max-h-[80vh] overflow-auto">
                                     <DialogHeader>
                                         <DialogTitle>Enviar Correo Masivo</DialogTitle>
                                         <DialogDescription>
