@@ -36,7 +36,7 @@ class DonationController extends Controller
                 'donor_name' => $donation->getDonorDisplayName(),
                 'amount' => $donation->amount,
                 'description' => $donation->description,
-                'created_at' => (string) $date->format('d F Y'),
+                'created_at' => $date->format('Y-m-d'),
                 'is_imported' => $donation->isImported(),
                 'shelter_name' => $donation->shelter?->name,
             ];

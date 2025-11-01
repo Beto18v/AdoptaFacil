@@ -25,7 +25,7 @@ type DonationType = {
     shelter?: { name?: string };
     donor_name?: string;
     amount: number;
-    created_at: string;
+    created_at: Date;
     description?: string;
 };
 
@@ -66,7 +66,13 @@ const DonationsTable = ({ donations, userRole }: { donations: DonationType[]; us
                             <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
                                 <span className="font-medium text-green-600 dark:text-green-400">{formatCurrency(donation.amount)}</span>
                             </td>
-                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{donation.created_at}</td>
+                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                                {new Date(donation.created_at).toLocaleDateString('es-ES', {
+                                    year: 'numeric',
+                                    month: '2-digit',
+                                    day: '2-digit'
+                                }).toString()}
+                            </td>
                             <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
                                 {donation.description ? (
                                     <span className="text-sm">{donation.description}</span>
