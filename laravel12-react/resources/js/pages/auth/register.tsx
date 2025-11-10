@@ -8,6 +8,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 import Logo from '../../../../public/Logo/Logo.png';
+import { refreshCsrfToken } from '../../app';
 
 type RegisterForm = {
     name: string;
@@ -31,7 +32,8 @@ export default function Register({ role }: { role: string }) {
         const params = new URLSearchParams(window.location.search);
         const adoptarMascota = params.get('adoptar_mascota');
         post(route('register'), {
-            onSuccess: () => {
+            onSuccess: async () => {
+                await refreshCsrfToken();
                 if (adoptarMascota) {
                     Inertia.visit(route('productos.mascotas') + `?adoptar_mascota=${adoptarMascota}`);
                 } else {

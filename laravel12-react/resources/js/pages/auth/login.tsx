@@ -9,6 +9,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 import Logo from '../../../../public/Logo/Logo.png';
+import { refreshCsrfToken } from '../../app';
 
 type LoginForm = {
     email: string;
@@ -28,9 +29,13 @@ export default function Login({ status, canResetPassword }: LoginProps) {
         remember: false,
     });
 
-    const submit: FormEventHandler = (e) => {
+    const submit: FormEventHandler = async (e) => {
         e.preventDefault();
+        await refreshCsrfToken();
         post(route('login'), {
+            onSuccess: async () => {
+                await refreshCsrfToken();
+            },
             onFinish: () => reset('password'),
         });
     };

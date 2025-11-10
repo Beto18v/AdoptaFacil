@@ -111,6 +111,11 @@ Route::get('/registro-opciones', function () {
 Route::get('favoritos/ids', [FavoritosController::class, 'getFavoriteIds'])
     ->name('favoritos.ids');
 
+// Endpoint para obtener el token CSRF vía AJAX
+Route::get('/csrf-token', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+});
+
 /*
 |--------------------------------------------------------------------------
 | MÓDULO DE COMUNIDAD - Funcionalidades sociales

@@ -1,8 +1,9 @@
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
+import { refreshCsrfToken } from '../../app';
 
 export default function VerifyEmail({ status }: { status?: string }) {
     const { post, processing } = useForm({});
@@ -45,9 +46,23 @@ export default function VerifyEmail({ status }: { status?: string }) {
                         Reenviar email de verificación
                     </Button>
 
-                    <Link href={route('logout')} method="post" className="text-sm text-blue-500 hover:underline dark:text-gray-100">
+                    <button
+                        type="button"
+                        className="text-sm text-blue-500 hover:underline dark:text-gray-100"
+                        onClick={async () => {
+                            router.post(
+                                route('logout'),
+                                {},
+                                {
+                                    onSuccess: async () => {
+                                        await refreshCsrfToken();
+                                    },
+                                },
+                            );
+                        }}
+                    >
                         Cerrar sesión
-                    </Link>
+                    </button>
                 </form>
             </div>
             <ThemeSwitcher />

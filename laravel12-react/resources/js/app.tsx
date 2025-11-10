@@ -16,6 +16,16 @@ if (token) {
     axios.defaults.headers.common['X-CSRF-TOKEN'] = token.getAttribute('content');
 }
 
+// Función para refrescar el token CSRF después de login/logout
+export async function refreshCsrfToken() {
+    const response = await fetch('/csrf-token');
+    const data = await response.json();
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = data.csrf_token;
+    // Si usas meta tag, actualízala también:
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    if (meta) meta.setAttribute('content', data.csrf_token);
+}
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
