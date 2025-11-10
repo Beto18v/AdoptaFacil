@@ -58,7 +58,7 @@ interface ProductoEdicion {
     descripcion: string;
     precio: string;
     cantidad: string;
-    imagenes_existentes: Array<{ id: number; ruta: string }>;
+    imagenes_existentes: string[];
 }
 
 /**
@@ -220,20 +220,18 @@ export default function ProductosMascotas() {
         );
     };
 
-    /**
-     * Función avanzada para edición de elementos
-     * Implementa carga lazy de datos completos del backend con fallbacks robustos
-     * @param item - Elemento a editar
-     */
     const handleEdit = async (item: CardItem) => {
         try {
             if (item.tipo === 'mascota') {
                 // Obtener datos completos de la mascota desde el backend
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
                 const response = await fetch(`/mascotas/${item.id}`, {
                     headers: {
                         Accept: 'application/json',
                         'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken || '',
                     },
+                    credentials: 'same-origin',
                 });
 
                 if (response.ok) {
@@ -250,25 +248,8 @@ export default function ProductosMascotas() {
                 setModoEdicion(true);
                 setMascotaModalOpen(true);
             } else if (item.tipo === 'producto') {
-                // Obtener datos completos del producto desde el backend
-                const response = await fetch(`/productos/${item.id}`, {
-                    headers: {
-                        Accept: 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                });
-
-                if (response.ok) {
-                    const productoCompleto = await response.json();
-                    setProductoEditando({
-                        ...item,
-                        ...productoCompleto,
-                    });
-                } else {
-                    // Fallback a datos básicos si no se pueden obtener datos completos
-                    setProductoEditando(item);
-                }
-
+                // Para productos, usar los datos del item que ya incluyen imagenes_existentes
+                setProductoEditando(item);
                 setModoEdicion(true);
                 setProductoModalOpen(true);
             }
@@ -369,8 +350,7 @@ export default function ProductosMascotas() {
                                       descripcion: (productoEditando as unknown as ProductoEdicion).descripcion || '',
                                       precio: (productoEditando as unknown as ProductoEdicion).precio?.toString() || '0',
                                       cantidad: (productoEditando as unknown as ProductoEdicion).cantidad?.toString() || '1',
-                                      imagenes_existentes:
-                                          (productoEditando as unknown as ProductoEdicion).imagenes_existentes?.map((img) => img.ruta) || [],
+                                      imagenes_existentes: (productoEditando as unknown as ProductoEdicion).imagenes_existentes || [],
                                   }
                                 : null
                         }

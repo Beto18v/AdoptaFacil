@@ -90,7 +90,8 @@ class ProductController extends Controller
                         'user_id' => $producto->user_id,
                         'user' => $producto->user,
                         'tipo' => 'producto',
-                        'created_at' => $producto->created_at
+                        'created_at' => $producto->created_at,
+                        'imagenes_existentes' => $producto->images->pluck('image_path')->toArray(),
                     ];
                 });
 

@@ -123,8 +123,7 @@ export default function RegistrarProducto({ isOpen, onClose, setMensaje, product
                 });
 
                 // Cargar imágenes existentes
-                setImagenesExistentes(productoEditar.imagenes_existentes || []);
-
+                setImagenesExistentes((productoEditar.imagenes_existentes || []).filter((img) => img && img !== 'undefined'));
                 console.log('Datos de producto cargados en el formulario:', formData);
             }, 300); // Aumentamos el timeout
         } else if (isOpen && !modoEdicion) {
