@@ -25,9 +25,8 @@
 // resources/js/pages/Dashboard/VerMascotasProductos/components/registrar-mascota.tsx
 // Componente modal para registrar nuevas mascotas con sistema de múltiples imágenes (hasta 3)
 
-import { useDescripcionIA } from '@/hooks/useDescripcionIA';
 import { useForm } from '@inertiajs/react';
-import { Plus, Sparkles, X } from 'lucide-react'; // Iconos para agregar y eliminar imágenes
+import { Plus, X } from 'lucide-react'; // Iconos para agregar y eliminar imágenes
 import React, { useEffect, useRef, useState } from 'react';
 
 /**
@@ -322,19 +321,6 @@ export default function RegistrarMascota({
     // Estado para mostrar edad calculada
     const [edadCalculada, setEdadCalculada] = useState<string>('');
 
-    // Hook para generar descripciones con IA
-    const {
-        generandoDescripcion,
-        ultimaDescripcion, // eslint-disable-line @typescript-eslint/no-unused-vars
-        error: errorIA,
-        generarDescripcionDesdeDatos,
-        verificarServicio,
-        limpiarError,
-    } = useDescripcionIA();
-
-    // Estado para verificar si el servicio de IA está disponible
-    const [servicioIADisponible, setServicioIADisponible] = useState<boolean | null>(null); // eslint-disable-line @typescript-eslint/no-unused-vars
-
     // Efecto para limpiar la raza cuando cambie la especie
     useEffect(() => {
         if (data.especie && data.raza) {
@@ -427,34 +413,6 @@ export default function RegistrarMascota({
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isOpen, onClose]);
 
-    // Función para generar descripción con IA
-    const handleGenerarDescripcionIA = async () => {
-        if (!data.nombre.trim()) {
-            alert('Por favor, ingresa el nombre de la mascota antes de generar la descripción');
-            return;
-        }
-
-        if (!data.especie.trim()) {
-            alert('Por favor, selecciona la especie antes de generar la descripción');
-            return;
-        }
-
-        limpiarError();
-
-        const descripcionGenerada = await generarDescripcionDesdeDatos(
-            data.nombre,
-            data.especie,
-            data.raza || 'Mestiza',
-            data.sexo,
-            data.ciudad || 'Ciudad no especificada',
-            data.descripcion,
-        );
-
-        if (descripcionGenerada) {
-            setData('descripcion', descripcionGenerada);
-        }
-    };
-
     /**
      * Maneja el envío del formulario de registro/edición de mascota
      * Valida los datos y envía la solicitud al backend según el modo
@@ -492,7 +450,7 @@ export default function RegistrarMascota({
                             onClose();
                         }
                     },
-                    onError: (errors) => {
+                    onError: () => {
                         setMensaje('Error al actualizar mascota. Revisa los datos e intenta nuevamente.');
                     },
                 });
@@ -514,7 +472,7 @@ export default function RegistrarMascota({
                         onClose();
                     }
                 },
-                onError: (errors) => {
+                onError: () => {
                     setMensaje('Error al registrar mascota. Revisa los datos e intenta nuevamente.');
                     setTimeout(() => {
                         setData('imagenes', []);
@@ -532,7 +490,6 @@ export default function RegistrarMascota({
             setImagePreviews([]);
             setEdadCalculada('');
             setImagenesExistentes([]);
-            setServicioIADisponible(null);
             reset();
         } else if (isOpen && modoEdicion && mascotaEditar) {
             // Cargar datos cuando se abre en modo edición
@@ -576,13 +533,6 @@ export default function RegistrarMascota({
             setEdadCalculada('');
         }
     }, [isOpen, modoEdicion, mascotaEditar, reset, setData]);
-
-    // Verificar servicio de IA solo una vez cuando se abre el modal
-    useEffect(() => {
-        if (isOpen) {
-            verificarServicio().then(setServicioIADisponible);
-        }
-    }, [isOpen, verificarServicio]); // Ahora verificarServicio está memoizado
 
     // Función para manejar múltiples imágenes (máximo 3)
     const handleAddImages = (files: FileList | null) => {
@@ -779,27 +729,6 @@ export default function RegistrarMascota({
                                 className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
                             >
                                 Descripción y personalidad
-                                {/* ⭐ BOTÓN DE ESTRELLITA AQUÍ ⭐ */}
-                                <button
-                                    type="button"
-                                    onClick={handleGenerarDescripcionIA}
-                                    disabled={generandoDescripcion || !data.nombre.trim() || !data.especie.trim()}
-                                    className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-600 text-white shadow-sm transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
-                                    title={`Generar descripción con IA para ${data.nombre || 'la mascota'}`}
-                                >
-                                    {generandoDescripcion ? (
-                                        <svg className="h-3 w-3 animate-spin" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                            <path
-                                                className="opacity-75"
-                                                fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                            />
-                                        </svg>
-                                    ) : (
-                                        <Sparkles className="h-3 w-3" />
-                                    )}
-                                </button>
                             </label>
                             <textarea
                                 id="descripcion"
@@ -812,27 +741,6 @@ export default function RegistrarMascota({
                             />
                         </div>
                         {errors.descripcion && <p className="mt-1 text-sm text-red-600">{errors.descripcion}</p>}
-
-                        {/* 🌟 MENSAJE DE AYUDA PARA LA IA 🌟 */}
-                        <p className="mt-2 text-xs font-medium text-purple-600 dark:text-purple-400">
-                            💡 Haz clic en la ⭐ junto al título para generar una descripción emocional automática
-                        </p>
-
-                        {/* Mostrar errores de IA */}
-                        {errorIA && (
-                            <div className="mt-2 rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-300">
-                                <div className="flex items-center gap-2">
-                                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                    <span>Error generando descripción: {errorIA}</span>
-                                </div>
-                            </div>
-                        )}
                     </div>
 
                     {/* Campo Imágenes (hasta 3) */}

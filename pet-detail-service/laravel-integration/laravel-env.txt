@@ -1,7 +1,0 @@
-# Configuración adicional para Laravel .env
-
-# URL del microservicio de descripciones (cambiar en producción)
-FAQ_SERVICE_URL=http://localhost:8001
-
-# Para habilitar logs detallados
-LOG_LEVEL=debug
