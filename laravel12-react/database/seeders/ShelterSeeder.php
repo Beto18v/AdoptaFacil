@@ -103,14 +103,15 @@ class ShelterSeeder extends Seeder
             // Seleccionar imágenes aleatorias (1 a 3) según especie
             $imagenes = $especie === 'Perro' ? $imagenesPerrosPublic : $imagenesGatosPublic;
             shuffle($imagenes);
-            $imagenesSeleccionadas = array_slice($imagenes, 0, rand(1, min(3, count($imagenes))));
+            $numImagenes = count($imagenes) > 0 ? rand(1, min(3, count($imagenes))) : 0;
+            $imagenesSeleccionadas = array_slice($imagenes, 0, $numImagenes);
             $imagenPrincipal = $imagenesSeleccionadas[0] ?? null;
 
             $mascota = Mascota::create([
                 'nombre' => $this->generarNombreMascota(),
                 'especie' => $especie,
                 'raza' => $raza,
-                'edad' => rand(1, 10),
+                'fecha_nacimiento' => now()->subYears(rand(1, 10))->subDays(rand(0, 365))->toDateString(),
                 'sexo' => $sexo,
                 'ciudad' => $ciudad,
                 'descripcion' => "Hermosa mascota en busca de un hogar lleno de amor en {$ciudad}",

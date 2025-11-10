@@ -61,7 +61,7 @@ class Mascota extends Model
     {
         static::saving(function ($mascota) {
             if ($mascota->fecha_nacimiento) {
-                $mascota->edad = Carbon::parse($mascota->fecha_nacimiento)->diffInYears(Carbon::now());
+                $mascota->edad = (int) Carbon::parse($mascota->fecha_nacimiento)->diffInYears(Carbon::now());
             }
         });
     }
