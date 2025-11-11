@@ -10,7 +10,7 @@ interface Pet {
     imageUrl: string | null;
 }
 
-export default function PetsSection({ pets }: { pets: Pet[] }) {
+export default function PetsSection({ pets, totalMascotas }: { pets: Pet[]; totalMascotas: number }) {
     return (
         <section className="relative border-t border-blue-200/50 bg-gradient-to-br from-blue-100/80 via-green-100/60 to-blue-200/40 pt-30 pb-20 md:pt-36 md:pb-24 dark:border-blue-800/30 dark:from-blue-950/40 dark:via-green-950/30 dark:to-blue-900/50">
             {/* Elementos decorativos mejorados */}
@@ -58,7 +58,7 @@ export default function PetsSection({ pets }: { pets: Pet[] }) {
                 <div className="mb-20 grid grid-cols-1 gap-8 md:grid-cols-3">
                     <div className="rounded-2xl border border-green-200/50 bg-white/95 p-6 text-center shadow-xl ring-1 ring-green-100/60 backdrop-blur-sm dark:border-green-800/40 dark:bg-gray-900/95 dark:ring-green-900/40">
                         <div className="mb-3 bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-4xl font-bold text-transparent dark:from-green-400 dark:to-green-500">
-                            Muchas
+                            {totalMascotas}
                         </div>
                         <p className="font-semibold text-gray-700 dark:text-gray-200">Mascotas disponibles</p>
                         <div className="mx-auto mt-2 h-1 w-16 rounded-full bg-gradient-to-r from-green-400 to-green-500 dark:from-green-500 dark:to-green-600"></div>

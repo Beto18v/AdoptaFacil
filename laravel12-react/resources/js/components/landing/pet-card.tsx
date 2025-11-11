@@ -1,4 +1,3 @@
-import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 
 interface PetCardProps {
@@ -45,6 +44,9 @@ export default function PetCard({ name, breed, age, description, imageUrl }: Pet
                     {name}
                 </h3>
 
+                {/* Separador decorativo */}
+                <div className="mb-4 h-0.5 w-16 rounded-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-300 group-hover:w-24"></div>
+
                 {/* Información de raza y edad */}
                 <div className="mb-4 flex items-center space-x-2 text-gray-600 dark:text-gray-300">
                     <span className="text-blue-500">🐾</span>
@@ -55,20 +57,6 @@ export default function PetCard({ name, breed, age, description, imageUrl }: Pet
 
                 {/* Descripción */}
                 <p className="mb-6 line-clamp-3 leading-relaxed text-gray-700 dark:text-gray-300">{description}</p>
-
-                {/* Separador decorativo */}
-                <div className="mb-6 h-0.5 w-16 rounded-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-300 group-hover:w-24"></div>
-
-                {/* Botón de acción */}
-                <Link
-                    href="/mascotas"
-                    className="block w-full rounded-xl bg-gradient-to-r from-blue-500 to-blue-700 py-4 text-center font-semibold text-white shadow-lg transition-colors duration-300 hover:from-blue-600 hover:to-blue-800 focus:ring-4 focus:ring-blue-300/50 focus:outline-none"
-                >
-                    <span className="flex items-center justify-center space-x-2">
-                        <span>💖</span>
-                        <span>Conocer más</span>
-                    </span>
-                </Link>
             </div>
         </div>
     );

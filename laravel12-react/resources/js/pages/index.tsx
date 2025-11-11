@@ -36,9 +36,9 @@ import { ThemeSwitcher } from '@/components/theme-switcher';
 
 interface Product {
     id: number;
-    nombre: string;
-    descripcion: string;
-    precio: number;
+    name: string;
+    description: string;
+    price: string;
     imagen?: string;
     user: {
         id: number;
@@ -72,12 +72,10 @@ export default function Welcome({ productos = [], mascotas = [], todasLasMascota
         return productos
             .slice(0, 3) // Limitar a los primeros 3 (asumiendo que vienen ordenados por fecha desde el backend)
             .map((producto) => ({
-                nombre: producto.nombre,
-                descripcion: producto.descripcion,
-                precio: `$${producto.precio ? producto.precio.toLocaleString('es-CO') : '0'}`,
-                imageUrl: producto.imagen
-                    ? `/storage/${producto.imagen}`
-                    : 'https://images.unsplash.com/photo-1598133894005-6d5c4b6f634d?auto=format&fit=crop&w=800&q=60',
+                name: producto.name,
+                description: producto.description,
+                price: `$${producto.price ? parseFloat(producto.price).toLocaleString('es-CO') : '0'}`,
+                imageUrl: producto.imagen ? `/storage/${producto.imagen}` : null,
             }));
     }, [productos]);
 
@@ -128,7 +126,7 @@ export default function Welcome({ productos = [], mascotas = [], todasLasMascota
                 <CategoriesSection categories={categories} />
 
                 {/* 3. Mascotas - Prioridad máxima, contenido principal */}
-                <PetsSection pets={pets} />
+                <PetsSection pets={pets} totalMascotas={todasLasMascotas.length} />
 
                 {/* 4. Productos - Complemento importante */}
                 <ProductsSection products={products} />

@@ -14,7 +14,12 @@ use Illuminate\Database\Seeder;
  * 2. ShelterSeeder - Crea refugios y mascotas
  * 3. ProductSeeder - Crea productos para la tienda
  * 4. PostSeeder - Crea publicaciones de comunidad
- * 5. DashboardDataSeeder - Crea datos para métricas del dashboard
+ * 5. CommentSeeder - Crea comentarios en las publicaciones
+ * 6. DonationSeeder - Crea donaciones para los refugios
+ * 7. PostLikeSeeder - Crea likes en las publicaciones
+ * 8. FavoritoSeeder - Crea mascotas favoritas
+ * 9. SolicitudSeeder - Crea solicitudes de adopción
+ * 10. DashboardDataSeeder - Crea datos para métricas del dashboard
  *
  * El orden es importante debido a las dependencias entre modelos.
  */
@@ -43,6 +48,31 @@ class DatabaseSeeder extends Seeder
         // Ejecutar el seeder de posts
         $this->call([
             PostSeeder::class,
+        ]);
+
+        // Ejecutar el seeder de comentarios
+        $this->call([
+            CommentSeeder::class,
+        ]);
+
+        // Ejecutar el seeder de donaciones
+        $this->call([
+            DonationSeeder::class,
+        ]);
+
+        // Ejecutar el seeder de likes en posts
+        $this->call([
+            PostLikeSeeder::class,
+        ]);
+
+        // Ejecutar el seeder de favoritos
+        $this->call([
+            FavoritoSeeder::class,
+        ]);
+
+        // Ejecutar el seeder de solicitudes
+        $this->call([
+            SolicitudSeeder::class,
         ]);
 
         // Ejecutar el seeder de datos del dashboard

@@ -2,10 +2,10 @@ import { ArrowRight, ShoppingBag, Sparkles } from 'lucide-react';
 import ProductCard from './product-card';
 
 interface Product {
-    nombre: string;
-    descripcion: string;
-    precio: string;
-    imageUrl: string;
+    name: string;
+    description: string;
+    price: string;
+    imageUrl: string | null;
 }
 
 export default function ProductsSection({ products }: { products: Product[] }) {
