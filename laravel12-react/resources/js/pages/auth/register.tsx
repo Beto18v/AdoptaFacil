@@ -4,13 +4,11 @@ import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Inertia } from '@inertiajs/inertia';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import Logo from '../../../../public/Logo/Logo.png';
 import LogoWhite from '../../../../public/Logo/LogoWhite.png';
-import { refreshCsrfToken } from '../../app';
 
 type RegisterForm = {
     name: string;
@@ -34,26 +32,15 @@ export default function Register({ role }: { role: string }) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        const params = new URLSearchParams(window.location.search);
-        const adoptarMascota = params.get('adoptar_mascota');
         post(route('register'), {
-            onSuccess: async () => {
-                await refreshCsrfToken();
-                if (adoptarMascota) {
-                    Inertia.visit(route('productos.mascotas') + `?adoptar_mascota=${adoptarMascota}`);
-                } else {
-                    Inertia.visit(route('dashboard'));
-                }
+            onSuccess: () => {
+                window.location.href = route('dashboard');
             },
             onFinish: () => {
                 reset('password', 'password_confirmation');
             },
         });
     };
-
-    // Detectar si hay adoptar_mascota en la URL y agregarlo al formulario
-    const params = new URLSearchParams(window.location.search);
-    const adoptarMascota = params.get('adoptar_mascota');
 
     return (
         <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
@@ -86,7 +73,6 @@ export default function Register({ role }: { role: string }) {
                     <form className="flex flex-col gap-6" onSubmit={submit}>
                         {/* Añade un campo oculto para el rol */}
                         <input type="hidden" value={data.role} onChange={(e) => setData('role', e.target.value)} />
-                        {adoptarMascota && <input type="hidden" name="adoptar_mascota" value={adoptarMascota} />}
                         <div className="grid gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="name" className="text-start font-semibold text-gray-800 dark:text-white">

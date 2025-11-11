@@ -89,22 +89,13 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         Auth::login($user);
 
-        // Redirección por adopción directa
-        if ($request->filled('adoptar_mascota')) {
-            $id = $request->input('adoptar_mascota');
-            $url = route('productos.mascotas') . '?adoptar_mascota=' . $id;
-            if ($request->header('X-Inertia')) {
-                // Forzar redirección completa del navegador
-                return redirect($url)->header('X-Inertia-Location', $url);
-            }
-            return redirect($url);
-        }
         // Redirección inteligente: si hay intended, redirige ahí
         if (session()->has('url.intended')) {
             $intended = session('url.intended');
             session()->forget('url.intended');
             return redirect($intended);
         }
-        return redirect(route('dashboard', absolute: false));
+        $url = route('dashboard', absolute: false);
+        return redirect($url)->header('X-Inertia-Location', $url);
     }
 }

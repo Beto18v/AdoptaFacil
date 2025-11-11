@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Head, Link, router } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
+import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import Logo from '../../../../public/Logo/Logo.png';
 import LogoWhite from '../../../../public/Logo/LogoWhite.png';
@@ -30,6 +30,8 @@ export default function ResetPassword({ email }: ResetPasswordProps) {
     const [processing, setProcessing] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [message, setMessage] = useState<string>('');
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const submit: FormEventHandler = async (e) => {
         e.preventDefault();
@@ -203,16 +205,26 @@ export default function ResetPassword({ email }: ResetPasswordProps) {
                             <Label htmlFor="newPassword" className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 Nueva Contraseña
                             </Label>
-                            <Input
-                                id="newPassword"
-                                type="password"
-                                name="newPassword"
-                                autoComplete="new-password"
-                                value={data.newPassword}
-                                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 transition-all duration-300 focus:border-transparent focus:ring-4 focus:ring-blue-300/50 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                onChange={(e) => setData({ ...data, newPassword: e.target.value })}
-                                placeholder="Ingresa tu nueva contraseña"
-                            />
+                            <div className="relative">
+                                <Input
+                                    id="newPassword"
+                                    type={showNewPassword ? 'text' : 'password'}
+                                    name="newPassword"
+                                    autoComplete="new-password"
+                                    value={data.newPassword}
+                                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 pr-12 text-gray-800 transition-all duration-300 focus:border-transparent focus:ring-4 focus:ring-blue-300/50 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                    onChange={(e) => setData({ ...data, newPassword: e.target.value })}
+                                    placeholder="Ingresa tu nueva contraseña"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowNewPassword(!showNewPassword)}
+                                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 transition-colors duration-200 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                                    tabIndex={-1}
+                                >
+                                    {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                </button>
+                            </div>
                             <InputError message={errors.newPassword} />
                         </div>
 
@@ -220,16 +232,26 @@ export default function ResetPassword({ email }: ResetPasswordProps) {
                             <Label htmlFor="confirmPassword" className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 Confirmar Contraseña
                             </Label>
-                            <Input
-                                id="confirmPassword"
-                                type="password"
-                                name="confirmPassword"
-                                autoComplete="new-password"
-                                value={data.confirmPassword}
-                                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 transition-all duration-300 focus:border-transparent focus:ring-4 focus:ring-blue-300/50 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                onChange={(e) => setData({ ...data, confirmPassword: e.target.value })}
-                                placeholder="Confirma tu nueva contraseña"
-                            />
+                            <div className="relative">
+                                <Input
+                                    id="confirmPassword"
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    name="confirmPassword"
+                                    autoComplete="new-password"
+                                    value={data.confirmPassword}
+                                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 pr-12 text-gray-800 transition-all duration-300 focus:border-transparent focus:ring-4 focus:ring-blue-300/50 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                                    onChange={(e) => setData({ ...data, confirmPassword: e.target.value })}
+                                    placeholder="Confirma tu nueva contraseña"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 transition-colors duration-200 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                                    tabIndex={-1}
+                                >
+                                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                </button>
+                            </div>
                             <InputError message={errors.confirmPassword} />
                         </div>
 
