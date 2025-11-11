@@ -3,6 +3,7 @@ import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Head, Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import Logo from '../../../../public/Logo/Logo.png';
+import LogoWhite from '../../../../public/Logo/LogoWhite.png';
 
 export default function RegistroOpciones() {
     const [tarjetaActiva, setTarjetaActiva] = useState<number | null>(null);
@@ -42,28 +43,33 @@ export default function RegistroOpciones() {
             </div>
 
             {/* Header con logo */}
-            <div className="relative z-10 pt-16 pb-8 text-center">
+            <div className="relative z-10 pt-12 pb-4 text-center">
                 <Link href={route('index')} className="group inline-block">
                     <img
                         src={Logo}
-                        alt="Logo"
-                        className="mx-auto mb-8 h-36 w-56 drop-shadow-2xl transition-transform duration-300 group-hover:scale-105"
+                        alt="Logo AdoptaFácil"
+                        className="mx-auto mb-6 h-28 w-44 drop-shadow-2xl transition-transform duration-300 group-hover:scale-105 dark:hidden"
+                    />
+                    <img
+                        src={LogoWhite}
+                        alt="Logo AdoptaFácil"
+                        className="mx-auto mb-6 hidden h-28 w-44 drop-shadow-2xl transition-transform duration-300 group-hover:scale-105 dark:block"
                     />
                 </Link>
-                <h1 className="mt-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-4xl font-bold text-transparent drop-shadow-lg md:text-5xl lg:text-6xl">
+                <h1 className="mt-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-3xl font-bold text-transparent drop-shadow-lg md:text-4xl lg:text-5xl">
                     Únete a AdoptaFácil
                 </h1>
-                <p className="mx-auto mt-6 max-w-2xl px-4 text-xl leading-relaxed font-medium text-white/90">
-                    Selecciona el tipo de cuenta que deseas crear y comienza tu experiencia con nosotros
+                <p className="mx-auto mt-4 max-w-xl px-4 text-lg leading-relaxed font-medium text-white/90">
+                    Selecciona el tipo de cuenta que deseas crear
                 </p>
 
                 {/* Línea decorativa */}
-                <div className="mx-auto mt-8 h-1 w-24 rounded-full bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+                <div className="mx-auto mt-6 h-1 w-20 rounded-full bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
             </div>
 
             {/* Tarjetas de opciones */}
-            <div className="flex min-h-[60vh] items-center justify-center px-4">
-                <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
+            <div className="flex min-h-[45vh] items-center justify-center px-4">
+                <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10">
                     {opcionesRegistro.map((opcion) => (
                         <div
                             key={opcion.id}
@@ -108,6 +114,23 @@ export default function RegistroOpciones() {
                 </div>
             </div>
 
+            {/* Botón de regreso al login */}
+            <div className="mt-8 flex justify-center px-4">
+                <Link
+                    href={route('login')}
+                    className="group relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/20 hover:shadow-xl focus:ring-4 focus:ring-white/30 focus:outline-none"
+                >
+                    <div className="flex items-center justify-center gap-3">
+                        <span className="text-2xl group-hover:animate-bounce">🐕</span>
+                        <span className="text-lg font-semibold">¿Ya tienes cuenta? Inicia sesión</span>
+                        <span className="text-2xl group-hover:animate-bounce" style={{ animationDelay: '0.1s' }}>
+                            🐱
+                        </span>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                </Link>
+            </div>
+
             {/* Elementos decorativos flotantes */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
                 <div className="absolute top-1/4 left-1/4 h-2 w-2 animate-pulse rounded-full bg-white/20"></div>
@@ -117,7 +140,7 @@ export default function RegistroOpciones() {
             </div>
 
             {/* Espaciado inferior */}
-            <div className="pb-20"></div>
+            <div className="pb-12"></div>
 
             <ThemeSwitcher hasChatbot={true} />
             <ChatbotWidget />
