@@ -185,70 +185,83 @@ export default function Comunidad({ auth, posts: initialPosts, flash }: Comunida
     }, [flash]);
 
     return (
-        <div className="flex min-h-screen flex-col bg-gray-100 dark:bg-gray-800">
+        <div className="flex min-h-screen flex-col bg-white dark:bg-gray-900">
             <Head title="Comunidad" />
             <Header />
             <ComunityHero />
 
             <main className="flex-1">
-                <div className="container mx-auto px-4 py-12 md:px-6 md:py-16">
-                    <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-                        {/* Filtros a la izquierda (3 de 12 columnas) */}
-                        <aside className="lg:col-span-3">
-                            <PostFilters onFiltersChange={handleFiltersChange} />
-                        </aside>
+                {/* Sección principal con espaciado según PALETA */}
+                <div className="relative border-t border-blue-200/50 bg-gradient-to-br from-blue-100/80 via-green-100/60 to-blue-200/40 py-12 md:py-16 dark:border-blue-800/30 dark:from-blue-950/40 dark:via-green-950/30 dark:to-blue-900/50">
+                    {/* Elementos decorativos según PALETA */}
+                    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                        <div className="absolute -top-10 -right-20 h-40 w-40 rounded-full bg-gradient-to-br from-blue-300/30 to-green-300/30 blur-3xl dark:from-blue-800/25 dark:to-green-800/25"></div>
+                        <div className="absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-gradient-to-br from-green-300/25 to-blue-300/25 blur-2xl dark:from-green-800/30 dark:to-blue-800/30"></div>
 
-                        {/* Feed de publicaciones (6 de 12 columnas, el área central) */}
-                        <section className="space-y-8 lg:col-span-6">
-                            {/* Mensajes Flash */}
-                            {showFlash && flash?.success && (
-                                <Alert className="border-green-200 bg-green-50 text-green-800 dark:border-green-800 dark:bg-green-900/50 dark:text-green-200">
-                                    <CheckCircle className="h-4 w-4" />
-                                    <AlertDescription>{flash.success}</AlertDescription>
-                                </Alert>
-                            )}
+                        {/* Puntos animados */}
+                        <div className="absolute top-1/4 right-1/3 h-3 w-3 animate-pulse rounded-full bg-blue-400/90 shadow-lg shadow-blue-400/50 dark:bg-blue-600/90 dark:shadow-blue-600/50"></div>
+                        <div className="absolute bottom-1/3 left-1/4 h-4 w-4 animate-ping rounded-full bg-green-400/80 shadow-lg shadow-green-400/50 dark:bg-green-600/80 dark:shadow-green-600/50"></div>
+                    </div>
 
-                            {showFlash && flash?.error && (
-                                <Alert className="border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/50 dark:text-red-200">
-                                    <XCircle className="h-4 w-4" />
-                                    <AlertDescription>{flash.error}</AlertDescription>
-                                </Alert>
-                            )}
+                    <div className="relative container mx-auto px-4 md:px-6">
+                        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+                            {/* Filtros a la izquierda (3 de 12 columnas) */}
+                            <aside className="lg:col-span-3">
+                                <PostFilters onFiltersChange={handleFiltersChange} />
+                            </aside>
 
-                            <CreatePost user={user} onPostCreated={handlePostCreated} />
-
-                            <div className="space-y-6">
-                                {filteredPosts && filteredPosts.length > 0 ? (
-                                    filteredPosts.map((post) => (
-                                        <PostCard
-                                            key={post.id}
-                                            post={post}
-                                            user={user}
-                                            onDelete={handlePostDelete}
-                                            onLikeUpdate={handleLikeUpdate}
-                                            onCommentUpdate={handleCommentUpdate}
-                                        />
-                                    ))
-                                ) : posts && posts.length > 0 ? (
-                                    <div className="rounded-xl bg-white p-8 text-center shadow-lg dark:bg-gray-900">
-                                        <p className="text-gray-500 dark:text-gray-400">
-                                            No se encontraron publicaciones que coincidan con los filtros aplicados.
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <div className="rounded-xl bg-white p-8 text-center shadow-lg dark:bg-gray-900">
-                                        <p className="text-gray-500 dark:text-gray-400">
-                                            No hay publicaciones aún. ¡Sé el primero en compartir algo!
-                                        </p>
-                                    </div>
+                            {/* Feed de publicaciones (6 de 12 columnas, el área central) */}
+                            <section className="space-y-8 lg:col-span-6">
+                                {/* Mensajes Flash */}
+                                {showFlash && flash?.success && (
+                                    <Alert className="border-green-200 bg-green-50 text-green-800 dark:border-green-800 dark:bg-green-900/50 dark:text-green-200">
+                                        <CheckCircle className="h-4 w-4" />
+                                        <AlertDescription>{flash.success}</AlertDescription>
+                                    </Alert>
                                 )}
-                            </div>
-                        </section>
 
-                        {/* Tendencias a la derecha (3 de 12 columnas) */}
-                        <aside className="hidden lg:col-span-3 lg:block">
-                            <TrendingTopics />
-                        </aside>
+                                {showFlash && flash?.error && (
+                                    <Alert className="border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/50 dark:text-red-200">
+                                        <XCircle className="h-4 w-4" />
+                                        <AlertDescription>{flash.error}</AlertDescription>
+                                    </Alert>
+                                )}
+
+                                <CreatePost user={user} onPostCreated={handlePostCreated} />
+
+                                <div className="space-y-6">
+                                    {filteredPosts && filteredPosts.length > 0 ? (
+                                        filteredPosts.map((post) => (
+                                            <PostCard
+                                                key={post.id}
+                                                post={post}
+                                                user={user}
+                                                onDelete={handlePostDelete}
+                                                onLikeUpdate={handleLikeUpdate}
+                                                onCommentUpdate={handleCommentUpdate}
+                                            />
+                                        ))
+                                    ) : posts && posts.length > 0 ? (
+                                        <div className="rounded-xl bg-white p-8 text-center shadow-lg dark:bg-gray-900">
+                                            <p className="text-gray-500 dark:text-gray-400">
+                                                No se encontraron publicaciones que coincidan con los filtros aplicados.
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="rounded-xl bg-white p-8 text-center shadow-lg dark:bg-gray-900">
+                                            <p className="text-gray-500 dark:text-gray-400">
+                                                No hay publicaciones aún. ¡Sé el primero en compartir algo!
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </section>
+
+                            {/* Tendencias a la derecha (3 de 12 columnas) */}
+                            <aside className="hidden lg:col-span-3 lg:block">
+                                <TrendingTopics />
+                            </aside>
+                        </div>
                     </div>
                 </div>
             </main>

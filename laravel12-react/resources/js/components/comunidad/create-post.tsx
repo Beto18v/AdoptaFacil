@@ -120,10 +120,10 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
 
     if (!user) {
         return (
-            <div className="mb-8 rounded-xl bg-gradient-to-r from-teal-50 to-blue-50 p-8 shadow-lg dark:from-gray-900 dark:to-gray-950">
+            <div className="mb-8 rounded-xl bg-gradient-to-r from-blue-50 to-green-50 p-8 shadow-lg dark:from-gray-900 dark:to-gray-950">
                 <div className="text-center">
-                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-900">
-                        <LogIn className="h-8 w-8 text-teal-600 dark:text-teal-400" />
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-100 to-green-100 dark:from-blue-900 dark:to-green-900">
+                        <LogIn className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                     </div>
                     <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">¡Únete a nuestra comunidad!</h3>
                     <p className="mb-6 text-gray-600 dark:text-gray-300">
@@ -133,7 +133,7 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
                     <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
                         <Button
                             onClick={() => router.visit('/registro-opciones')}
-                            className="bg-teal-500 px-6 py-3 text-white hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
+                            className="bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-3 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
                         >
                             <LogIn className="mr-2 h-4 w-4" />
                             Crear Cuenta Gratis
@@ -141,22 +141,22 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
                         <Button
                             onClick={() => router.visit('/login')}
                             variant="outline"
-                            className="border-teal-500 px-6 py-3 text-teal-600 hover:bg-teal-50 dark:border-teal-600 dark:text-teal-400 dark:hover:bg-teal-900/20"
+                            className="border-green-500 px-6 py-3 text-green-600 hover:bg-green-50 dark:border-green-600 dark:text-green-400 dark:hover:bg-green-900/20"
                         >
                             Ya tengo cuenta
                         </Button>
                     </div>
                     <div className="mt-6 grid grid-cols-3 gap-4 text-center">
                         <div className="rounded-lg bg-white p-3 shadow-sm dark:bg-gray-800">
-                            <div className="text-lg font-bold text-teal-600 dark:text-teal-400">🐾</div>
+                            <div className="text-lg font-bold text-blue-600 dark:text-blue-400">🐾</div>
                             <div className="text-xs text-gray-600 dark:text-gray-400">Comparte</div>
                         </div>
                         <div className="rounded-lg bg-white p-3 shadow-sm dark:bg-gray-800">
-                            <div className="text-lg font-bold text-teal-600 dark:text-teal-400">💬</div>
+                            <div className="text-lg font-bold text-green-600 dark:text-green-400">💬</div>
                             <div className="text-xs text-gray-600 dark:text-gray-400">Comenta</div>
                         </div>
                         <div className="rounded-lg bg-white p-3 shadow-sm dark:bg-gray-800">
-                            <div className="text-lg font-bold text-teal-600 dark:text-teal-400">❤️</div>
+                            <div className="text-lg font-bold text-purple-600 dark:text-purple-400">❤️</div>
                             <div className="text-xs text-gray-600 dark:text-gray-400">Conecta</div>
                         </div>
                     </div>
@@ -176,7 +176,7 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
                     <div className="ml-4 flex-1">
                         <Textarea
                             placeholder="¿Qué estás pensando? Comparte una noticia, consejo o campaña..."
-                            className="mb-4 min-h-[80px] w-full rounded-lg border-gray-200 bg-gray-100 p-4 focus:border-teal-500 focus:ring-teal-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:focus:border-teal-600 dark:focus:ring-teal-600"
+                            className="mb-4 min-h-[80px] w-full rounded-lg border-gray-200 bg-gray-100 p-4 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:focus:border-blue-600 dark:focus:ring-blue-600"
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             maxLength={1000}
@@ -251,7 +251,7 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
                             </div>
                             <Button
                                 type="submit"
-                                className="gap-2 rounded-full bg-teal-500 text-white hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
+                                className="gap-2 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
                                 disabled={isSubmitting || !content.trim()}
                             >
                                 <Send className="h-4 w-4" />

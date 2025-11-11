@@ -17,7 +17,7 @@ export default function TrendingTopics() {
             {/* Aliados Destacados */}
             <div className="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-900">
                 <h3 className="mb-4 flex items-center text-lg font-bold text-gray-900 dark:text-white">
-                    <Flame className="mr-2 h-5 w-5 text-orange-500" />
+                    <Flame className="mr-2 h-5 w-5 text-green-600 dark:text-green-400" />
                     Aliados Destacados
                 </h3>
                 <div className="space-y-4">
@@ -30,7 +30,12 @@ export default function TrendingTopics() {
                                 </Avatar>
                                 <span className="text-sm font-medium">{ally.name}</span>
                             </div>
-                            <Button className="dark:bg-gray-700" variant="outline" size="sm" asChild>
+                            <Button
+                                className="border-blue-500 text-blue-600 transition-all duration-300 hover:scale-105 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
+                                variant="outline"
+                                size="sm"
+                                asChild
+                            >
                                 <a href={ally.link}>Ver</a>
                             </Button>
                         </div>
@@ -41,7 +46,7 @@ export default function TrendingTopics() {
             {/* Temas Populares */}
             <div className="rounded-xl bg-white p-6 shadow-lg dark:bg-gray-900">
                 <h3 className="mb-4 flex items-center text-lg font-bold text-gray-900 dark:text-white">
-                    <Hash className="mr-2 h-5 w-5 text-blue-500" />
+                    <Hash className="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400" />
                     Temas Populares
                 </h3>
                 <div className="flex flex-wrap gap-2">

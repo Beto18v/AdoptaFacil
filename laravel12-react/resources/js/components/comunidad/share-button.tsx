@@ -139,7 +139,7 @@ export default function ShareButton({ postId, disabled = false, className = '' }
         <div className={`relative flex-1 ${className}`}>
             <Button
                 variant="ghost"
-                className="w-full gap-2 text-gray-600 hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/50 dark:hover:text-green-500"
+                className="w-full gap-2 text-gray-600 transition-all duration-300 hover:scale-105 hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/50 dark:hover:text-green-500"
                 onClick={handleShare}
                 disabled={disabled || isSharing}
             >
@@ -183,7 +183,7 @@ export default function ShareButton({ postId, disabled = false, className = '' }
                             <Button
                                 onClick={copyToClipboard}
                                 size="sm"
-                                className={`${copySuccess ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+                                className={`shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl ${copySuccess ? 'bg-gradient-to-r from-green-500 to-green-700' : 'bg-gradient-to-r from-blue-500 to-blue-700'} text-white`}
                             >
                                 {copySuccess ? (
                                     <>

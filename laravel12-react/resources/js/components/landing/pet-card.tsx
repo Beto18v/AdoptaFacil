@@ -19,19 +19,55 @@ export default function PetCard({ name, breed, age, description, imageUrl }: Pet
     };
 
     return (
-        <div className="pet-card dark:shadow-dark overflow-hidden rounded-xl bg-white shadow-md transition hover:shadow-xl dark:bg-gray-700">
-            <img src={imageSrc} alt={`${name} - ${breed}`} className="h-48 w-full object-cover" loading="lazy" onError={handleImageError} />
-            <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{name}</h3>
-                <p className="mb-2 text-gray-600 dark:text-gray-300">
-                    {breed} • {age}
-                </p>
-                <p className="mb-4 text-gray-700 dark:text-gray-300">{description}</p>
+        <div className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl transition-all duration-300 hover:shadow-2xl dark:border-gray-700 dark:bg-gray-800">
+            {/* Imagen con overlay */}
+            <div className="relative overflow-hidden">
+                <img
+                    src={imageSrc}
+                    alt={`${name} - ${breed}`}
+                    className="h-56 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                    onError={handleImageError}
+                />
+                {/* Overlay sutil en hover */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+
+                {/* Badge de estado en la esquina */}
+                <div className="absolute top-4 right-4 rounded-full bg-green-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
+                    Disponible
+                </div>
+            </div>
+
+            {/* Contenido de la tarjeta */}
+            <div className="p-8">
+                {/* Nombre con gradiente */}
+                <h3 className="mb-3 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-2xl font-bold text-transparent dark:from-white dark:to-gray-300">
+                    {name}
+                </h3>
+
+                {/* Información de raza y edad */}
+                <div className="mb-4 flex items-center space-x-2 text-gray-600 dark:text-gray-300">
+                    <span className="text-blue-500">🐾</span>
+                    <p className="font-semibold">
+                        {breed} • {age}
+                    </p>
+                </div>
+
+                {/* Descripción */}
+                <p className="mb-6 line-clamp-3 leading-relaxed text-gray-700 dark:text-gray-300">{description}</p>
+
+                {/* Separador decorativo */}
+                <div className="mb-6 h-0.5 w-16 rounded-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-300 group-hover:w-24"></div>
+
+                {/* Botón de acción */}
                 <Link
                     href="/mascotas"
-                    className="block w-full rounded-lg bg-blue-600 py-2 text-center text-white transition hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
+                    className="block w-full rounded-xl bg-gradient-to-r from-blue-500 to-blue-700 py-4 text-center font-semibold text-white shadow-lg transition-colors duration-300 hover:from-blue-600 hover:to-blue-800 focus:ring-4 focus:ring-blue-300/50 focus:outline-none"
                 >
-                    Conocer más
+                    <span className="flex items-center justify-center space-x-2">
+                        <span>💖</span>
+                        <span>Conocer más</span>
+                    </span>
                 </Link>
             </div>
         </div>

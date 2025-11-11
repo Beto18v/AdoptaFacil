@@ -30,6 +30,7 @@ import ChatbotWidget from '@/components/chatbot-widget';
 import Footer from '@/components/landing/footer';
 import Header from '@/components/landing/header';
 import PetCard from '@/components/mascotas/pet-card';
+import PetFilters from '@/components/mascotas/pet-filters';
 import PetHero from '@/components/mascotas/pet-hero';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import CarouselModal from '@/components/ui/carousel-modal';
@@ -158,6 +159,16 @@ export default function Mascotas({ mascotas = [] }: MascotasProps) {
     };
 
     const filteredPets = useMemo(() => {
+        // Debug: mostrar información de filtrado cuando hay filtro de edad activo
+        if (filters.selectedEdad !== 'all') {
+            console.log('🐕 Filtro por edad activo:', filters.selectedEdad);
+            console.log('📊 Total mascotas antes del filtro:', allPets.length);
+            console.log(
+                '📈 Distribución de edades:',
+                allPets.map((pet) => ({ nombre: pet.name, edad: pet.edad })),
+            );
+        }
+
         return allPets.filter((pet) => {
             const searchTermMatch =
                 pet.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
@@ -165,13 +176,44 @@ export default function Mascotas({ mascotas = [] }: MascotasProps) {
 
             const especieMatch = filters.selectedEspecie === 'all' || pet.especie === filters.selectedEspecie;
 
-            const edadMatch =
-                filters.selectedEdad === 'all' ||
-                (filters.selectedEdad === 'joven' && pet.edad <= 24) || // (0-2 años)
-                (filters.selectedEdad === 'adulto' && pet.edad > 24 && pet.edad <= 84) || // (2-7 años)
-                (filters.selectedEdad === 'senior' && pet.edad > 84); // (+7 años)
+            // Lógica mejorada del filtro por edad con validación
+            let edadMatch = true;
+            if (filters.selectedEdad !== 'all') {
+                const edadEnAnios = Number(pet.edad);
 
-            // NUEVO: Lógica de filtros para ciudad y género.
+                // Debug: log para la primera mascota cuando hay filtro activo
+                if (pet === allPets[0]) {
+                    console.log(
+                        `🔍 Analizando ${pet.name}: edad original="${pet.edad}", convertida=${edadEnAnios}, filtro="${filters.selectedEdad}"`,
+                    );
+                }
+
+                if (isNaN(edadEnAnios)) {
+                    edadMatch = false; // Si la edad no es un número válido, no coincide
+                    console.log(`❌ ${pet.name}: edad inválida "${pet.edad}"`);
+                } else {
+                    switch (filters.selectedEdad) {
+                        case 'joven':
+                            edadMatch = edadEnAnios <= 2; // 0-2 años
+                            break;
+                        case 'adulto':
+                            edadMatch = edadEnAnios > 2 && edadEnAnios <= 7; // 2-7 años
+                            break;
+                        case 'senior':
+                            edadMatch = edadEnAnios > 7; // +7 años
+                            break;
+                        default:
+                            edadMatch = true;
+                    }
+
+                    // Debug: log del resultado para la primera mascota
+                    if (pet === allPets[0]) {
+                        console.log(`📊 ${pet.name}: ${edadMatch ? '✅ coincide' : '❌ no coincide'} con filtro "${filters.selectedEdad}"`);
+                    }
+                }
+            }
+
+            // Lógica de filtros para ciudad y género
             const ciudadMatch = filters.selectedCiudad === 'all' || pet.ciudad === filters.selectedCiudad;
             const generoMatch = filters.selectedGenero === 'all' || pet.sexo === filters.selectedGenero;
 
@@ -188,144 +230,55 @@ export default function Mascotas({ mascotas = [] }: MascotasProps) {
         return Array.from(new Set(allPets.map((pet) => pet.ciudad)));
     }, [allPets]);
 
-    // NUEVO: Variable para saber si hay algún filtro activo.
-    const anyFilterActive =
-        filters.selectedEspecie !== 'all' || filters.selectedEdad !== 'all' || filters.selectedCiudad !== 'all' || filters.selectedGenero !== 'all';
-
     return (
         <FavoritesProvider showNotification={addNotification}>
-            <div className="flex min-h-screen flex-col bg-white dark:bg-gray-800">
+            <div className="flex min-h-screen flex-col bg-white dark:bg-gray-900">
                 <Head title="Mascotas" />
                 <Header />
                 <PetHero />
 
                 <main className="flex-1">
-                    <div className="container mx-auto px-4 py-12 md:px-6 md:py-16">
-                        {/* Contenedor de filtros */}
-                        <div className="mb-8 flex flex-wrap items-center gap-4">
-                            <input
-                                type="text"
-                                placeholder="Buscar por nombre o descripción..."
-                                value={filters.searchTerm}
-                                onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
-                                className="flex-grow rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 sm:flex-grow-0 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            />
+                    {/* Sección principal con espaciado según PALETA */}
+                    <div className="relative border-t border-blue-200/50 bg-gradient-to-br from-blue-100/80 via-green-100/60 to-blue-200/40 pt-12 pb-16 md:pt-16 md:pb-20 dark:border-blue-800/30 dark:from-blue-950/40 dark:via-green-950/30 dark:to-blue-900/50">
+                        {/* Elementos decorativos según PALETA */}
+                        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                            <div className="absolute -top-10 -right-20 h-40 w-40 rounded-full bg-gradient-to-br from-blue-300/30 to-green-300/30 blur-3xl dark:from-blue-800/25 dark:to-green-800/25"></div>
+                            <div className="absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-gradient-to-br from-green-300/25 to-blue-300/25 blur-2xl dark:from-green-800/30 dark:to-blue-800/30"></div>
 
-                            <select
-                                value={filters.selectedEspecie}
-                                onChange={(e) => handleFilterChange('selectedEspecie', e.target.value)}
-                                className="rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            >
-                                <option value="all">Todas las especies</option>
-                                {availableEspecies.map((especie) => (
-                                    <option key={especie} value={especie}>
-                                        {especie}
-                                    </option>
-                                ))}
-                            </select>
-
-                            {/* NUEVO: Filtro de Ciudad */}
-                            <select
-                                value={filters.selectedCiudad}
-                                onChange={(e) => handleFilterChange('selectedCiudad', e.target.value)}
-                                className="rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            >
-                                <option value="all">Todas las ciudades</option>
-                                {availableCiudades.map((ciudad) => (
-                                    <option key={ciudad} value={ciudad}>
-                                        {ciudad}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <select
-                                value={filters.selectedEdad}
-                                onChange={(e) => handleFilterChange('selectedEdad', e.target.value)}
-                                className="rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            >
-                                <option value="all">Todas las edades</option>
-                                <option value="joven">Joven (0-2 años)</option>
-                                <option value="adulto">Adulto (2-7 años)</option>
-                                <option value="senior">Senior (7+ años)</option>
-                            </select>
-
-                            {/* NUEVO: Filtro de Género */}
-                            <select
-                                value={filters.selectedGenero}
-                                onChange={(e) => handleFilterChange('selectedGenero', e.target.value)}
-                                className="rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            >
-                                <option value="all">Todos los géneros</option>
-                                <option value="Macho">Macho</option>
-                                <option value="Hembra">Hembra</option>
-                            </select>
+                            {/* Puntos animados */}
+                            <div className="absolute top-1/4 right-1/3 h-3 w-3 animate-pulse rounded-full bg-blue-400/90 shadow-lg shadow-blue-400/50 dark:bg-blue-600/90 dark:shadow-blue-600/50"></div>
+                            <div className="absolute bottom-1/3 left-1/4 h-4 w-4 animate-ping rounded-full bg-green-400/80 shadow-lg shadow-green-400/50 dark:bg-green-600/80 dark:shadow-green-600/50"></div>
                         </div>
 
-                        {/* NUEVO: Sección para mostrar filtros activos y botón de limpieza general */}
-                        {anyFilterActive && (
-                            <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">
-                                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">Filtros Activos:</span>
-                                {/* Píldora para Especie */}
-                                {filters.selectedEspecie !== 'all' && (
-                                    <span className="flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                                        {filters.selectedEspecie}
-                                        <button onClick={() => handleFilterChange('selectedEspecie', 'all')} className="font-bold">
-                                            ✕
-                                        </button>
-                                    </span>
-                                )}
-                                {/* Píldora para Ciudad */}
-                                {filters.selectedCiudad !== 'all' && (
-                                    <span className="flex items-center gap-2 rounded-full bg-green-100 px-3 py-1 text-sm text-green-800 dark:bg-green-900 dark:text-green-200">
-                                        {filters.selectedCiudad}
-                                        <button onClick={() => handleFilterChange('selectedCiudad', 'all')} className="font-bold">
-                                            ✕
-                                        </button>
-                                    </span>
-                                )}
-                                {/* Píldora para Edad */}
-                                {filters.selectedEdad !== 'all' && (
-                                    <span className="flex items-center gap-2 rounded-full bg-yellow-100 px-3 py-1 text-sm text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                                        {filters.selectedEdad}
-                                        <button onClick={() => handleFilterChange('selectedEdad', 'all')} className="font-bold">
-                                            ✕
-                                        </button>
-                                    </span>
-                                )}
-                                {/* Píldora para Género */}
-                                {filters.selectedGenero !== 'all' && (
-                                    <span className="flex items-center gap-2 rounded-full bg-purple-100 px-3 py-1 text-sm text-purple-800 dark:bg-purple-900 dark:text-purple-200">
-                                        {filters.selectedGenero}
-                                        <button onClick={() => handleFilterChange('selectedGenero', 'all')} className="font-bold">
-                                            ✕
-                                        </button>
-                                    </span>
-                                )}
-                                {/* Botón de Limpieza General */}
-                                <button onClick={clearAllFilters} className="text-sm font-semibold text-red-600 hover:underline dark:text-red-400">
-                                    Limpiar todos los filtros
-                                </button>
-                            </div>
-                        )}
+                        <div className="relative container mx-auto px-4 md:px-6">
+                            {/* Componente de filtros separado para mejor performance */}
+                            <PetFilters
+                                filters={filters}
+                                availableEspecies={availableEspecies}
+                                availableCiudades={availableCiudades}
+                                onFilterChange={handleFilterChange}
+                                onClearAllFilters={clearAllFilters}
+                            />
 
-                        {/* Grid de mascotas */}
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                            {filteredPets.length > 0 ? (
-                                filteredPets.map((pet, index) => (
-                                    <PetCard
-                                        key={pet.id}
-                                        {...pet}
-                                        onImageClick={() => handlePetClick(index)}
-                                        onViewDetails={() => handlePetClick(index)}
-                                    />
-                                ))
-                            ) : (
-                                <p className="col-span-full py-16 text-center text-gray-500">
-                                    {allPets.length === 0
-                                        ? 'No hay mascotas disponibles para adopción aún.'
-                                        : 'No se encontraron mascotas con estos filtros.'}
-                                </p>
-                            )}
+                            {/* Grid de mascotas */}
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                                {filteredPets.length > 0 ? (
+                                    filteredPets.map((pet, index) => (
+                                        <PetCard
+                                            key={pet.id}
+                                            {...pet}
+                                            onImageClick={() => handlePetClick(index)}
+                                            onViewDetails={() => handlePetClick(index)}
+                                        />
+                                    ))
+                                ) : (
+                                    <p className="col-span-full py-16 text-center text-gray-500 dark:text-gray-400">
+                                        {allPets.length === 0
+                                            ? 'No hay mascotas disponibles para adopción aún.'
+                                            : 'No se encontraron mascotas con estos filtros.'}
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </main>

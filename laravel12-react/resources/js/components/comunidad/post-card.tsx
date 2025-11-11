@@ -55,13 +55,13 @@ export default function PostCard({ post, user, onDelete, onLikeUpdate, onComment
     const getCategoryClass = (category: string) => {
         switch (category) {
             case 'Campaña':
-                return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+                return 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 dark:from-blue-900 dark:to-blue-800 dark:text-blue-300';
             case 'Noticia':
-                return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+                return 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-300';
             case 'Consejo':
-                return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+                return 'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 dark:from-purple-900 dark:to-purple-800 dark:text-purple-300';
             default:
-                return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+                return 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 dark:from-gray-700 dark:to-gray-600 dark:text-gray-300';
         }
     };
 
@@ -189,9 +189,9 @@ export default function PostCard({ post, user, onDelete, onLikeUpdate, onComment
             <div className="flex border-t border-gray-200 p-2 dark:border-gray-700">
                 <Button
                     variant="ghost"
-                    className={`flex-1 gap-2 ${
+                    className={`flex-1 gap-2 transition-all duration-300 ${
                         isLiked ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400'
-                    } hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/50 dark:hover:text-red-500`}
+                    } hover:scale-105 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/50 dark:hover:text-red-500`}
                     onClick={handleLike}
                     disabled={!user || isLiking}
                 >
@@ -200,7 +200,7 @@ export default function PostCard({ post, user, onDelete, onLikeUpdate, onComment
                 </Button>
                 <Button
                     variant="ghost"
-                    className="flex-1 gap-2 text-gray-600 hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/50 dark:hover:text-blue-500"
+                    className="flex-1 gap-2 text-gray-600 transition-all duration-300 hover:scale-105 hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/50 dark:hover:text-blue-500"
                     onClick={() => setShowCommentModal(true)}
                     disabled={!user}
                 >

@@ -120,7 +120,7 @@ export default function Welcome({ productos = [], mascotas = [], todasLasMascota
             <Head title="Inicio" />
             <Header />
 
-            <main className="relative z-10 w-full bg-white dark:bg-gray-800">
+            <main className="relative z-10 w-full">
                 {/* 1. Hero Section - Punto de entrada */}
                 <HeroSection />
 

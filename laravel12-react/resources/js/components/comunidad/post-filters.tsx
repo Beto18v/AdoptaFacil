@@ -14,10 +14,10 @@ export default function PostFilters({ onFiltersChange }: PostFiltersProps) {
     const [tempSearch, setTempSearch] = useState('');
 
     const categories = [
-        { id: 'Campaña', label: 'Campañas', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' },
-        { id: 'Noticia', label: 'Noticias', color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' },
-        { id: 'Consejo', label: 'Consejos', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' },
-        { id: 'General', label: 'General', color: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' },
+        { id: 'Campaña', label: 'Campañas', color: 'bg-blue-500 text-blue-800 dark:bg-blue-600 dark:text-blue-300' },
+        { id: 'Noticia', label: 'Noticias', color: 'bg-green-500 text-green-800 dark:bg-green-600 dark:text-green-300' },
+        { id: 'Consejo', label: 'Consejos', color: 'bg-purple-500 text-purple-800 dark:bg-purple-600 dark:text-purple-300' },
+        { id: 'General', label: 'General', color: 'bg-gray-500 text-gray-800 dark:bg-gray-600 dark:text-gray-300' },
     ];
 
     const handleCategoryToggle = (categoryId: string) => {
@@ -90,7 +90,7 @@ export default function PostFilters({ onFiltersChange }: PostFiltersProps) {
     return (
         <div className="sticky top-24 rounded-xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-900">
             <h3 className="mb-4 flex items-center text-lg font-bold text-gray-900 dark:text-white">
-                <ListFilter className="mr-2 h-5 w-5 text-teal-600" />
+                <ListFilter className="mr-2 h-5 w-5 text-blue-600 dark:text-blue-400" />
                 Filtrar Publicaciones
             </h3>
 
@@ -104,7 +104,11 @@ export default function PostFilters({ onFiltersChange }: PostFiltersProps) {
                         onKeyPress={handleSearchKeyPress}
                         className="flex-1"
                     />
-                    <Button onClick={handleSearch} size="icon" className="bg-teal-600 text-white hover:bg-teal-700">
+                    <Button
+                        onClick={handleSearch}
+                        size="icon"
+                        className="bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                    >
                         <Search className="h-4 w-4" />
                     </Button>
                 </div>
@@ -119,10 +123,10 @@ export default function PostFilters({ onFiltersChange }: PostFiltersProps) {
                             key={category.id}
                             variant={selectedCategories.includes(category.id) ? 'default' : 'ghost'}
                             onClick={() => handleCategoryToggle(category.id)}
-                            className={`w-full justify-start transition-all ${
+                            className={`w-full justify-start transition-all duration-300 ${
                                 selectedCategories.includes(category.id)
-                                    ? 'bg-teal-600 text-white hover:bg-teal-700'
-                                    : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                                    ? 'bg-gradient-to-r from-green-500 to-green-700 text-white shadow-lg hover:scale-105 hover:shadow-xl'
+                                    : 'text-gray-700 hover:scale-102 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
                             }`}
                         >
                             <span className={`mr-2 h-3 w-3 rounded-full ${category.color.split(' ')[0]}`}></span>
@@ -150,14 +154,14 @@ export default function PostFilters({ onFiltersChange }: PostFiltersProps) {
                     <div className="space-y-2">
                         {/* Filtro de búsqueda */}
                         {searchTerm && (
-                            <div className="flex items-center gap-2 rounded-full bg-teal-50 px-3 py-2 text-sm dark:bg-teal-900/20">
-                                <Search className="h-3 w-3 text-teal-600" />
-                                <span className="flex-1 truncate text-teal-800 dark:text-teal-200">"{searchTerm}"</span>
+                            <div className="flex items-center gap-2 rounded-full bg-blue-50 px-3 py-2 text-sm dark:bg-blue-900/20">
+                                <Search className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+                                <span className="flex-1 truncate text-blue-800 dark:text-blue-200">"{searchTerm}"</span>
                                 <Button
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => removeFilter('search')}
-                                    className="h-5 w-5 p-0 text-teal-600 hover:bg-teal-100 hover:text-teal-700 dark:hover:bg-teal-800"
+                                    className="h-5 w-5 p-0 text-blue-600 hover:bg-blue-100 hover:text-blue-700 dark:text-blue-400 dark:hover:bg-blue-800"
                                 >
                                     <X className="h-3 w-3" />
                                 </Button>

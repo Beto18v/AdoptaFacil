@@ -186,21 +186,21 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
     const getCategoryClass = (category: string) => {
         switch (category) {
             case 'Campaña':
-                return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+                return 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 dark:from-blue-900 dark:to-blue-800 dark:text-blue-300';
             case 'Noticia':
-                return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+                return 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:from-green-900 dark:to-green-800 dark:text-green-300';
             case 'Consejo':
-                return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+                return 'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 dark:from-purple-900 dark:to-purple-800 dark:text-purple-300';
             default:
-                return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+                return 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 dark:from-gray-700 dark:to-gray-600 dark:text-gray-300';
         }
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-h-[90vh] max-w-4xl border-2 border-teal-300 bg-white p-0 shadow-2xl backdrop-blur-sm dark:border-teal-600 dark:bg-gray-900">
+            <DialogContent className="max-h-[90vh] max-w-4xl border-2 border-blue-300 bg-white p-0 shadow-2xl backdrop-blur-sm dark:border-blue-600 dark:bg-gray-900">
                 {/* Header del modal */}
-                <div className="rounded-t-lg bg-gradient-to-r from-teal-600 to-blue-700 px-6 py-4 text-white shadow-lg">
+                <div className="rounded-t-lg bg-gradient-to-r from-blue-600 to-green-600 px-6 py-4 text-white shadow-lg">
                     <DialogTitle className="flex items-center gap-2 text-xl font-bold">
                         <MessageCircle className="h-6 w-6" />
                         Publicación de {currentPost.author.name}
@@ -209,11 +209,11 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
 
                 <div className="flex h-full max-h-[calc(90vh-80px)] flex-col bg-white dark:bg-gray-900">
                     {/* Post original con diseño mejorado */}
-                    <div className="border-b-2 border-teal-200 bg-gradient-to-r from-teal-50 to-blue-50 px-6 py-4 dark:border-teal-700 dark:from-gray-800 dark:to-gray-700">
+                    <div className="border-b-2 border-blue-200 bg-gradient-to-r from-blue-50 to-green-50 px-6 py-4 dark:border-blue-700 dark:from-gray-800 dark:to-gray-700">
                         <div className="flex items-start gap-4">
-                            <Avatar className="h-12 w-12 ring-2 ring-teal-300 dark:ring-teal-600">
+                            <Avatar className="h-12 w-12 ring-2 ring-blue-300 dark:ring-blue-600">
                                 <AvatarImage src={currentPost.author.avatarUrl} alt={currentPost.author.name} />
-                                <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-200">
+                                <AvatarFallback className="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200">
                                     {currentPost.author.name.substring(0, 2)}
                                 </AvatarFallback>
                             </Avatar>
@@ -286,14 +286,14 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
                                         value={newComment}
                                         onChange={(e) => setNewComment(e.target.value)}
                                         placeholder="Comparte tu opinión..."
-                                        className="max-h-[120px] min-h-[60px] flex-1 border-2 border-teal-200 bg-white focus:border-teal-400 dark:border-teal-700 dark:bg-gray-700 dark:focus:border-teal-500"
+                                        className="max-h-[120px] min-h-[60px] flex-1 border-2 border-blue-200 bg-white focus:border-blue-400 dark:border-blue-700 dark:bg-gray-700 dark:focus:border-blue-500"
                                         disabled={isSubmitting}
                                     />
                                     <Button
                                         type="submit"
                                         size="icon"
                                         disabled={!newComment.trim() || isSubmitting}
-                                        className="h-12 w-12 self-end rounded-full bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-600 hover:to-blue-700"
+                                        className="h-12 w-12 self-end rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
                                     >
                                         <Send className="h-5 w-5" />
                                     </Button>
@@ -307,7 +307,7 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
                         <div className="space-y-4">
                             {isLoadingComments ? (
                                 <div className="py-8 text-center">
-                                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-teal-500"></div>
+                                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
                                     <p className="mt-2 text-gray-500">Cargando comentarios...</p>
                                 </div>
                             ) : postComments.length === 0 ? (
