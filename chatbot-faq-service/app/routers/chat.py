@@ -1,34 +1,46 @@
+# chat.py
+# Define los endpoints de la API y el flujo de conversación del chatbot FAQ.
+# Orquesta cómo se recibe la pregunta, se busca la respuesta y se responde al usuario.
+# Aquí se pueden personalizar saludos, fallback y lógica de integración.
+
 # Define los endpoints relacionados con el chatbot FAQ, procesando preguntas y generando respuestas.
 from fastapi import APIRouter, Response
 from ..schemas import ChatRequest, ChatResponse
+from ..fuzzy_matcher import get_fuzzy_response
+from ..faqs import search_faqs_by_keywords
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
 def get_chatbot_response(message: str) -> str:
-    message_lower = message.lower()
-    
-    # Reglas de respuesta basadas en palabras clave
-    rules = [
-        (["hola", "buenas", "saludos"], "¡Hola! ¿En qué puedo ayudarte hoy?"),
-        (["registro", "registrar"], "Sí, el registro es completamente gratuito para todas las opciones de cuenta."),
-        (["cambiar", "cuenta"], "Claro, solo necesitas completar información adicional para actualizar tu cuenta."),
-        (["documento", "papeles"], "Depende del tipo de cuenta. Fundaciones deben adjuntar soporte legal."),
-        (["proceso", "adopción", "adopto", "adoptar"], "El proceso incluye llenar un formulario, una entrevista y la firma del acuerdo de adopción."),
-        (["costo", "precio", "pagar"], "La adopción no tiene costo, pero pedimos cubrir vacunas y esterilización."),
-        (["requisito", "necesito"], "Necesitas ser mayor de edad y completar los formularios correspondientes."),
-        (["ubicación", "dónde"], "Puedes verificar donde se encuentran los refugios más cercanos registrandote y dirigiendote al apartado de mapa."),
-        (["vacuna", "esterilización"], "Sí, todas las mascotas se entregan vacunadas y esterilizadas según su edad."),
-        (["otra mascota", "ya tengo"], "Sí, siempre que tus mascotas actuales estén vacunadas y socializadas."),
-        (["devolver", "regresar"], "Las devoluciones responsables dependen de las politicas del refugio."),
-        (["voluntario", "donar", "ayudar"], "¡Claro! Puedes unirte como voluntario en diferentes actividades de cuidado y rescate, tambien puedes apoyar a un refugio dondando para su causa en el apartado de refugios.")
-    ]
-    
-    for keywords, response in rules:
-        if any(keyword in message_lower for keyword in keywords):
-            return response
-    
-    # Respuesta por defecto
-    return "Soy tu asistente de adopciones 🐾. Puedes preguntarme sobre registro, documentos, requisitos, proceso, ubicación, horarios, costos o voluntariado."
+    """
+    Get chatbot response using fuzzy matching against FAQ database.
+    Falls back to keyword-based matching if fuzzy matching fails.
+    """
+    message_lower = message.lower().strip()
+
+    # First try fuzzy matching
+    fuzzy_response = get_fuzzy_response(message)
+    if fuzzy_response:
+        return fuzzy_response
+
+    # Fallback to keyword-based matching
+    keyword_results = search_faqs_by_keywords(message)
+    if keyword_results:
+        faq = keyword_results[0]  # Take the first match
+        return str(faq["answer"])
+
+    # Basic greetings and common responses
+    if any(word in message_lower for word in ["hola", "buenas", "saludos", "hello", "hi"]):
+        return "¡Hola! Soy tu asistente de AdoptaFácil 🐾. ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre adopciones, registro, mascotas, o cualquier aspecto de la plataforma."
+
+    if any(word in message_lower for word in ["gracias", "thanks", "thank you"]):
+        return "¡De nada! Estoy aquí para ayudarte con cualquier pregunta sobre AdoptaFácil. ¿Hay algo más que quieras saber?"
+
+    if any(word in message_lower for word in ["adios", "bye", "chau", "hasta luego"]):
+        return "¡Hasta luego! Recuerda que puedes volver cuando necesites ayuda con AdoptaFácil. ¡Cuida mucho a tu mascota! 🐕🐱"
+
+    # Default response with suggestions
+    return "Lo siento, no pude encontrar una respuesta exacta para tu pregunta. Soy un chatbot especializado en AdoptaFácil y puedo ayudarte con temas como:\n\n• Registro y cuentas de usuario\n• Publicar mascotas para adopción\n• Proceso de adopción\n• Comunidad y consejos\n• Productos para mascotas\n• Donaciones a refugios\n\n¿Podrías reformular tu pregunta o elegir uno de estos temas?"
 
 @router.post("/", response_model=ChatResponse)
 async def chat(request: ChatRequest):
