@@ -1,3 +1,4 @@
+import ChatbotWidget from '@/components/chatbot-widget';
 import InputError from '@/components/input-error';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
@@ -153,7 +154,8 @@ export default function Register({ role }: { role: string }) {
                     </div>
                 </form>
             </div>
-            <ThemeSwitcher />
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
         </div>
     );
 }

@@ -1,3 +1,4 @@
+import ChatbotWidget from '@/components/chatbot-widget';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { ThemeSwitcher } from '@/components/theme-switcher';
@@ -127,7 +128,8 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     </div>
                 </form>
             </div>
-            <ThemeSwitcher />
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
         </div>
     );
 }

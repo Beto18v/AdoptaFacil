@@ -62,6 +62,31 @@ FAQS = [
         "answer": "Para cambiar tu tipo de cuenta (por ejemplo, de adoptante a refugio), contacta al soporte con documentación que acredite tu rol. El equipo revisará y actualizará tu perfil.",
         "keywords": ["cambiar tipo cuenta", "actualizar perfil", "cambiar rol"]
     },
+    {
+        "question": "¿Por qué registrarme en AdoptaFácil?",
+        "answer": "AdoptaFácil ofrece un proceso simplificado desde la búsqueda hasta el seguimiento de adopciones, una comunidad comprometida que realmente ama y protege a los animales, y recursos exclusivos según tu tipo de cuenta.",
+        "keywords": ["por que registrarme", "beneficios", "ventajas", "razones para registrarse"]
+    },
+    {
+        "question": "¿Qué documentos necesito para registrarme?",
+        "answer": "Depende del tipo de cuenta. Para usuarios individuales solo necesitas email y datos básicos. Para fundaciones y organizaciones es necesario adjuntar soporte legal que acredite su estatus.",
+        "keywords": ["documentos registro", "que necesito", "requisitos registro", "papeles"]
+    },
+    {
+        "question": "¿Qué significa proceso simplificado en AdoptaFácil?",
+        "answer": "Desde la búsqueda hasta el seguimiento, todo está pensado para facilitar la adopción. La plataforma integra todas las etapas del proceso en un solo lugar, haciendo que sea más fácil y eficiente para adoptantes y refugios.",
+        "keywords": ["proceso simplificado", "fácil", "simple", "proceso adopción", "facilitar"]
+    },
+    {
+        "question": "¿Qué es la comunidad comprometida de AdoptaFácil?",
+        "answer": "Es una comunidad de personas que realmente aman y protegen a los animales. Incluye adoptantes responsables, refugios dedicados, veterinarios y aliados comerciales que trabajan juntos por el bienestar animal.",
+        "keywords": ["comunidad comprometida", "comunidad", "gente que ama animales", "proteger animales"]
+    },
+    {
+        "question": "¿Cuáles son los recursos exclusivos de AdoptaFácil?",
+        "answer": "Accedes a beneficios según tu tipo de cuenta: adoptantes pueden usar favoritos y seguimiento de solicitudes, refugios tienen herramientas de gestión, aliados comerciales pueden vender productos, y todos participan en la comunidad social.",
+        "keywords": ["recursos exclusivos", "beneficios", "ventajas cuenta", "funciones especiales"]
+    },
 
     # Pets Management
     {

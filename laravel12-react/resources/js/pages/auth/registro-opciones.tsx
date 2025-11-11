@@ -1,3 +1,4 @@
+import ChatbotWidget from '@/components/chatbot-widget';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Head, Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
@@ -30,85 +31,96 @@ export default function RegistroOpciones() {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-500 text-white dark:from-green-600 dark:to-blue-700">
+        <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 text-white dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
             <Head title="Opciones de Registro" />
+
+            {/* Elementos de fondo decorativos */}
+            <div className="absolute inset-0">
+                <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-white/5 blur-3xl"></div>
+                <div className="absolute right-1/4 bottom-1/4 h-64 w-64 rounded-full bg-blue-300/10 blur-2xl"></div>
+                <div className="absolute top-1/2 right-1/3 h-32 w-32 rounded-full bg-purple-300/10 blur-xl"></div>
+            </div>
+
             {/* Header con logo */}
-            <div className="pt-10 text-center">
-                <Link href={route('index')}>
-                    <img src={Logo} alt="Logo" className="mx-auto mb-8 h-36 w-56" />
+            <div className="relative z-10 pt-16 pb-8 text-center">
+                <Link href={route('index')} className="group inline-block">
+                    <img
+                        src={Logo}
+                        alt="Logo"
+                        className="mx-auto mb-8 h-36 w-56 drop-shadow-2xl transition-transform duration-300 group-hover:scale-105"
+                    />
                 </Link>
-                <h1 className="mt-4 text-3xl font-bold md:text-4xl">Únete a AdoptaFácil</h1>
-                <p className="mx-auto mt-2 max-w-xl px-4 text-white/90">
+                <h1 className="mt-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-4xl font-bold text-transparent drop-shadow-lg md:text-5xl lg:text-6xl">
+                    Únete a AdoptaFácil
+                </h1>
+                <p className="mx-auto mt-6 max-w-2xl px-4 text-xl leading-relaxed font-medium text-white/90">
                     Selecciona el tipo de cuenta que deseas crear y comienza tu experiencia con nosotros
                 </p>
+
+                {/* Línea decorativa */}
+                <div className="mx-auto mt-8 h-1 w-24 rounded-full bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
             </div>
 
             {/* Tarjetas de opciones */}
-            <div className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 px-4 md:grid-cols-2">
-                {opcionesRegistro.map((opcion) => (
-                    <div
-                        key={opcion.id}
-                        onMouseEnter={() => setTarjetaActiva(opcion.id)}
-                        onMouseLeave={() => setTarjetaActiva(null)}
-                        className={`rounded-2xl bg-white p-6 text-gray-800 shadow-lg transition-transform duration-300 hover:shadow-2xl dark:bg-gray-700 dark:text-white ${
-                            tarjetaActiva === opcion.id ? 'scale-105 ring-2 ring-white' : ''
-                        }`}
-                    >
+            <div className="flex min-h-[60vh] items-center justify-center px-4">
+                <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
+                    {opcionesRegistro.map((opcion) => (
                         <div
-                            className={`bg-gradient-to-r ${opcion.color} mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full text-3xl text-white shadow-md`}
+                            key={opcion.id}
+                            onMouseEnter={() => setTarjetaActiva(opcion.id)}
+                            onMouseLeave={() => setTarjetaActiva(null)}
+                            className={`group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white p-8 text-gray-800 shadow-2xl transition-all duration-500 dark:bg-gray-800 dark:text-white ${
+                                tarjetaActiva === opcion.id ? 'scale-[1.02] ring-4 ring-white/50' : ''
+                            }`}
                         >
-                            {opcion.icono}
+                            {/* Decoración de fondo */}
+                            <div className="absolute -top-6 -right-6 h-24 w-24 rounded-full bg-gradient-to-br from-white/10 to-transparent"></div>
+                            <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-white/5 to-transparent"></div>
+
+                            {/* Contenido */}
+                            <div className="relative z-10">
+                                <div
+                                    className={`bg-gradient-to-r ${opcion.color} mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl text-4xl text-white shadow-xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}
+                                >
+                                    {opcion.icono}
+                                </div>
+
+                                <h3 className="mb-4 text-center text-2xl font-bold tracking-tight">{opcion.titulo}</h3>
+                                <p className="mb-8 text-center leading-relaxed text-gray-600 dark:text-gray-300">{opcion.descripcion}</p>
+
+                                <div className="flex justify-center">
+                                    <Link
+                                        href={route('register', { role: opcion.rol })}
+                                        className={`bg-gradient-to-r ${opcion.color} relative overflow-hidden rounded-xl px-8 py-4 text-center font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:ring-4 focus:ring-blue-300/50 focus:outline-none`}
+                                    >
+                                        <span className="relative z-10">Registrarme Ahora</span>
+                                        <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></div>
+                                    </Link>
+                                </div>
+                            </div>
+
+                            {/* Efecto de brillo en hover */}
+                            <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                                <div className="absolute inset-0 translate-x-[-100%] -skew-x-12 bg-gradient-to-r from-transparent via-white/5 to-transparent transition-transform duration-1000 group-hover:translate-x-[200%]"></div>
+                            </div>
                         </div>
-                        <h3 className="mb-2 text-center text-xl font-semibold">{opcion.titulo}</h3>
-                        <p className="mb-6 text-center text-gray-700 dark:text-white">{opcion.descripcion}</p>
-                        <Link
-                            href={route('register', { role: opcion.rol })}
-                            className="block w-full rounded-xl bg-blue-600 py-3 text-center text-white transition-colors duration-300 hover:bg-blue-700"
-                        >
-                            Registrarme
-                        </Link>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
-            {/* Informativo */}
-            <section className="mt-16 rounded-t-3xl bg-white px-6 py-10 text-gray-800 md:px-20 dark:bg-gray-700 dark:text-white">
-                <h2 className="mb-6 text-center text-2xl font-bold">¿Por qué registrarte en AdoptaFácil?</h2>
-                <div className="grid gap-6 md:grid-cols-3">
-                    <div className="rounded-xl bg-gray-100 p-6 dark:bg-gray-900 dark:text-white">
-                        <h3 className="mb-2 text-lg font-semibold">Proceso simplificado</h3>
-                        <p>Desde la búsqueda hasta el seguimiento, todo está pensado para facilitar la adopción.</p>
-                    </div>
-                    <div className="rounded-xl bg-gray-100 p-6 dark:bg-gray-900 dark:text-white">
-                        <h3 className="mb-2 text-lg font-semibold">Comunidad comprometida</h3>
-                        <p>Únete a quienes realmente aman y protegen a los animales.</p>
-                    </div>
-                    <div className="rounded-xl bg-gray-100 p-6 dark:bg-gray-900 dark:text-white">
-                        <h3 className="mb-2 text-lg font-semibold">Recursos exclusivos</h3>
-                        <p>Accede a beneficios según tu tipo de cuenta.</p>
-                    </div>
-                </div>
+            {/* Elementos decorativos flotantes */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                <div className="absolute top-1/4 left-1/4 h-2 w-2 animate-pulse rounded-full bg-white/20"></div>
+                <div className="absolute top-1/3 right-1/4 h-1 w-1 animate-ping rounded-full bg-white/30"></div>
+                <div className="absolute bottom-1/4 left-1/3 h-3 w-3 animate-pulse rounded-full bg-white/10"></div>
+                <div className="absolute right-1/3 bottom-1/3 h-1.5 w-1.5 animate-ping rounded-full bg-white/25"></div>
+            </div>
 
-                <div className="mt-12 space-y-6">
-                    <h2 className="text-center text-2xl font-bold">Preguntas frecuentes</h2>
+            {/* Espaciado inferior */}
+            <div className="pb-20"></div>
 
-                    <div className="border-b border-gray-300 pb-4">
-                        <h3 className="text-lg font-semibold">¿Es gratuito el registro?</h3>
-                        <p className="mt-2">Sí, el registro es completamente gratuito para todas las opciones de cuenta.</p>
-                    </div>
-
-                    <div className="border-b border-gray-300 pb-4">
-                        <h3 className="text-lg font-semibold">¿Puedo cambiar mi tipo de cuenta después?</h3>
-                        <p className="mt-2">Claro. Solo necesitas completar alguna información adicional.</p>
-                    </div>
-
-                    <div className="border-b border-gray-300 pb-4">
-                        <h3 className="text-lg font-semibold">¿Qué documentos necesito?</h3>
-                        <p className="mt-2">Depende del tipo de cuenta. Fundaciones deben adjuntar soporte legal.</p>
-                    </div>
-                </div>
-            </section>
-            <ThemeSwitcher />
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
         </div>
     );
 }
