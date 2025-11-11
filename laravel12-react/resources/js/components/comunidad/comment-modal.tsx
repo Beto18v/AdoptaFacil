@@ -198,9 +198,9 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-h-[90vh] max-w-4xl border-2 border-blue-300 bg-white p-0 shadow-2xl backdrop-blur-sm dark:border-blue-600 dark:bg-gray-900">
+            <DialogContent className="max-h-auto max-w-4xl border-5 border-blue-400 bg-white p-0 shadow-2xl backdrop-blur-sm dark:border-blue-600 dark:bg-gray-900">
                 {/* Header del modal */}
-                <div className="rounded-t-lg bg-gradient-to-r from-blue-600 to-green-600 px-6 py-4 text-white shadow-lg">
+                <div className="rounded-t-lg border-b-2 border-purple-400 bg-gradient-to-r from-purple-600 via-blue-500 to-green-600 px-6 py-4 text-white shadow-lg dark:border-purple-500 dark:from-purple-800 dark:via-blue-700 dark:to-green-600">
                     <DialogTitle className="flex items-center gap-2 text-xl font-bold">
                         <MessageCircle className="h-6 w-6" />
                         Publicación de {currentPost.author.name}
@@ -209,9 +209,9 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
 
                 <div className="flex h-full max-h-[calc(90vh-80px)] flex-col bg-white dark:bg-gray-900">
                     {/* Post original con diseño mejorado */}
-                    <div className="border-b-2 border-blue-200 bg-gradient-to-r from-blue-50 to-green-50 px-6 py-4 dark:border-blue-700 dark:from-gray-800 dark:to-gray-700">
+                    <div className="border-b-2 border-green-400 bg-gradient-to-r from-blue-50 to-green-50 px-6 py-4 dark:border-green-500 dark:from-gray-800 dark:to-gray-700">
                         <div className="flex items-start gap-4">
-                            <Avatar className="h-12 w-12 ring-2 ring-blue-300 dark:ring-blue-600">
+                            <Avatar className="h-12 w-12 border-2 border-blue-400 ring-2 ring-green-300 dark:border-blue-500 dark:ring-green-600">
                                 <AvatarImage src={currentPost.author.avatarUrl} alt={currentPost.author.name} />
                                 <AvatarFallback className="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200">
                                     {currentPost.author.name.substring(0, 2)}
@@ -275,7 +275,7 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
                     {user && (
                         <div className="border-b border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-700 dark:bg-gray-800">
                             <div className="flex gap-4">
-                                <Avatar className="h-10 w-10 ring-2 ring-teal-300 dark:ring-teal-600">
+                                <Avatar className="h-10 w-10 ring-2 ring-blue-300 dark:ring-blue-600">
                                     <AvatarImage src={getAvatarUrl(user.avatar)} alt={user.name} />
                                     <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-200">
                                         {user.name.substring(0, 2)}
@@ -286,7 +286,7 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
                                         value={newComment}
                                         onChange={(e) => setNewComment(e.target.value)}
                                         placeholder="Comparte tu opinión..."
-                                        className="max-h-[120px] min-h-[60px] flex-1 border-2 border-blue-200 bg-white focus:border-blue-400 dark:border-blue-700 dark:bg-gray-700 dark:focus:border-blue-500"
+                                        className="max-h-[120px] min-h-[60px] flex-1 border-3 border-blue-400 bg-white focus:border-blue-600 dark:border-blue-500 dark:bg-gray-700 dark:focus:border-blue-400"
                                         disabled={isSubmitting}
                                     />
                                     <Button
@@ -325,12 +325,12 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
                                     <div
                                         key={comment.id}
                                         className={`flex gap-4 rounded-xl p-4 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/50 ${
-                                            index === 0 ? 'border border-teal-200 bg-teal-50 dark:border-teal-800 dark:bg-teal-900/20' : ''
+                                            index === 0 ? 'border border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20' : ''
                                         }`}
                                     >
-                                        <Avatar className="h-8 w-8 ring-1 ring-gray-200 dark:ring-gray-600">
+                                        <Avatar className="h-8 w-8 ring-1 ring-blue-200 dark:ring-blue-600">
                                             <AvatarImage src={comment.user.avatarUrl} alt={comment.user.name} />
-                                            <AvatarFallback className="bg-gradient-to-br from-teal-100 to-blue-100 text-teal-800 dark:from-teal-800 dark:to-blue-800 dark:text-teal-200">
+                                            <AvatarFallback className="bg-gradient-to-br from-blue-100 to-green-100 text-blue-800 dark:from-blue-800 dark:to-green-800 dark:text-blue-200">
                                                 {comment.user.name.substring(0, 2)}
                                             </AvatarFallback>
                                         </Avatar>
@@ -349,16 +349,16 @@ export default function CommentModal({ isOpen, onClose, post, user, comments = [
 
                     {/* Sección para usuarios no registrados */}
                     {!user && (
-                        <div className="border-t border-teal-200 bg-gradient-to-r from-teal-50 to-blue-50 px-6 py-6 dark:border-teal-700 dark:from-gray-800 dark:to-gray-700">
+                        <div className="border-t border-blue-200 bg-gradient-to-r from-blue-50 to-green-50 px-6 py-6 dark:border-blue-700 dark:from-gray-800 dark:to-gray-700">
                             <div className="text-center">
-                                <Heart className="mx-auto mb-3 h-12 w-12 text-teal-500" />
+                                <Heart className="mx-auto mb-3 h-12 w-12 text-blue-500" />
                                 <p className="mb-4 font-medium text-gray-700 dark:text-gray-300">¡Únete a la conversación!</p>
                                 <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
                                     Inicia sesión para comentar y dar like a las publicaciones
                                 </p>
                                 <Button
                                     onClick={() => (window.location.href = '/registro-opciones')}
-                                    className="rounded-full bg-gradient-to-r from-teal-500 to-blue-600 px-6 py-2 font-semibold text-white shadow-lg transition-all hover:from-teal-600 hover:to-blue-700 hover:shadow-xl"
+                                    className="rounded-full bg-gradient-to-r from-blue-500 to-green-600 px-6 py-2 font-semibold text-white shadow-lg transition-all hover:from-blue-600 hover:to-green-700 hover:shadow-xl"
                                 >
                                     Crear cuenta gratis
                                 </Button>

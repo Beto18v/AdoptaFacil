@@ -136,7 +136,7 @@ export default function PostCard({ post, user, onDelete, onLikeUpdate, onComment
     const isAdminDelete = user?.role === 'admin' && post.author.name !== user.name;
 
     return (
-        <div className="overflow-hidden rounded-xl bg-white shadow-lg transition-all duration-300 hover:shadow-2xl dark:bg-gray-900">
+        <div className="overflow-hidden rounded-xl border-2 border-gray-600 bg-white shadow-lg transition-all duration-300 hover:border-gray-500 hover:shadow-2xl dark:border-gray-600 dark:bg-gray-900 dark:hover:border-gray-400">
             {/* Cabecera de la publicación */}
             <div className="flex items-center p-4">
                 <Avatar>

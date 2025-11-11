@@ -5,15 +5,15 @@ import { ArrowLeft, ExternalLink } from 'lucide-react';
 
 interface Post {
     id: number;
-    author: {
+    user: {
         name: string;
-        avatarUrl: string;
+        avatar: string;
     };
-    timestamp: string;
+    created_at: string;
     content: string;
-    imageUrl?: string;
-    likes: number;
-    comments: number;
+    image_url?: string;
+    likes_count: number;
+    comments_count: number;
     category: string;
 }
 
@@ -32,19 +32,19 @@ export default function PostShow({ post, sharedLink }: Props) {
     const getCategoryClass = (category: string) => {
         switch (category) {
             case 'Campaña':
-                return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+                return 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
             case 'Noticia':
-                return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+                return 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 dark:bg-green-900 dark:text-green-300';
             case 'Consejo':
-                return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+                return 'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
             default:
-                return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+                return 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
         }
     };
 
     return (
         <>
-            <Head title={`Publicación compartida - ${post.author.name}`} />
+            <Head title={`Publicación compartida - ${post.user.name}`} />
 
             <div className="min-h-screen bg-gray-50 py-8 dark:bg-gray-900">
                 <div className="mx-auto max-w-2xl px-4">
@@ -63,30 +63,30 @@ export default function PostShow({ post, sharedLink }: Props) {
                     {/* Publicación compartida */}
                     <div className="overflow-hidden rounded-xl bg-white shadow-lg dark:bg-gray-800">
                         {/* Banner de publicación compartida */}
-                        <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-4 py-3">
+                        <div className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 px-4 py-3 dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
                             <p className="text-sm font-medium text-white">📤 Publicación compartida de la comunidad AdoptaFácil</p>
                         </div>
 
                         {/* Cabecera de la publicación */}
                         <div className="flex items-center p-6">
                             <Avatar className="h-12 w-12">
-                                <AvatarImage src={post.author.avatarUrl} alt={post.author.name} />
-                                <AvatarFallback>{post.author.name.substring(0, 2)}</AvatarFallback>
+                                <AvatarImage src={post.user.avatar} alt={post.user.name} />
+                                <AvatarFallback>{post.user.name.substring(0, 2)}</AvatarFallback>
                             </Avatar>
                             <div className="ml-4 flex-1">
-                                <p className="text-lg font-bold text-gray-900 dark:text-white">{post.author.name}</p>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">{post.timestamp}</p>
+                                <p className="text-lg font-bold text-gray-900 dark:text-white">{post.user.name}</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{new Date(post.created_at).toLocaleDateString()}</p>
                             </div>
                             <span className={`rounded-full px-3 py-1 text-sm font-semibold ${getCategoryClass(post.category)}`}>{post.category}</span>
                         </div>
 
                         {/* Contenido de la publicación */}
                         <div className="px-6 pb-6">
-                            {post.imageUrl ? (
+                            {post.image_url ? (
                                 <div className="space-y-4">
                                     <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">{post.content}</p>
                                     <div className="overflow-hidden rounded-lg">
-                                        <img src={post.imageUrl} alt="Imagen del post" className="h-auto max-h-96 w-full object-cover" />
+                                        <img src={post.image_url} alt="Imagen del post" className="h-auto max-h-96 w-full object-cover" />
                                     </div>
                                 </div>
                             ) : (
@@ -97,8 +97,8 @@ export default function PostShow({ post, sharedLink }: Props) {
                         {/* Estadísticas */}
                         <div className="border-t border-gray-200 px-6 py-4 dark:border-gray-700">
                             <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
-                                <span className="flex items-center gap-1">❤️ {post.likes} Me gusta</span>
-                                <span className="flex items-center gap-1">💬 {post.comments} Comentarios</span>
+                                <span className="flex items-center gap-1">❤️ {post.likes_count} Me gusta</span>
+                                <span className="flex items-center gap-1">💬 {post.comments_count} Comentarios</span>
                             </div>
                         </div>
 
@@ -110,7 +110,7 @@ export default function PostShow({ post, sharedLink }: Props) {
                                 </p>
                                 <a
                                     href="/comunidad"
-                                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700"
+                                    className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-green-600 px-6 py-3 font-medium text-white transition-all hover:from-blue-600 hover:to-green-700"
                                 >
                                     Explorar Comunidad
                                     <ExternalLink className="h-4 w-4" />
@@ -127,6 +127,11 @@ export default function PostShow({ post, sharedLink }: Props) {
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric',
+                            })}{' '}
+                            a las{' '}
+                            {new Date(sharedLink.expires_at).toLocaleTimeString('es-ES', {
+                                hour: '2-digit',
+                                minute: '2-digit',
                             })}
                         </p>
                     </div>

@@ -23,8 +23,10 @@ export default function ShareButton({ postId, disabled = false, className = '' }
     const [isSharing, setIsSharing] = useState(false);
     const [shareUrl, setShareUrl] = useState('');
     const [showShareMenu, setShowShareMenu] = useState(false);
-    const [copySuccess, setCopySuccess] = useState(false);
+    const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const shareMenuRef = useRef<HTMLDivElement>(null);
+    const [copySuccess, setCopySuccess] = useState(false);
 
     // Cerrar menú al hacer clic fuera
     useEffect(() => {
@@ -53,6 +55,8 @@ export default function ShareButton({ postId, disabled = false, className = '' }
 
             if (!csrfToken) {
                 console.error('CSRF token no encontrado');
+                alert('Error: Token CSRF no encontrado. Recarga la página.');
+                setIsSharing(false);
                 return;
             }
 
@@ -69,9 +73,14 @@ export default function ShareButton({ postId, disabled = false, className = '' }
 
             const data = await response.json();
 
-            if (data.success) {
+            if (response.ok && data.success) {
                 setShareUrl(data.url);
                 setShowShareMenu(true);
+
+                if (buttonRef.current) {
+                    const rect = buttonRef.current.getBoundingClientRect();
+                    setMenuPosition({ top: rect.top - 400, left: rect.left });
+                }
 
                 // Si el dispositivo soporta Web Share API
                 if (navigator.share && window.innerWidth <= 768) {
@@ -89,10 +98,12 @@ export default function ShareButton({ postId, disabled = false, className = '' }
                     }
                 }
             } else {
-                console.error('Error al generar enlace de compartir');
+                console.error('Error en la respuesta:', data);
+                alert(`Error al compartir: ${data.message || 'Error desconocido'}`);
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error en la petición:', error);
+            alert('Error de conexión. Verifica tu conexión a internet.');
         } finally {
             setIsSharing(false);
         }
@@ -136,10 +147,11 @@ export default function ShareButton({ postId, disabled = false, className = '' }
     ];
 
     return (
-        <div className={`relative flex-1 ${className}`}>
+        <div className={`relative flex-1 overflow-visible ${className}`}>
             <Button
+                ref={buttonRef}
                 variant="ghost"
-                className="w-full gap-2 text-gray-600 transition-all duration-300 hover:scale-105 hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/50 dark:hover:text-green-500"
+                className="w-full gap-2 text-gray-600 transition-all duration-300 hover:scale-105 hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/50 dark:hover:text-blue-500"
                 onClick={handleShare}
                 disabled={disabled || isSharing}
             >
@@ -150,11 +162,12 @@ export default function ShareButton({ postId, disabled = false, className = '' }
             {showShareMenu && shareUrl && (
                 <div
                     ref={shareMenuRef}
-                    className="absolute top-full right-0 z-50 mt-2 min-w-72 rounded-lg border bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                    className="fixed z-50 max-h-96 min-w-64 overflow-y-auto rounded-lg border-2 border-blue-400 bg-white p-4 shadow-lg dark:border-blue-500 dark:bg-gray-800"
+                    style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}
                 >
                     <div className="mb-3">
                         <p className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Compartir en:</p>
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 gap-2">
                             {shareOptions.map((option) => (
                                 <a
                                     key={option.name}
@@ -178,7 +191,7 @@ export default function ShareButton({ postId, disabled = false, className = '' }
                                 type="text"
                                 value={shareUrl}
                                 readOnly
-                                className="flex-1 rounded border bg-gray-50 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                                className="flex-1 rounded border-2 border-blue-400 bg-gray-50 px-3 py-2 text-sm dark:border-blue-500 dark:bg-gray-700 dark:text-gray-200"
                             />
                             <Button
                                 onClick={copyToClipboard}

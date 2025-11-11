@@ -40,7 +40,7 @@ import Footer from '@/components/landing/footer';
 import Header from '@/components/landing/header';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Head, router } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -133,8 +133,9 @@ export default function Comunidad({ auth, posts: initialPosts, flash }: Comunida
     };
 
     // Función para recargar posts desde el servidor
-    const handlePostCreated = () => {
-        router.reload({ only: ['posts'] });
+    const handlePostCreated = (newPost: Post) => {
+        setPosts((prevPosts) => [newPost, ...prevPosts]);
+        setFilteredPosts((prevPosts) => [newPost, ...prevPosts]);
     };
 
     // Función para manejar actualizaciones de likes

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DescripcionMascotaController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\ShelterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,10 +36,14 @@ Route::prefix('users')->group(function () {
 
 // Rutas API removidas - las donaciones se manejan en routes/web.php
 
+// Ruta para obtener refugios destacados por cantidad de mascotas
+Route::get('/top-shelters', [ShelterController::class, 'topShelters']);
+
 /*
 Endpoints disponibles:
 - POST /api/descripciones/generar
 - GET /api/descripciones/verificar-servicio
 - POST /api/users/validate-email
 - POST /api/users/reset-password
+- GET /api/top-shelters
 */

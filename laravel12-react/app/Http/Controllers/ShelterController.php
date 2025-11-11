@@ -89,4 +89,30 @@ class ShelterController extends Controller
         // Inertia recargará la página y el DonacionesController mostrará la nueva vista.
         return redirect()->route('donaciones.index')->with('success', '¡Tu fundación ha sido registrada exitosamente!');
     }
+
+    /**
+     * API endpoint para obtener los refugios ordenados por cantidad de mascotas (de mayor a menor).
+     */
+    public function topShelters()
+    {
+        $shelters = Shelter::select('shelters.*')
+            ->selectRaw('COUNT(mascotas.id) as mascotas_count')
+            ->leftJoin('mascotas', 'shelters.user_id', '=', 'mascotas.user_id')
+            ->groupBy('shelters.id')
+            ->orderBy('mascotas_count', 'desc')
+            ->limit(5)
+            ->with('user')
+            ->get()
+            ->map(function ($shelter) {
+                return [
+                    'id' => $shelter->id,
+                    'name' => $shelter->name,
+                    'avatarUrl' => $shelter->user->avatar ? asset('storage/' . $shelter->user->avatar) : '',
+                    'mascotas' => $shelter->mascotas_count,
+                    'link' => route('refugios'),
+                ];
+            });
+
+        return response()->json($shelters);
+    }
 }

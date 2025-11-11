@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { getAvatarUrl } from '@/lib/avatar-utils';
 import { router } from '@inertiajs/react';
 import { CheckCircle, ImagePlus, LogIn, Send, Video, XCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface User {
     id: number;
@@ -17,9 +17,24 @@ interface User {
     avatar?: string;
 }
 
+interface Post {
+    id: number;
+    author: {
+        name: string;
+        avatarUrl: string;
+    };
+    timestamp: string;
+    content: string;
+    imageUrl?: string;
+    likes: number;
+    is_liked?: boolean;
+    comments: number;
+    category: string;
+}
+
 interface CreatePostProps {
     user?: User;
-    onPostCreated?: () => void;
+    onPostCreated?: (post: Post) => void;
 }
 
 export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
@@ -29,6 +44,30 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [isSelectOpen, setIsSelectOpen] = useState(false);
+
+    useEffect(() => {
+        if (isSelectOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }, [isSelectOpen]);
+
+    const getBorderClass = (category: string) => {
+        switch (category) {
+            case 'General':
+                return 'border-gray-600 dark:border-gray-500';
+            case 'Campaña':
+                return 'border-blue-500 dark:border-blue-400';
+            case 'Consejo':
+                return 'border-purple-500 dark:border-purple-400';
+            case 'Noticia':
+                return 'border-green-500 dark:border-green-400';
+            default:
+                return 'border-gray-600 dark:border-gray-500';
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -83,8 +122,8 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
                 setSuccess('¡Publicación creada exitosamente!');
 
                 // Llamar al callback para actualizar la lista
-                if (onPostCreated) {
-                    onPostCreated();
+                if (onPostCreated && data.post) {
+                    onPostCreated(data.post);
                 }
 
                 // Ocultar mensaje de éxito después de 3 segundos
@@ -120,9 +159,14 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
 
     if (!user) {
         return (
-            <div className="mb-8 rounded-xl bg-gradient-to-r from-blue-50 to-green-50 p-8 shadow-lg dark:from-gray-900 dark:to-gray-950">
-                <div className="text-center">
-                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-100 to-green-100 dark:from-blue-900 dark:to-green-900">
+            <div className="relative mb-8 overflow-hidden rounded-xl bg-gradient-to-r from-blue-50 to-green-50 p-8 shadow-lg dark:from-gray-900 dark:to-gray-950">
+                {/* Borde animado sutil */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-200/30 via-green-200/30 to-blue-200/30 p-[1px] dark:from-blue-400/20 dark:via-green-400/20 dark:to-blue-400/20">
+                    <div className="absolute inset-0 animate-pulse rounded-xl bg-gradient-to-r from-transparent via-white/15 to-transparent dark:via-gray-900/15"></div>
+                    <div className="h-full w-full rounded-xl bg-gradient-to-r from-blue-50 to-green-50 dark:from-gray-900 dark:to-gray-950"></div>
+                </div>
+                <div className="relative z-10 text-center">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-green-300/50 bg-gradient-to-r from-blue-100 to-green-100 dark:border-green-400/40 dark:from-blue-900 dark:to-green-900">
                         <LogIn className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                     </div>
                     <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">¡Únete a nuestra comunidad!</h3>
@@ -147,15 +191,15 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
                         </Button>
                     </div>
                     <div className="mt-6 grid grid-cols-3 gap-4 text-center">
-                        <div className="rounded-lg bg-white p-3 shadow-sm dark:bg-gray-800">
+                        <div className="rounded-lg border border-blue-200/50 bg-white p-3 shadow-sm dark:border-blue-400/30 dark:bg-gray-800">
                             <div className="text-lg font-bold text-blue-600 dark:text-blue-400">🐾</div>
                             <div className="text-xs text-gray-600 dark:text-gray-400">Comparte</div>
                         </div>
-                        <div className="rounded-lg bg-white p-3 shadow-sm dark:bg-gray-800">
+                        <div className="rounded-lg border border-green-200/50 bg-white p-3 shadow-sm dark:border-green-400/30 dark:bg-gray-800">
                             <div className="text-lg font-bold text-green-600 dark:text-green-400">💬</div>
                             <div className="text-xs text-gray-600 dark:text-gray-400">Comenta</div>
                         </div>
-                        <div className="rounded-lg bg-white p-3 shadow-sm dark:bg-gray-800">
+                        <div className="rounded-lg border border-purple-200/50 bg-white p-3 shadow-sm dark:border-purple-400/30 dark:bg-gray-800">
                             <div className="text-lg font-bold text-purple-600 dark:text-purple-400">❤️</div>
                             <div className="text-xs text-gray-600 dark:text-gray-400">Conecta</div>
                         </div>
@@ -166,7 +210,7 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
     }
 
     return (
-        <div className="mb-8 rounded-xl bg-white p-6 shadow-lg dark:bg-gray-900">
+        <div className={`mb-8 rounded-xl border-2 ${getBorderClass(category)} bg-white p-6 shadow-lg dark:bg-gray-900`}>
             <form onSubmit={handleSubmit}>
                 <div className="flex items-start">
                     <Avatar>
@@ -184,11 +228,11 @@ export default function CreatePost({ user, onPostCreated }: CreatePostProps) {
                         />
 
                         <div className="mb-4 flex items-center gap-4">
-                            <Select value={category} onValueChange={setCategory} disabled={isSubmitting}>
+                            <Select value={category} onValueChange={setCategory} disabled={isSubmitting} onOpenChange={setIsSelectOpen}>
                                 <SelectTrigger className="w-48">
                                     <SelectValue placeholder="Categoría" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent position="popper" side="bottom" align="start">
                                     <SelectItem value="General">General</SelectItem>
                                     <SelectItem value="Campaña">Campaña</SelectItem>
                                     <SelectItem value="Noticia">Noticia</SelectItem>

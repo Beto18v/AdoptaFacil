@@ -88,7 +88,7 @@ class SharedController extends Controller
     {
         $sharedLink = SharedLink::where('token', $token)
             ->where('expires_at', '>', now())
-            ->with(['post.author'])
+            ->with(['post.user'])
             ->firstOrFail();
 
         return Inertia::render('Shared/PostShow', [
