@@ -41,6 +41,8 @@ env/
 
 # Java/Maven
 target/
+mail-service/target/
+chatbot-faq-service/target/
 .classpath
 .project
 .settings/
