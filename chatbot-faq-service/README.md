@@ -290,20 +290,6 @@ export APP_PORT=8001
 export APP_HOST=0.0.0.0
 ```
 
-## 🤝 Contribución
-
-1. Fork el repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit tus cambios (`git commit -am 'Agrega nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un Pull Request
-
-## 📝 Licencia
-
-Este proyecto es parte de AdoptaFácil. Consulta los términos de la plataforma principal.
-
-## 🆘 Solución de Problemas
-
 ### Error: "Module 'rapidfuzz' not found"
 
 ```bash
