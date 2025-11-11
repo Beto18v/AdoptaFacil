@@ -1,4 +1,3 @@
-
 # Servicio de Correo – Documentación Técnica
 
 Este microservicio, desarrollado en Spring Boot (Java 17+), permite el envío de correos electrónicos transaccionales y masivos, integrándose fácilmente con otros sistemas como Laravel.
@@ -38,16 +37,19 @@ Este microservicio, desarrollado en Spring Boot (Java 17+), permite el envío de
 El servicio implementa el **Patrón Strategy** para el envío de emails, permitiendo encapsular y extender fácilmente la lógica de cada tipo de correo (bienvenida, recuperación, notificación, etc.).
 
 **Ventajas:**
+
 - Extensibilidad y mantenibilidad
 - Testabilidad por tipo de email
 - Separación de responsabilidades
 
 **Estructura:**
+
 - Interfaz `EmailStrategy` y DTOs (`EmailRequest`, `WelcomeEmailRequest`, etc.)
 - Estrategias concretas: `WelcomeEmailStrategy`, `RecoveryEmailStrategy`, `NotificationEmailStrategy`
 - Servicio central: `EmailService` (inyecta y ejecuta la estrategia)
 
 **Ejemplo de uso:**
+
 ```java
 public void sendWelcomeEmail(WelcomeEmailRequest request) throws Exception {
 		sendEmail(new WelcomeEmailStrategy(), request);
@@ -55,6 +57,7 @@ public void sendWelcomeEmail(WelcomeEmailRequest request) throws Exception {
 ```
 
 **Endpoints principales:**
+
 - `POST /api/send-welcome-email`
 - `POST /api/send-recovery-email`
 - `POST /api/send-notification-email`
@@ -66,18 +69,21 @@ public void sendWelcomeEmail(WelcomeEmailRequest request) throws Exception {
 El sistema de plantillas permite definir emails HTML reutilizables con placeholders dinámicos (`{{name}}`, `{{token}}`, etc.).
 
 **Componentes:**
+
 - Modelo `EmailTemplate` (id, type, subject, htmlContent, ...)
 - Enum `EmailTemplateType` (WELCOME, RECOVERY, NOTIFICATION)
 - Servicio `EmailTemplateService` (gestión y procesamiento de plantillas)
 - Seeder `EmailTemplateSeeder` (inicialización automática)
 
 **Flujo:**
+
 1. Seeder crea plantillas al iniciar la app
 2. Estrategia consulta y procesa la plantilla
 3. Placeholders se reemplazan con datos dinámicos
 4. Email se envía personalizado
 
 **Ejemplo de uso en estrategia:**
+
 ```java
 String subject = templateService.getSubject(EmailTemplateType.WELCOME);
 String htmlContent = templateService.processTemplate(EmailTemplateType.WELCOME, placeholders);
@@ -86,11 +92,13 @@ helper.setText(htmlContent, true);
 ```
 
 **Placeholders disponibles:**
+
 - Bienvenida: `{{name}}`
 - Recuperación: `{{name}}`, `{{token}}`
 - Notificación: `{{name}}`, `{{message}}`
 
 **Características de las plantillas:**
+
 - Diseño responsivo y accesible
 - Elementos visuales y branding
 - Seguridad: placeholders sanitizados y HTML escapado
@@ -115,6 +123,7 @@ El sistema permite a los usuarios recuperar su contraseña mediante un flujo seg
 4. Spring Boot valida PIN y actualiza contraseña en Laravel
 
 **Ejemplo de requests:**
+
 ```json
 // Solicitud de recuperación
 {
@@ -130,6 +139,7 @@ El sistema permite a los usuarios recuperar su contraseña mediante un flujo seg
 ```
 
 **Configuración relevante:**
+
 ```properties
 # Laravel API
 laravel.api.base-url=http://localhost:8000/api
@@ -149,6 +159,7 @@ spring.mail.password=your-app-password
 Los seeders permiten poblar la base de datos con datos de ejemplo para usuarios, refugios, productos, publicaciones y dashboard.
 
 **Principales seeders:**
+
 - UserSeeder: usuarios base (admin, aliado, cliente)
 - ShelterSeeder: refugios y mascotas
 - ProductSeeder: productos de la tienda
@@ -156,6 +167,7 @@ Los seeders permiten poblar la base de datos con datos de ejemplo para usuarios,
 - DashboardDataSeeder: métricas y estadísticas
 
 **Ejecución:**
+
 ```bash
 php artisan db:seed
 # O uno específico
@@ -163,6 +175,7 @@ php artisan db:seed --class=UserSeeder
 ```
 
 **Notas:**
+
 - Usa `firstOrCreate()` para evitar duplicados
 - Contraseñas encriptadas y emails únicos
 - Datos realistas y apropiados para pruebas
@@ -172,15 +185,18 @@ php artisan db:seed --class=UserSeeder
 ## Pruebas y Métricas
 
 **Cobertura de tests:**
+
 - EmailTemplateServiceTest, EmailTemplateSeederTest, EmailTemplateTest, EmailTemplateTypeTest, EmailTemplateSystemIntegrationTest
 - PasswordResetServiceTest, UserApiServiceTest, RecoveryEmailControllerTest, WelcomeEmailControllerTest, EmailServiceTest, EmailTemplateServiceTest, WelcomeEmailStrategyTest
 
 **Ejecución:**
+
 ```bash
 mvn test
 ```
 
 **Resultados:**
+
 - Todas las pruebas deben pasar (ver `target/surefire-reports/` y `target/reports/surefire.html`)
 
 ---
@@ -201,6 +217,7 @@ mvn test
 - Maven 3.6+
 
 **Ejecución local:**
+
 ```bash
 mvn spring-boot:run
 ```
@@ -221,22 +238,27 @@ mvn spring-boot:run
 ## Informe de Funcionalidades
 
 ### Email Template
+
 - Plantillas reutilizables, personalizables y seguras
 - Variables dinámicas para personalización
 
 ### Password Reset
+
 - Flujo seguro y validado de recuperación
 - Tokens únicos y expiración
 
 ### Seeders
+
 - Datos de ejemplo para desarrollo y pruebas
 - Idempotencia y separación de datos
 
 ### Strategy Pattern
+
 - Extensibilidad y bajo acoplamiento
 - Fácil de probar y mantener
 
 ### Pruebas Automáticas
+
 - 77 pruebas ejecutadas, 0 fallos, 0 errores, 0 omitidas (ver surefire-reports)
 
 ---
