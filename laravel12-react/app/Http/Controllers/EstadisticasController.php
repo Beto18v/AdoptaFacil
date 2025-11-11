@@ -46,7 +46,7 @@ class EstadisticasController extends Controller
         $startDate = Carbon::now()->subMonths(12);
         $monthlyAdoptions = Solicitud::where('estado', 'Aprobada')
             ->where('created_at', '>=', $startDate)
-            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count')
+            ->selectRaw('EXTRACT(YEAR FROM created_at) as year, EXTRACT(MONTH FROM created_at) as month, COUNT(*) as count')
             ->groupBy('year', 'month')
             ->orderBy('year')
             ->orderBy('month')
@@ -63,13 +63,13 @@ class EstadisticasController extends Controller
             $month = $date->month;
 
             $adoptions = Solicitud::where('estado', 'Aprobada')
-                ->whereYear('created_at', $year)
-                ->whereMonth('created_at', $month)
+                ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [$year])
+                ->whereRaw('EXTRACT(MONTH FROM created_at) = ?', [$month])
                 ->count();
 
             $returns = Solicitud::where('estado', 'Rechazada')
-                ->whereYear('created_at', $year)
-                ->whereMonth('created_at', $month)
+                ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [$year])
+                ->whereRaw('EXTRACT(MONTH FROM created_at) = ?', [$month])
                 ->count();
 
             $totalMonth = $adoptions + $returns;

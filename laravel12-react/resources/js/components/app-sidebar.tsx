@@ -3,7 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { BadgeDollarSign, BellRing, BookHeart, ChartSpline, LayoutGrid, MapPinned, Users } from 'lucide-react';
+import { BadgeDollarSign, BellRing, BookHeart, ChartSpline, LayoutGrid, MapPinned, Store, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 export function AppSidebar() {
@@ -13,9 +13,14 @@ export function AppSidebar() {
     // Plantilla Única con TODOS los elementos de navegación
     const baseNavItems: NavItem[] = [
         {
-            title: 'Dashboard',
+            title: 'Menú',
             href: '/dashboard',
             icon: LayoutGrid,
+        },
+        {
+            title: 'Mapa',
+            href: '/mapa',
+            icon: MapPinned,
         },
         {
             title: 'Favoritos',
@@ -33,19 +38,19 @@ export function AppSidebar() {
             icon: ChartSpline,
         },
         {
-            title: 'Mapa',
-            href: '/mapa',
-            icon: MapPinned,
-        },
-        {
             title: 'Donaciones',
             href: '/donaciones',
             icon: BadgeDollarSign,
         },
         {
+            title: 'Gestión de Usuarios',
+            href: '/gestion-usuarios',
+            icon: Users,
+        },
+        {
             title: 'Productos y Mascotas',
             href: route('productos.mascotas'),
-            icon: LayoutGrid,
+            icon: Store,
         },
     ];
 
@@ -53,24 +58,16 @@ export function AppSidebar() {
     let finalNavItems: NavItem[] = [];
 
     if (user.role === 'cliente') {
-        // Rutas que SÍ debe ver el cliente (SIN productos y mascotas)
+        // Rutas que SÍ debe ver el cliente (SIN productos y mascotas, SIN estadísticas, SIN gestión de usuarios)
         const allowedHrefs = ['/dashboard', '/favoritos', '/mapa', '/donaciones', '/solicitudes'];
         finalNavItems = baseNavItems.filter((item) => allowedHrefs.includes(item.href as string));
     } else if (user.role === 'aliado') {
-        // Rutas que SÍ debe ver el aliado (CON productos y mascotas, CON favoritos, SIN estadísticas)
+        // Rutas que SÍ debe ver el aliado (SIN estadísticas, SIN gestión de usuarios)
         const allowedHrefs = ['/dashboard', '/favoritos', '/solicitudes', '/mapa', '/donaciones', route('productos.mascotas')];
         finalNavItems = baseNavItems.filter((item) => allowedHrefs.includes(item.href as string));
     } else {
         // Lógica para otros roles (El admin ve todo)
         finalNavItems = baseNavItems;
-        // Agregar Gestión de Usuarios solo para admin
-        if (user.role === 'admin') {
-            finalNavItems.push({
-                title: 'Gestión de Usuarios',
-                href: '/gestion-usuarios',
-                icon: Users,
-            });
-        }
     }
 
     return (
@@ -78,7 +75,7 @@ export function AppSidebar() {
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" className="justify-center" asChild>
+                        <SidebarMenuButton size="lg" className="justify-center p-2" asChild>
                             <AppLogo />
                         </SidebarMenuButton>
                     </SidebarMenuItem>
