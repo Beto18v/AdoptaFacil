@@ -85,25 +85,52 @@ class SolicitudesController extends Controller
      */
     public function store(Request $request)
     {
-        // Validación para los campos más importantes
-        $request->validate([
-            'mascota_id' => 'required|exists:mascotas,id',
-            'nombre_completo' => 'required|string|max:255',
-            'cedula' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'telefono' => 'required|string|max:255',
-            'acepta_proceso_evaluacion' => 'required|accepted',
-            'acepta_cuidado_responsable' => 'required|accepted',
-            'acepta_contrato_adopcion' => 'required|accepted',
-        ]);
+        try {
+            // Validación para los campos más importantes
+            $request->validate([
+                'mascota_id' => 'required|exists:mascotas,id',
+                'nombre_completo' => 'required|string|max:255',
+                'cedula' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'telefono' => 'required|string|max:255',
+                'acepta_proceso_evaluacion' => 'required|accepted',
+                'acepta_cuidado_responsable' => 'required|accepted',
+                'acepta_contrato_adopcion' => 'required|accepted',
+            ]);
 
-        $data = $request->all();
-        $data['user_id'] = Auth::id();
+            $userId = Auth::id();
+            $mascotaId = $request->mascota_id;
 
-        Solicitud::create($data);
+            // Verificar si ya existe una solicitud pendiente o aprobada para esta mascota por este usuario
+            $existingSolicitud = Solicitud::where('user_id', $userId)
+                ->where('mascota_id', $mascotaId)
+                ->whereIn('estado', ['Enviada', 'En Proceso', 'Aprobada'])
+                ->first();
 
-        // Redirige a la página del índice de solicitudes con un mensaje de éxito.
-        return redirect()->route('solicitudes.index')->with('success', '¡Solicitud enviada con éxito!');
+            if ($existingSolicitud) {
+                return response()->json([
+                    'errors' => [
+                        'mascota_id' => ['Ya tienes una solicitud pendiente o aprobada para esta mascota.']
+                    ]
+                ], 422);
+            }
+
+            $data = $request->all();
+            $data['user_id'] = $userId;
+            $data['estado'] = 'Enviada'; // Estado inicial por defecto
+
+            Solicitud::create($data);
+
+            // Redirige a la página del índice de solicitudes con un mensaje de éxito.
+            return redirect()->route('solicitudes.index')->with('success', '¡Solicitud enviada con éxito!');
+        } catch (\Exception $e) {
+            // Manejar errores generales
+            return response()->json([
+                'errors' => [
+                    'general' => ['Ocurrió un error al procesar tu solicitud. Por favor, intenta de nuevo.']
+                ]
+            ], 500);
+        }
     }
 
     /**
@@ -126,35 +153,43 @@ class SolicitudesController extends Controller
      */
     public function updateEstado(Request $request, $id)
     {
-        $request->validate([
-            'estado' => 'required|in:Aprobada,Rechazada',
-            'comentario_rechazo' => 'nullable|string|max:1000'
-        ]);
+        try {
+            $request->validate([
+                'estado' => 'required|in:Aprobada,Rechazada',
+                'comentario_rechazo' => 'nullable|string|max:1000'
+            ]);
 
-        $solicitud = Solicitud::findOrFail($id);
+            $solicitud = Solicitud::findOrFail($id);
 
-        // Solo el aliado dueño de la mascota puede cambiar el estado
-        $user = Auth::user();
-        if ($user->role !== 'aliado' || $solicitud->mascota->user_id !== $user->id) {
-            abort(403, 'No autorizado.');
+            // Solo el aliado dueño de la mascota puede cambiar el estado
+            $user = Auth::user();
+            if ($user->role !== 'aliado' || $solicitud->mascota->user_id !== $user->id) {
+                return response()->json([
+                    'error' => 'No autorizado para cambiar el estado de esta solicitud.'
+                ], 403);
+            }
+
+            $solicitud->estado = $request->estado;
+
+            // Si se rechaza la solicitud, guardar el comentario de rechazo
+            if ($request->estado === 'Rechazada') {
+                $solicitud->comentario_rechazo = $request->comentario_rechazo;
+            } else {
+                // Si se aprueba, limpiar cualquier comentario de rechazo previo
+                $solicitud->comentario_rechazo = null;
+            }
+
+            $solicitud->save();
+
+            return response()->json([
+                'success' => true,
+                'estado' => $solicitud->estado,
+                'comentario_rechazo' => $solicitud->comentario_rechazo
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Ocurrió un error al actualizar el estado de la solicitud.'
+            ], 500);
         }
-
-        $solicitud->estado = $request->estado;
-
-        // Si se rechaza la solicitud, guardar el comentario de rechazo
-        if ($request->estado === 'Rechazada') {
-            $solicitud->comentario_rechazo = $request->comentario_rechazo;
-        } else {
-            // Si se aprueba, limpiar cualquier comentario de rechazo previo
-            $solicitud->comentario_rechazo = null;
-        }
-
-        $solicitud->save();
-
-        return response()->json([
-            'success' => true,
-            'estado' => $solicitud->estado,
-            'comentario_rechazo' => $solicitud->comentario_rechazo
-        ]);
     }
 }

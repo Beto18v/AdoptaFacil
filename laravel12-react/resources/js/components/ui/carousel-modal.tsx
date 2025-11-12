@@ -109,6 +109,8 @@ export default function CarouselModal({ isOpen, onClose, items, initialIndex }: 
     useEffect(() => {
         setImageLoading(true);
         setCurrentImageIndex(0);
+        // Cerrar el formulario de adopción si está abierto al cambiar de item
+        setShowAdoptionForm(false);
     }, [currentIndex]);
 
     useEffect(() => {

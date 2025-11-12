@@ -269,3 +269,183 @@
 .dark ::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255, 255, 255, 0.4);
 }
+
+/* ===== ANIMACIONES PERSONALIZADAS PARA MAPA ===== */
+
+/* Animación sutil para marcadores del mapa */
+@keyframes map-gentle-pulse {
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.9;
+        transform: scale(1.05);
+    }
+}
+
+/* Animación de brillo para marcadores */
+@keyframes map-shine {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%) rotate(-45deg);
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(200%) rotate(-45deg);
+    }
+}
+
+/* Estilos para popups del mapa - con modo oscuro */
+.leaflet-popup-content-wrapper {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+    border: 1px solid rgba(59, 130, 246, 0.2) !important;
+}
+
+.leaflet-popup-tip {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 1px solid rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Modo oscuro para popups */
+.dark .leaflet-popup-content-wrapper {
+    background: rgba(31, 41, 55, 0.95) !important;
+    border: 1px solid rgba(75, 85, 99, 0.6) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.dark .leaflet-popup-tip {
+    background: rgba(31, 41, 55, 0.95) !important;
+    border: 1px solid rgba(75, 85, 99, 0.6) !important;
+}
+
+/* Ajustes adicionales para el contenido del popup en modo oscuro */
+.dark .popup-container {
+    background: linear-gradient(135deg, rgba(31, 41, 55, 0.9), rgba(17, 24, 39, 0.95)) !important;
+    border-color: rgba(75, 85, 99, 0.5) !important;
+}
+
+/* Estilo para marcadores personalizados - asegurar visibilidad completa */
+.custom-marker {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    opacity: 1 !important;
+    z-index: 500 !important;
+}
+
+.custom-marker .marker-content {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+}
+
+.custom-marker:hover {
+    transform: scale(1.1);
+    z-index: 1000 !important;
+}
+
+.custom-marker:hover .marker-content {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Asegurar que los marcadores de Leaflet sean visibles */
+.leaflet-marker-icon.custom-marker {
+    opacity: 1 !important;
+}
+
+/* Efecto de brillo más sutil en hover para marcadores */
+.custom-marker:hover::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: rgba(59, 130, 246, 0.15);
+    border-radius: 50%;
+    animation: map-gentle-pulse 2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Animación de entrada para estadísticas */
+@keyframes stats-fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stats-card {
+    animation: stats-fadeInUp 0.6s ease-out forwards;
+}
+
+.stats-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+.stats-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+.stats-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+/* Efectos para las tarjetas de ciudad */
+@keyframes city-float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.city-card:hover {
+    animation: city-float 2s ease-in-out infinite;
+}
+
+/* Gradiente animado para elementos decorativos */
+@keyframes gradient-shift {
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+.animated-gradient {
+    background: linear-gradient(45deg, #3b82f6, #10b981, #8b5cf6, #3b82f6);
+    background-size: 300% 300%;
+    animation: gradient-shift 6s ease infinite;
+}
+
+/* Asegurar visibilidad completa de todos los elementos de Leaflet */
+.leaflet-container .leaflet-marker-icon {
+    opacity: 1 !important;
+}
+
+.leaflet-container .leaflet-marker-shadow {
+    opacity: 0.6 !important;
+}
+
+.leaflet-container .leaflet-popup {
+    opacity: 1 !important;
+}
+
+/* Prevenir que las animaciones afecten los marcadores */
+.leaflet-marker-icon * {
+    opacity: inherit !important;
+}

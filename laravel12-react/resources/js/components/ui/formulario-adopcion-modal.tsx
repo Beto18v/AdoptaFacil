@@ -121,6 +121,12 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
         setTieneOtrasMascotas(data.tiene_otras_mascotas === 'si');
     }, [data.tiene_otras_mascotas]);
 
+    // Resetear formulario cuando cambie la mascota
+    useEffect(() => {
+        reset();
+        setData('mascota_id', mascota.id);
+    }, [mascota.id, reset, setData]);
+
     // Resetear formulario cuando se cierre
     useEffect(() => {
         if (wasSuccessful) {
@@ -160,6 +166,26 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
                     </div>
 
                     <form onSubmit={submit} className="space-y-6">
+                        {/* Mostrar errores generales */}
+                        {errors.mascota_id && (
+                            <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
+                                <div className="flex">
+                                    <div className="ml-3">
+                                        <h3 className="text-sm font-medium text-red-800 dark:text-red-200">Error en la solicitud</h3>
+                                        <div className="mt-2 text-sm text-red-700 dark:text-red-300">
+                                            <ul role="list" className="list-inside list-disc space-y-1">
+                                                {Array.isArray(errors.mascota_id) ? (
+                                                    errors.mascota_id.map((error, index) => <li key={index}>{error}</li>)
+                                                ) : (
+                                                    <li>{errors.mascota_id}</li>
+                                                )}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Información Personal */}
                         <FormSection title="📋 Información Personal">
                             <div className="space-y-2">

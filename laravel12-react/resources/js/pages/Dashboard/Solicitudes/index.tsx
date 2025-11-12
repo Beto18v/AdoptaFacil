@@ -1,3 +1,4 @@
+import ChatbotWidget from '@/components/chatbot-widget';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -164,70 +165,181 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Mis Solicitudes" />
-            <main className="flex-1 overflow-y-auto bg-gradient-to-r from-green-400 to-blue-500 p-6 dark:from-green-600 dark:to-blue-700">
-                <div className="py-12">
-                    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                        <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                            <div className="p-6 text-gray-900 dark:text-gray-100">
-                                {solicitudes.length > 0 ? (
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Mascota</TableHead>
-                                                <TableHead>Estado</TableHead>
-                                                <TableHead>Fecha de Solicitud</TableHead>
-                                                <TableHead className="text-right">Acciones</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {solicitudes.map((solicitud) => (
-                                                <TableRow key={solicitud.id}>
-                                                    <TableCell className="font-medium">
-                                                        <div className="flex items-center gap-3">
-                                                            <img
-                                                                src={
-                                                                    solicitud.mascota.imagen
-                                                                        ? `/storage/${solicitud.mascota.imagen}`
-                                                                        : 'https://via.placeholder.com/150'
-                                                                }
-                                                                alt={solicitud.mascota.nombre}
-                                                                className="h-10 w-10 rounded-full object-cover"
-                                                            />
-                                                            <span>{solicitud.mascota.nombre}</span>
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Badge variant="outline" className={getStatusBadgeClass(solicitud.estado)}>
-                                                            {solicitud.estado}
-                                                        </Badge>
-                                                    </TableCell>
-                                                    <TableCell>{new Date(solicitud.created_at).toLocaleDateString()}</TableCell>
-                                                    <TableCell className="flex justify-end gap-2 text-right">
-                                                        <Button
-                                                            variant="secondary"
-                                                            size="sm"
-                                                            className="bg-gray-500 text-white hover:bg-gray-600"
-                                                            onClick={() => setSelectedSolicitud(solicitud)}
-                                                        >
-                                                            Ver Detalle
-                                                        </Button>
-                                                        {solicitud.estado === 'Enviada' && (
-                                                            <Button variant="destructive" size="icon" onClick={() => handleCancel(solicitud.id)}>
-                                                                <Trash2 className="h-4 w-4" />
-                                                                <span className="sr-only">Cancelar Solicitud</span>
-                                                            </Button>
-                                                        )}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                ) : (
-                                    <p>Aún no has realizado ninguna solicitud de adopción.</p>
-                                )}
+            <main className="relative flex-1 overflow-y-auto bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 p-6 dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
+                {/* Elementos decorativos de fondo */}
+                <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                    {/* Círculos decorativos grandes */}
+                    <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-white/5 blur-3xl"></div>
+                    <div className="absolute top-1/4 -right-32 h-80 w-80 rounded-full bg-blue-300/10 blur-3xl"></div>
+                    <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-purple-300/10 blur-3xl"></div>
+
+                    {/* Puntos animados */}
+                    <div className="absolute top-20 right-20 h-3 w-3 animate-pulse rounded-full bg-white/20 shadow-lg"></div>
+                    <div className="absolute top-1/3 left-1/4 h-4 w-4 animate-ping rounded-full bg-white/30 shadow-lg"></div>
+                    <div className="absolute right-1/3 bottom-32 h-2 w-2 animate-pulse rounded-full bg-white/25 shadow-md"></div>
+                </div>
+
+                <div className="relative z-10 container mx-auto">
+                    {/* Título de la página con gradiente */}
+                    <div className="mb-8 text-center">
+                        <h1 className="text-4xl font-bold tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl">
+                            <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Mis Solicitudes</span>
+                        </h1>
+                        <p className="mt-4 text-xl leading-relaxed font-medium text-white/90">Gestiona tus solicitudes de adopción</p>
+
+                        {/* Línea decorativa */}
+                        <div className="mx-auto mt-6 h-1 w-32 rounded-full bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+                    </div>
+
+                    {/* Estadística de solicitudes */}
+                    <div className="mb-8">
+                        <div className="group hover:shadow-3xl relative mx-auto max-w-sm overflow-hidden rounded-3xl bg-white/95 p-6 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95">
+                            <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-orange-500/20 to-transparent"></div>
+                            <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-orange-300/10 to-transparent"></div>
+                            <div className="relative text-center">
+                                <div className="mx-auto mb-3 w-fit rounded-2xl bg-gradient-to-r from-orange-500 to-orange-700 p-3 shadow-xl">
+                                    <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                        />
+                                    </svg>
+                                </div>
+                                <p className="text-2xl font-bold text-gray-800 dark:text-white">{solicitudes.length}</p>
+                                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    {solicitudes.length === 1 ? 'Solicitud Enviada' : 'Solicitudes Enviadas'}
+                                </p>
                             </div>
                         </div>
                     </div>
+
+                    {solicitudes.length > 0 ? (
+                        <div className="relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm dark:bg-gray-800/95">
+                            {/* Elementos decorativos */}
+                            <div className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-gradient-to-br from-orange-500/10 to-purple-500/5 blur-2xl"></div>
+                            <div className="absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-gradient-to-tr from-orange-500/10 to-blue-500/5 blur-xl"></div>
+
+                            <div className="relative">
+                                {/* Header de la sección */}
+                                <div className="mb-6 flex items-center justify-between">
+                                    <div>
+                                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Historial de Solicitudes</h2>
+                                        <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                            Seguimiento de {solicitudes.length} {solicitudes.length === 1 ? 'solicitud' : 'solicitudes'}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-2xl bg-gradient-to-r from-orange-500/20 to-blue-500/20 p-3">
+                                        <svg
+                                            className="h-6 w-6 text-orange-600 dark:text-orange-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                                            />
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                {/* Línea decorativa */}
+                                <div className="mb-6 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent dark:via-gray-600"></div>
+
+                                <div className="overflow-x-auto rounded-2xl">
+                                    {solicitudes.length > 0 ? (
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow>
+                                                    <TableHead>Mascota</TableHead>
+                                                    <TableHead>Estado</TableHead>
+                                                    <TableHead>Fecha de Solicitud</TableHead>
+                                                    <TableHead className="text-right">Acciones</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {solicitudes.map((solicitud) => (
+                                                    <TableRow key={solicitud.id}>
+                                                        <TableCell className="font-medium">
+                                                            <div className="flex items-center gap-3">
+                                                                <img
+                                                                    src={
+                                                                        solicitud.mascota.imagen
+                                                                            ? `/storage/${solicitud.mascota.imagen}`
+                                                                            : 'https://via.placeholder.com/150'
+                                                                    }
+                                                                    alt={solicitud.mascota.nombre}
+                                                                    className="h-10 w-10 rounded-full object-cover"
+                                                                />
+                                                                <span>{solicitud.mascota.nombre}</span>
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Badge variant="outline" className={getStatusBadgeClass(solicitud.estado)}>
+                                                                {solicitud.estado}
+                                                            </Badge>
+                                                        </TableCell>
+                                                        <TableCell>{new Date(solicitud.created_at).toLocaleDateString()}</TableCell>
+                                                        <TableCell className="flex justify-end gap-2 text-right">
+                                                            <Button
+                                                                variant="secondary"
+                                                                size="sm"
+                                                                className="bg-gray-500 text-white hover:bg-gray-600"
+                                                                onClick={() => setSelectedSolicitud(solicitud)}
+                                                            >
+                                                                Ver Detalle
+                                                            </Button>
+                                                            {solicitud.estado === 'Enviada' && (
+                                                                <Button variant="destructive" size="icon" onClick={() => handleCancel(solicitud.id)}>
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                    <span className="sr-only">Cancelar Solicitud</span>
+                                                                </Button>
+                                                            )}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    ) : (
+                                        <p className="py-8 text-center text-gray-600 dark:text-gray-300">
+                                            Aún no has realizado ninguna solicitud de adopción.
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="relative overflow-hidden rounded-3xl bg-white/95 p-12 shadow-2xl backdrop-blur-sm dark:bg-gray-800/95">
+                            {/* Elementos decorativos para estado vacío */}
+                            <div className="absolute -top-4 -right-4 h-16 w-16 rounded-full bg-gradient-to-br from-orange-300/20 to-transparent"></div>
+                            <div className="absolute -bottom-4 -left-4 h-12 w-12 rounded-full bg-gradient-to-tr from-orange-300/20 to-transparent"></div>
+
+                            <div className="relative text-center">
+                                <div className="mx-auto mb-4 w-fit rounded-full bg-gradient-to-r from-orange-400 to-orange-600 p-6 shadow-lg">
+                                    <svg className="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                        />
+                                    </svg>
+                                </div>
+                                <h3 className="mb-2 text-xl font-bold text-gray-700 dark:text-gray-300">No hay solicitudes enviadas</h3>
+                                <p className="mb-6 text-gray-500 dark:text-gray-400">Aún no has realizado ninguna solicitud de adopción</p>
+                                <a
+                                    href="/mascotas"
+                                    className="inline-block rounded-xl bg-gradient-to-r from-green-500 to-green-700 px-6 py-3 text-white shadow-lg transition-all duration-300 hover:from-green-600 hover:to-green-800 hover:shadow-xl"
+                                >
+                                    Explorar mascotas
+                                </a>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 {/* Modal/Card para mostrar el detalle de la solicitud */}
                 {selectedSolicitud && (
@@ -550,7 +662,8 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                     </div>
                 )}
             </main>
-            <ThemeSwitcher />
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
         </AppLayout>
     );
 }

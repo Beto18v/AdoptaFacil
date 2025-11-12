@@ -71,22 +71,33 @@ export function AppSidebar() {
     }
 
     return (
-        <Sidebar collapsible="icon" variant="inset">
-            <SidebarHeader>
+        <Sidebar
+            collapsible="icon"
+            variant="inset"
+            className={`border-0 bg-gradient-to-br from-white/95 via-blue-50/20 to-green-50/20 shadow-2xl shadow-blue-500/10 backdrop-blur-xl group-data-[collapsible=icon]:bg-gradient-to-b group-data-[collapsible=icon]:from-white/95 group-data-[collapsible=icon]:to-blue-50/30 dark:from-gray-950/95 dark:via-blue-950/20 dark:to-green-950/20 dark:shadow-blue-900/30 dark:group-data-[collapsible=icon]:from-gray-950/95 dark:group-data-[collapsible=icon]:to-blue-950/30`}
+        >
+            {/* Header adaptable al estado */}
+            <SidebarHeader className="p-3 pb-2 group-data-[collapsible=icon]:p-2">
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" className="justify-center p-2" asChild>
+                        <SidebarMenuButton
+                            size="lg"
+                            className={`justify-center rounded-2xl border border-white/30 bg-gradient-to-br from-white/80 to-white/40 p-2 shadow-lg shadow-blue-500/15 backdrop-blur-sm transition-all duration-300 group-data-[collapsible=icon]:rounded-xl group-data-[collapsible=icon]:p-1 hover:scale-105 hover:from-white/90 hover:to-white/60 hover:shadow-xl dark:border-gray-700/30 dark:from-gray-800/80 dark:to-gray-800/40 dark:shadow-blue-900/25 dark:hover:from-gray-700/90 dark:hover:to-gray-700/60`}
+                            asChild
+                        >
                             <AppLogo />
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
+            {/* Content adaptable */}
+            <SidebarContent className="flex-1 overflow-y-auto px-2 py-1 group-data-[collapsible=icon]:px-1">
                 <NavMain items={finalNavItems} />
             </SidebarContent>
 
-            <SidebarFooter>
+            {/* Footer adaptable */}
+            <SidebarFooter className="mt-2 p-2 group-data-[collapsible=icon]:mt-1 group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2">
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

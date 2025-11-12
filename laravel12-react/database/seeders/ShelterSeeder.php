@@ -36,7 +36,7 @@ class ShelterSeeder extends Seeder
 
         foreach ($ciudades as $ciudad => $cantidadRefugios) {
             for ($i = 1; $i <= $cantidadRefugios; $i++) {
-                $email = strtolower("refugio{$ciudad}{$i}@example.com");
+                $email = strtolower("refugio{$ciudad}{$i}@example.com"); // Correo electrónico del refugio: refugioBarranquilla1@example.com
 
                 // Crear usuario aliado (usar firstOrCreate para evitar duplicados)
                 $user = User::firstOrCreate(

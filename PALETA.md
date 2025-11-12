@@ -1738,6 +1738,471 @@ const LogoComponent = () => (
 
 ---
 
-**Versión**: 2.1  
+## 📊 Dashboard AdoptaFácil
+
+### Diseño Principal del Dashboard
+
+El dashboard mantiene consistencia visual con las páginas principales usando el mismo gradiente de fondo y elementos decorativos, pero optimizado para la gestión administrativa.
+
+#### Estructura Base del Dashboard
+
+```css
+/* Contenedor principal del dashboard */
+.dashboard-main {
+  @apply relative flex-1 overflow-y-auto p-6;
+  @apply bg-gradient-to-br from-green-400 via-blue-500 to-purple-600;
+  @apply dark:from-green-600 dark:via-blue-700 dark:to-purple-800;
+}
+
+/* Elementos decorativos de fondo */
+.dashboard-decorations {
+  @apply pointer-events-none absolute inset-0 overflow-hidden;
+}
+
+/* Círculos decorativos grandes */
+.dashboard-circle-large {
+  @apply absolute -left-20 -top-20 h-64 w-64 rounded-full bg-white/5 blur-3xl;
+}
+
+.dashboard-circle-medium {
+  @apply absolute -right-32 top-1/4 h-80 w-80 rounded-full bg-blue-300/10 blur-3xl;
+}
+
+.dashboard-circle-small {
+  @apply absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-purple-300/10 blur-3xl;
+}
+
+/* Puntos animados del dashboard */
+.dashboard-dot-pulse {
+  @apply absolute right-20 top-20 h-3 w-3 animate-pulse rounded-full bg-white/20 shadow-lg;
+}
+
+.dashboard-dot-ping {
+  @apply absolute left-1/4 top-1/3 h-4 w-4 animate-ping rounded-full bg-white/30 shadow-lg;
+}
+
+.dashboard-dot-small {
+  @apply absolute bottom-32 right-1/3 h-2 w-2 animate-pulse rounded-full bg-white/25 shadow-md;
+}
+```
+
+#### Header del Dashboard
+
+```css
+/* Título principal del dashboard */
+.dashboard-title-main {
+  @apply text-4xl font-bold tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl;
+  @apply bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent;
+}
+
+/* Subtítulo descriptivo */
+.dashboard-subtitle {
+  @apply mt-4 text-xl leading-relaxed font-medium text-white/90;
+}
+
+/* Línea decorativa del header */
+.dashboard-divider {
+  @apply mt-6 mx-auto h-1 w-32 rounded-full;
+  @apply bg-gradient-to-r from-transparent via-white/60 to-transparent;
+}
+
+/* Contenedor del header */
+.dashboard-header {
+  @apply relative z-10 mb-8 text-center;
+}
+```
+
+### Tarjetas de Estadísticas
+
+#### Diseño Base de Tarjetas
+
+```css
+/* Contenedor de tarjetas estadísticas */
+.dashboard-stats-grid {
+  @apply mb-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4;
+}
+
+/* Tarjeta base con efectos glassmorphism */
+.dashboard-stat-card {
+  @apply group relative overflow-hidden rounded-3xl p-8 shadow-2xl backdrop-blur-sm;
+  @apply bg-white/95 dark:bg-gray-800/95;
+  @apply transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl;
+}
+
+/* Elementos decorativos de tarjetas */
+.dashboard-card-decoration-top {
+  @apply absolute -right-8 -top-8 h-24 w-24 rounded-full blur-xl;
+}
+
+.dashboard-card-decoration-bottom {
+  @apply absolute -bottom-4 -left-4 h-16 w-16 rounded-full blur-xl;
+}
+```
+
+#### Colores Temáticos por Tarjeta
+
+```css
+/* Tarjeta de Mascotas (Azul) */
+.dashboard-card-mascotas .dashboard-card-decoration-top {
+  @apply bg-gradient-to-br from-blue-500/20 to-transparent;
+}
+
+.dashboard-card-mascotas .dashboard-card-decoration-bottom {
+  @apply bg-gradient-to-tr from-blue-300/10 to-transparent;
+}
+
+.dashboard-card-mascotas .dashboard-icon {
+  @apply rounded-2xl bg-gradient-to-r from-blue-500 to-blue-700 p-4 shadow-xl;
+}
+
+/* Tarjeta de Adopciones (Verde) */
+.dashboard-card-adopciones .dashboard-card-decoration-top {
+  @apply bg-gradient-to-br from-green-500/20 to-transparent;
+}
+
+.dashboard-card-adopciones .dashboard-card-decoration-bottom {
+  @apply bg-gradient-to-tr from-green-300/10 to-transparent;
+}
+
+.dashboard-card-adopciones .dashboard-icon {
+  @apply rounded-2xl bg-gradient-to-r from-green-500 to-green-700 p-4 shadow-xl;
+}
+
+/* Tarjeta de Donaciones (Púrpura) */
+.dashboard-card-donaciones .dashboard-card-decoration-top {
+  @apply bg-gradient-to-br from-purple-500/20 to-transparent;
+}
+
+.dashboard-card-donaciones .dashboard-card-decoration-bottom {
+  @apply bg-gradient-to-tr from-purple-300/10 to-transparent;
+}
+
+.dashboard-card-donaciones .dashboard-icon {
+  @apply rounded-2xl bg-gradient-to-r from-purple-500 to-purple-700 p-4 shadow-xl;
+}
+
+/* Tarjeta de Usuarios (Azul-Verde) */
+.dashboard-card-usuarios .dashboard-card-decoration-top {
+  @apply bg-gradient-to-br from-blue-500/20 to-green-500/10;
+}
+
+.dashboard-card-usuarios .dashboard-card-decoration-bottom {
+  @apply bg-gradient-to-tr from-blue-300/10 to-green-300/5;
+}
+
+.dashboard-card-usuarios .dashboard-icon {
+  @apply rounded-2xl bg-gradient-to-r from-blue-500 to-green-600 p-4 shadow-xl;
+}
+```
+
+#### Contenido de Tarjetas
+
+```css
+/* Ícono dentro de tarjeta */
+.dashboard-icon svg {
+  @apply h-8 w-8 text-white;
+}
+
+/* Badge de cambio positivo */
+.dashboard-change-positive {
+  @apply rounded-full px-3 py-1 text-sm font-semibold;
+  @apply bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400;
+}
+
+/* Badge de cambio negativo */
+.dashboard-change-negative {
+  @apply rounded-full px-3 py-1 text-sm font-semibold;
+  @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
+}
+
+/* Título de métrica */
+.dashboard-metric-title {
+  @apply mb-2 text-sm font-medium text-gray-600 dark:text-gray-300;
+}
+
+/* Valor de métrica */
+.dashboard-metric-value {
+  @apply text-3xl font-bold text-gray-800 dark:text-white;
+}
+
+/* Contenedor del contenido de tarjeta */
+.dashboard-card-content {
+  @apply relative;
+}
+
+/* Header de tarjeta con ícono y badge */
+.dashboard-card-header {
+  @apply mb-4 flex items-center justify-between;
+}
+```
+
+### Tabla de Actividades Recientes
+
+#### Contenedor Principal
+
+```css
+/* Contenedor de tabla con glassmorphism */
+.dashboard-activities-container {
+  @apply relative overflow-hidden rounded-3xl p-8 shadow-2xl backdrop-blur-sm;
+  @apply bg-white/95 dark:bg-gray-800/95;
+}
+
+/* Elementos decorativos de tabla */
+.dashboard-activities-decoration-top {
+  @apply absolute -right-12 -top-12 h-32 w-32 rounded-full blur-2xl;
+  @apply bg-gradient-to-br from-blue-500/10 to-purple-500/5;
+}
+
+.dashboard-activities-decoration-bottom {
+  @apply absolute -bottom-8 -left-8 h-24 w-24 rounded-full blur-xl;
+  @apply bg-gradient-to-tr from-green-500/10 to-blue-500/5;
+}
+```
+
+#### Header de la Tabla
+
+```css
+/* Contenedor del header */
+.dashboard-activities-header {
+  @apply relative mb-6 flex items-center justify-between;
+}
+
+/* Título de actividades */
+.dashboard-activities-title {
+  @apply text-2xl font-bold text-gray-800 dark:text-white;
+}
+
+/* Descripción de actividades */
+.dashboard-activities-description {
+  @apply mt-1 text-sm text-gray-600 dark:text-gray-300;
+}
+
+/* Ícono decorativo del header */
+.dashboard-activities-icon-container {
+  @apply rounded-2xl bg-gradient-to-r from-blue-500/20 to-green-500/20 p-3;
+}
+
+.dashboard-activities-icon {
+  @apply h-6 w-6 text-blue-600 dark:text-blue-400;
+}
+
+/* Línea separadora */
+.dashboard-activities-divider {
+  @apply mb-6 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent;
+  @apply dark:via-gray-600;
+}
+```
+
+### Paleta de Colores Específica del Dashboard
+
+#### Gradientes de Fondo
+
+| Elemento              | Modo Claro                                  | Modo Oscuro                                                |
+| --------------------- | ------------------------------------------- | ---------------------------------------------------------- |
+| **Fondo principal**   | `from-green-400 via-blue-500 to-purple-600` | `dark:from-green-600 dark:via-blue-700 dark:to-purple-800` |
+| **Círculos grandes**  | `bg-white/5`                                | `bg-white/5`                                               |
+| **Círculos medianos** | `bg-blue-300/10`                            | `bg-blue-300/10`                                           |
+| **Círculos pequeños** | `bg-purple-300/10`                          | `bg-purple-300/10`                                         |
+
+#### Colores por Tipo de Tarjeta
+
+| Tarjeta        | Gradiente de Ícono        | Decoración Superior           | Decoración Inferior           |
+| -------------- | ------------------------- | ----------------------------- | ----------------------------- |
+| **Mascotas**   | `blue-500 → blue-700`     | `blue-500/20 → transparent`   | `blue-300/10 → transparent`   |
+| **Adopciones** | `green-500 → green-700`   | `green-500/20 → transparent`  | `green-300/10 → transparent`  |
+| **Donaciones** | `purple-500 → purple-700` | `purple-500/20 → transparent` | `purple-300/10 → transparent` |
+| **Usuarios**   | `blue-500 → green-600`    | `blue-500/20 → green-500/10`  | `blue-300/10 → green-300/5`   |
+
+#### Estados de Cambio
+
+```css
+/* Indicadores de cambio */
+.dashboard-change-colors {
+  /* Positivo */
+  --change-positive-bg: theme("colors.green.100");
+  --change-positive-text: theme("colors.green.700");
+  --change-positive-dark-bg: theme("colors.green.900/0.3");
+  --change-positive-dark-text: theme("colors.green.400");
+
+  /* Negativo */
+  --change-negative-bg: theme("colors.red.100");
+  --change-negative-text: theme("colors.red.700");
+  --change-negative-dark-bg: theme("colors.red.900/0.3");
+  --change-negative-dark-text: theme("colors.red.400");
+}
+```
+
+### Implementación Completa del Dashboard
+
+#### Estructura JSX Base
+
+```tsx
+export default function Dashboard({ stats, actividadesRecientes }) {
+  return (
+    <AppLayout>
+      <main className="dashboard-main">
+        {/* Elementos decorativos */}
+        <div className="dashboard-decorations">
+          <div className="dashboard-circle-large"></div>
+          <div className="dashboard-circle-medium"></div>
+          <div className="dashboard-circle-small"></div>
+          <div className="dashboard-dot-pulse"></div>
+          <div className="dashboard-dot-ping"></div>
+          <div className="dashboard-dot-small"></div>
+        </div>
+
+        <div className="relative z-10 container mx-auto">
+          {/* Header del Dashboard */}
+          <div className="dashboard-header">
+            <h1 className="dashboard-title-main">Panel de Control</h1>
+            <p className="dashboard-subtitle">
+              Gestiona y monitorea tu plataforma AdoptaFácil
+            </p>
+            <div className="dashboard-divider"></div>
+          </div>
+
+          {/* Grid de tarjetas estadísticas */}
+          <div className="dashboard-stats-grid">
+            {/* Tarjeta Mascotas */}
+            <div className="dashboard-stat-card dashboard-card-mascotas">
+              <div className="dashboard-card-decoration-top"></div>
+              <div className="dashboard-card-decoration-bottom"></div>
+
+              <div className="dashboard-card-content">
+                <div className="dashboard-card-header">
+                  <div className="dashboard-icon">{/* SVG Icon */}</div>
+                  <div className="dashboard-change-positive">
+                    +{stats.cambioMascotas}%
+                  </div>
+                </div>
+                <h3 className="dashboard-metric-title">Total Mascotas</h3>
+                <p className="dashboard-metric-value">{stats.totalMascotas}</p>
+              </div>
+            </div>
+
+            {/* Repetir para otras tarjetas... */}
+          </div>
+
+          {/* Tabla de actividades */}
+          <div className="dashboard-activities-container">
+            <div className="dashboard-activities-decoration-top"></div>
+            <div className="dashboard-activities-decoration-bottom"></div>
+
+            <div className="relative">
+              <div className="dashboard-activities-header">
+                <div>
+                  <h2 className="dashboard-activities-title">
+                    Actividades Recientes
+                  </h2>
+                  <p className="dashboard-activities-description">
+                    Últimas acciones en la plataforma
+                  </p>
+                </div>
+                <div className="dashboard-activities-icon-container">
+                  <svg className="dashboard-activities-icon">
+                    {/* Lightning Icon */}
+                  </svg>
+                </div>
+              </div>
+
+              <div className="dashboard-activities-divider"></div>
+              <RecentTable activities={actividadesRecientes} />
+            </div>
+          </div>
+        </div>
+      </main>
+    </AppLayout>
+  );
+}
+```
+
+### Espaciado del Dashboard
+
+#### Espaciado Principal
+
+```css
+/* Espaciado del contenedor principal */
+.dashboard-spacing {
+  @apply p-6; /* Padding general de 24px */
+}
+
+/* Espaciado del contenedor interno */
+.dashboard-container-spacing {
+  @apply container mx-auto; /* Contenedor centrado */
+}
+
+/* Espaciado del header */
+.dashboard-header-spacing {
+  @apply mb-8 text-center; /* Margin bottom de 32px */
+}
+
+/* Espaciado del grid de tarjetas */
+.dashboard-stats-spacing {
+  @apply mb-12 gap-8; /* Margin bottom 48px, gap 32px */
+  @apply sm:grid-cols-2 lg:grid-cols-4; /* Responsive grid */
+}
+
+/* Espaciado interno de tarjetas */
+.dashboard-card-spacing {
+  @apply p-8; /* Padding interno de 32px */
+}
+
+/* Espaciado de la tabla */
+.dashboard-table-spacing {
+  @apply p-8; /* Padding interno de 32px */
+}
+```
+
+#### Espaciado Responsive
+
+| Elemento                 | Móvil          | Tablet           | Desktop          |
+| ------------------------ | -------------- | ---------------- | ---------------- |
+| **Contenedor principal** | `p-6` (24px)   | `p-6` (24px)     | `p-6` (24px)     |
+| **Grid de tarjetas**     | `grid-cols-1`  | `sm:grid-cols-2` | `lg:grid-cols-4` |
+| **Gap entre tarjetas**   | `gap-8` (32px) | `gap-8` (32px)   | `gap-8` (32px)   |
+| **Padding de tarjetas**  | `p-8` (32px)   | `p-8` (32px)     | `p-8` (32px)     |
+| **Margin del header**    | `mb-8` (32px)  | `mb-8` (32px)    | `mb-8` (32px)    |
+| **Margin del grid**      | `mb-12` (48px) | `mb-12` (48px)   | `mb-12` (48px)   |
+
+### Guía de Uso para Otros Dashboards
+
+#### Checklist de Implementación
+
+✅ **Fondo principal**: Usar el gradiente azul-verde-púrpura  
+✅ **Elementos decorativos**: Incluir círculos y puntos animados  
+✅ **Header centralizado**: Título con gradiente y línea decorativa  
+✅ **Tarjetas glassmorphism**: Fondo semi-transparente con backdrop-blur  
+✅ **Colores temáticos**: Un color específico por tipo de métrica  
+✅ **Decoraciones por tarjeta**: Círculos graduales en esquinas  
+✅ **Estados de cambio**: Verde para positivo, rojo para negativo  
+✅ **Efectos hover**: Escala ligera (1.02) y sombra mejorada  
+✅ **Espaciado consistente**: Múltiplos de 8px (32px, 48px)  
+✅ **Modo oscuro**: Transiciones automáticas para todos los elementos
+
+#### Personalización por Módulo
+
+```css
+/* Para dashboard de mascotas */
+.dashboard-pets-theme {
+  /* Enfoque en verdes y azules */
+  @apply from-green-500 via-blue-500 to-green-600;
+}
+
+/* Para dashboard de donaciones */
+.dashboard-donations-theme {
+  /* Enfoque en púrpuras y azules */
+  @apply from-purple-500 via-blue-500 to-purple-600;
+}
+
+/* Para dashboard de usuarios */
+.dashboard-users-theme {
+  /* Enfoque en azules y verdes */
+  @apply from-blue-500 via-green-500 to-blue-600;
+}
+```
+
+---
+
+**Versión**: 2.2  
 **Última actualización**: Noviembre 2025  
-**Basado en**: Landing Page AdoptaFácil completa con filtros mejorados y cards actualizadas
+**Basado en**: Dashboard AdoptaFácil con diseño glassmorphism y paleta completa integrada
