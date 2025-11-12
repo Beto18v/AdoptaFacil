@@ -219,296 +219,298 @@ export function DonationImportModal({ onImportSuccess }: DonationImportModalProp
                     Importar Excel
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                        <FileSpreadsheet className="h-5 w-5" />
-                        Importar Donaciones desde Excel
-                    </DialogTitle>
-                    <DialogDescription>Sube un archivo Excel con las donaciones para importarlas masivamente</DialogDescription>
-                </DialogHeader>
+            <DialogContent className="max-h-[calc(100vh-4rem)] max-w-4xl overflow-hidden">
+                <div className="h-full overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <FileSpreadsheet className="h-5 w-5" />
+                            Importar Donaciones desde Excel
+                        </DialogTitle>
+                        <DialogDescription>Sube un archivo Excel con las donaciones para importarlas masivamente</DialogDescription>
+                    </DialogHeader>
 
-                {error && (
-                    <Alert variant="destructive">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                )}
+                    {error && (
+                        <Alert variant="destructive">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    )}
 
-                {step === 'upload' && (
-                    <div className="space-y-4">
-                        <div
-                            {...getRootProps()}
-                            className={`cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
-                                isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
-                            }`}
-                        >
-                            <input {...getInputProps()} />
-                            <Upload className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-                            {isDragActive ? (
-                                <p>Suelta el archivo aquí...</p>
-                            ) : (
-                                <div>
-                                    <p className="text-lg font-medium">Selecciona o arrastra un archivo Excel</p>
-                                    <p className="mt-2 text-sm text-gray-500">Formatos soportados: .xlsx, .xls, .csv</p>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="text-sm text-gray-600">
-                            <p className="font-medium">Formato esperado:</p>
-                            <ul className="mt-2 list-inside list-disc space-y-1">
-                                <li>
-                                    <strong>Donante:</strong> Nombre del donante (requerido)
-                                </li>
-                                <li>
-                                    <strong>Monto:</strong> Valor numérico (requerido)
-                                </li>
-                                <li>
-                                    <strong>Fecha:</strong> Fecha de la donación (requerido)
-                                </li>
-                                <li>
-                                    <strong>Descripción:</strong> Descripción de la donación (opcional)
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                )}
-
-                {step === 'mapping' && (
-                    <div className="space-y-4">
-                        <div>
-                            <h3 className="mb-3 text-lg font-medium">Mapear Columnas</h3>
-                            <p className="mb-4 text-sm text-gray-600">Relaciona las columnas de tu archivo con los campos requeridos</p>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="donor-mapping" className="text-sm font-medium">
-                                    Donante <span className="text-red-500">*</span>
-                                </Label>
-                                <Select
-                                    value={columnMapping.donor_name || ''}
-                                    onValueChange={(value) => setColumnMapping((prev) => ({ ...prev, donor_name: value || null }))}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Seleccionar columna" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {columns.map((col) => (
-                                            <SelectItem key={col} value={col}>
-                                                {col}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="amount-mapping" className="text-sm font-medium">
-                                    Monto <span className="text-red-500">*</span>
-                                </Label>
-                                <Select
-                                    value={columnMapping.amount || ''}
-                                    onValueChange={(value) => setColumnMapping((prev) => ({ ...prev, amount: value || null }))}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Seleccionar columna" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {columns.map((col) => (
-                                            <SelectItem key={col} value={col}>
-                                                {col}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="date-mapping" className="text-sm font-medium">
-                                    Fecha <span className="text-red-500">*</span>
-                                </Label>
-                                <Select
-                                    value={columnMapping.created_at || ''}
-                                    onValueChange={(value) => setColumnMapping((prev) => ({ ...prev, created_at: value || null }))}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Seleccionar columna" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {columns.map((col) => (
-                                            <SelectItem key={col} value={col}>
-                                                {col}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="description-mapping" className="text-sm font-medium">
-                                    Descripción (opcional)
-                                </Label>
-                                <Select
-                                    value={columnMapping.description || ''}
-                                    onValueChange={(value) => setColumnMapping((prev) => ({ ...prev, description: value || null }))}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Seleccionar columna" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="">Sin mapear</SelectItem>
-                                        {columns.map((col) => (
-                                            <SelectItem key={col} value={col}>
-                                                {col}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        <div className="mt-6">
-                            <h4 className="mb-2 text-sm font-medium">Vista previa de datos (primeras 3 filas):</h4>
-                            <div className="overflow-x-auto rounded-lg border">
-                                <table className="w-full text-sm">
-                                    <thead className="bg-gray-50">
-                                        <tr>
-                                            {columns.map((col) => (
-                                                <th key={col} className="px-3 py-2 text-left font-medium">
-                                                    {col}
-                                                </th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {rawData.slice(0, 3).map((row, index) => (
-                                            <tr key={index} className="border-t">
-                                                {columns.map((col) => (
-                                                    <td key={col} className="px-3 py-2">
-                                                        {String(row[col] || '')}
-                                                    </td>
-                                                ))}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {step === 'preview' && (
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-medium">Vista Previa y Edición</h3>
-                            <div className="text-sm text-gray-600">{previewData.length} donaciones para importar</div>
-                        </div>
-
-                        <div className="overflow-hidden rounded-lg border">
-                            <div className="max-h-96 overflow-y-auto">
-                                <table className="w-full text-sm">
-                                    <thead className="sticky top-0 bg-gray-50">
-                                        <tr>
-                                            <th className="px-3 py-2 text-left font-medium">Donante</th>
-                                            <th className="px-3 py-2 text-left font-medium">Monto</th>
-                                            <th className="px-3 py-2 text-left font-medium">Fecha</th>
-                                            <th className="px-3 py-2 text-left font-medium">Descripción</th>
-                                            <th className="px-3 py-2 text-center font-medium">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {previewData.map((item, index) => (
-                                            <tr key={index} className="border-t">
-                                                <td className="px-3 py-2">
-                                                    <Input
-                                                        type="text"
-                                                        value={item.donor_name}
-                                                        onChange={(e) => handleEditPreviewData(index, 'donor_name', e.target.value)}
-                                                        className="w-full"
-                                                        placeholder="Nombre del donante"
-                                                    />
-                                                </td>
-                                                <td className="px-3 py-2">
-                                                    <Input
-                                                        type="number"
-                                                        value={item.amount}
-                                                        onChange={(e) => handleEditPreviewData(index, 'amount', parseFloat(e.target.value) || 0)}
-                                                        className="w-full"
-                                                        min="0"
-                                                        step="0.01"
-                                                    />
-                                                </td>
-                                                <td className="px-3 py-2">
-                                                    <Input
-                                                        type="date"
-                                                        value={item.created_at}
-                                                        onChange={(e) => handleEditPreviewData(index, 'created_at', e.target.value)}
-                                                        className="w-full"
-                                                    />
-                                                </td>
-                                                <td className="px-3 py-2">
-                                                    <Textarea
-                                                        value={item.description || ''}
-                                                        onChange={(e) => handleEditPreviewData(index, 'description', e.target.value)}
-                                                        className="min-h-[60px] w-full"
-                                                        placeholder="Descripción opcional..."
-                                                    />
-                                                </td>
-                                                <td className="px-3 py-2 text-center">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => handleRemoveRow(index)}
-                                                        className="text-red-600 hover:text-red-800"
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                <DialogFooter>
                     {step === 'upload' && (
-                        <Button variant="outline" onClick={() => setIsOpen(false)}>
-                            Cancelar
-                        </Button>
+                        <div className="space-y-4">
+                            <div
+                                {...getRootProps()}
+                                className={`cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
+                                    isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
+                                }`}
+                            >
+                                <input {...getInputProps()} />
+                                <Upload className="mx-auto mb-4 h-12 w-12 text-gray-400" />
+                                {isDragActive ? (
+                                    <p>Suelta el archivo aquí...</p>
+                                ) : (
+                                    <div>
+                                        <p className="text-lg font-medium">Selecciona o arrastra un archivo Excel</p>
+                                        <p className="mt-2 text-sm text-gray-500">Formatos soportados: .xlsx, .xls, .csv</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="text-sm text-gray-600">
+                                <p className="font-medium">Formato esperado:</p>
+                                <ul className="mt-2 list-inside list-disc space-y-1">
+                                    <li>
+                                        <strong>Donante:</strong> Nombre del donante (requerido)
+                                    </li>
+                                    <li>
+                                        <strong>Monto:</strong> Valor numérico (requerido)
+                                    </li>
+                                    <li>
+                                        <strong>Fecha:</strong> Fecha de la donación (requerido)
+                                    </li>
+                                    <li>
+                                        <strong>Descripción:</strong> Descripción de la donación (opcional)
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     )}
 
                     {step === 'mapping' && (
-                        <>
-                            <Button variant="outline" onClick={() => setStep('upload')}>
-                                Volver
-                            </Button>
-                            <Button onClick={handleMappingComplete}>Continuar</Button>
-                        </>
+                        <div className="space-y-4">
+                            <div>
+                                <h3 className="mb-3 text-lg font-medium">Mapear Columnas</h3>
+                                <p className="mb-4 text-sm text-gray-600">Relaciona las columnas de tu archivo con los campos requeridos</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="donor-mapping" className="text-sm font-medium">
+                                        Donante <span className="text-red-500">*</span>
+                                    </Label>
+                                    <Select
+                                        value={columnMapping.donor_name || ''}
+                                        onValueChange={(value) => setColumnMapping((prev) => ({ ...prev, donor_name: value || null }))}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccionar columna" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {columns.map((col) => (
+                                                <SelectItem key={col} value={col}>
+                                                    {col}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="amount-mapping" className="text-sm font-medium">
+                                        Monto <span className="text-red-500">*</span>
+                                    </Label>
+                                    <Select
+                                        value={columnMapping.amount || ''}
+                                        onValueChange={(value) => setColumnMapping((prev) => ({ ...prev, amount: value || null }))}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccionar columna" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {columns.map((col) => (
+                                                <SelectItem key={col} value={col}>
+                                                    {col}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="date-mapping" className="text-sm font-medium">
+                                        Fecha <span className="text-red-500">*</span>
+                                    </Label>
+                                    <Select
+                                        value={columnMapping.created_at || ''}
+                                        onValueChange={(value) => setColumnMapping((prev) => ({ ...prev, created_at: value || null }))}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccionar columna" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {columns.map((col) => (
+                                                <SelectItem key={col} value={col}>
+                                                    {col}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="description-mapping" className="text-sm font-medium">
+                                        Descripción (opcional)
+                                    </Label>
+                                    <Select
+                                        value={columnMapping.description || ''}
+                                        onValueChange={(value) => setColumnMapping((prev) => ({ ...prev, description: value || null }))}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccionar columna" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="">Sin mapear</SelectItem>
+                                            {columns.map((col) => (
+                                                <SelectItem key={col} value={col}>
+                                                    {col}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            <div className="mt-6">
+                                <h4 className="mb-2 text-sm font-medium">Vista previa de datos (primeras 3 filas):</h4>
+                                <div className="overflow-x-auto rounded-lg border">
+                                    <table className="w-full text-sm">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                {columns.map((col) => (
+                                                    <th key={col} className="px-3 py-2 text-left font-medium">
+                                                        {col}
+                                                    </th>
+                                                ))}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {rawData.slice(0, 3).map((row, index) => (
+                                                <tr key={index} className="border-t">
+                                                    {columns.map((col) => (
+                                                        <td key={col} className="px-3 py-2">
+                                                            {String(row[col] || '')}
+                                                        </td>
+                                                    ))}
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     )}
 
                     {step === 'preview' && (
-                        <>
-                            <Button variant="outline" onClick={() => setStep('mapping')}>
-                                Volver
-                            </Button>
-                            <Button onClick={handleImport} disabled={isLoading || previewData.length === 0} className="gap-2">
-                                {isLoading ? (
-                                    <>Importando...</>
-                                ) : (
-                                    <>
-                                        <CheckCircle2 className="h-4 w-4" />
-                                        Importar {previewData.length} donaciones
-                                    </>
-                                )}
-                            </Button>
-                        </>
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-lg font-medium">Vista Previa y Edición</h3>
+                                <div className="text-sm text-gray-600">{previewData.length} donaciones para importar</div>
+                            </div>
+
+                            <div className="overflow-hidden rounded-lg border">
+                                <div className="max-h-96 overflow-y-auto">
+                                    <table className="w-full text-sm">
+                                        <thead className="sticky top-0 bg-gray-50">
+                                            <tr>
+                                                <th className="px-3 py-2 text-left font-medium">Donante</th>
+                                                <th className="px-3 py-2 text-left font-medium">Monto</th>
+                                                <th className="px-3 py-2 text-left font-medium">Fecha</th>
+                                                <th className="px-3 py-2 text-left font-medium">Descripción</th>
+                                                <th className="px-3 py-2 text-center font-medium">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {previewData.map((item, index) => (
+                                                <tr key={index} className="border-t">
+                                                    <td className="px-3 py-2">
+                                                        <Input
+                                                            type="text"
+                                                            value={item.donor_name}
+                                                            onChange={(e) => handleEditPreviewData(index, 'donor_name', e.target.value)}
+                                                            className="w-full"
+                                                            placeholder="Nombre del donante"
+                                                        />
+                                                    </td>
+                                                    <td className="px-3 py-2">
+                                                        <Input
+                                                            type="number"
+                                                            value={item.amount}
+                                                            onChange={(e) => handleEditPreviewData(index, 'amount', parseFloat(e.target.value) || 0)}
+                                                            className="w-full"
+                                                            min="0"
+                                                            step="0.01"
+                                                        />
+                                                    </td>
+                                                    <td className="px-3 py-2">
+                                                        <Input
+                                                            type="date"
+                                                            value={item.created_at}
+                                                            onChange={(e) => handleEditPreviewData(index, 'created_at', e.target.value)}
+                                                            className="w-full"
+                                                        />
+                                                    </td>
+                                                    <td className="px-3 py-2">
+                                                        <Textarea
+                                                            value={item.description || ''}
+                                                            onChange={(e) => handleEditPreviewData(index, 'description', e.target.value)}
+                                                            className="min-h-[60px] w-full"
+                                                            placeholder="Descripción opcional..."
+                                                        />
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() => handleRemoveRow(index)}
+                                                            className="text-red-600 hover:text-red-800"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     )}
-                </DialogFooter>
+
+                    <DialogFooter>
+                        {step === 'upload' && (
+                            <Button variant="outline" onClick={() => setIsOpen(false)}>
+                                Cancelar
+                            </Button>
+                        )}
+
+                        {step === 'mapping' && (
+                            <>
+                                <Button variant="outline" onClick={() => setStep('upload')}>
+                                    Volver
+                                </Button>
+                                <Button onClick={handleMappingComplete}>Continuar</Button>
+                            </>
+                        )}
+
+                        {step === 'preview' && (
+                            <>
+                                <Button variant="outline" onClick={() => setStep('mapping')}>
+                                    Volver
+                                </Button>
+                                <Button onClick={handleImport} disabled={isLoading || previewData.length === 0} className="gap-2">
+                                    {isLoading ? (
+                                        <>Importando...</>
+                                    ) : (
+                                        <>
+                                            <CheckCircle2 className="h-4 w-4" />
+                                            Importar {previewData.length} donaciones
+                                        </>
+                                    )}
+                                </Button>
+                            </>
+                        )}
+                    </DialogFooter>
+                </div>
             </DialogContent>
         </Dialog>
     );

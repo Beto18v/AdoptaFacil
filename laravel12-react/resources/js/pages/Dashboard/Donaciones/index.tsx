@@ -1,3 +1,4 @@
+import ChatbotWidget from '@/components/chatbot-widget';
 import { ExcelImportComponent } from '@/components/donations';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import AppLayout from '@/layouts/app-layout';
@@ -30,61 +31,100 @@ type DonationType = {
 };
 
 const DonationsTable = ({ donations, userRole }: { donations: DonationType[]; userRole: string }) => (
-    <div className="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
-        <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                            {userRole === 'cliente' ? 'Fundación' : 'Donante'}
-                        </th>
-                        {/* AÑADIDO: Condicional para mostrar la columna Refugio para el admin */}
-                        {userRole === 'admin' && (
-                            <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                                Fundación
-                            </th>
-                        )}
-                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">Monto</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">Fecha</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                            Descripción
-                        </th>
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-                    {donations.map((donation: DonationType) => (
-                        <tr key={donation.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900 dark:text-white">
-                                {userRole === 'cliente' ? (donation.shelter?.name ?? 'N/A') : donation.donor_name}
-                            </td>
-                            {/* Celda para mostrar el nombre del refugio */}
-                            {userRole === 'admin' && (
-                                <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-500 dark:text-gray-400">
-                                    {donation.shelter?.name ?? 'N/A'}
-                                </td>
-                            )}
-                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                                <span className="font-medium text-green-600 dark:text-green-400">{formatCurrency(donation.amount)}</span>
-                            </td>
-                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                                {new Date(donation.created_at).toLocaleDateString('es-ES', {
-                                    year: 'numeric',
-                                    month: '2-digit',
-                                    day: '2-digit'
-                                }).toString()}
-                            </td>
-                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                                {donation.description ? (
-                                    <span className="text-sm">{donation.description}</span>
-                                ) : (
-                                    <span className="text-sm text-gray-400">Sin descripción</span>
+    <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 shadow-2xl backdrop-blur-sm transition-all duration-300 dark:bg-gray-800/95">
+        {/* Efectos decorativos mejorados */}
+        <div className="absolute -top-8 -right-8 h-32 w-32 rounded-full bg-gradient-to-br from-blue-500/10 to-transparent"></div>
+        <div className="absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-gradient-to-tr from-purple-500/10 to-transparent"></div>
+
+        {/* Contenido con padding mejorado */}
+        <div className="relative p-6">
+            <div className="overflow-hidden rounded-2xl border border-gray-200/50 bg-white/50 shadow-lg dark:border-gray-700/50 dark:bg-gray-800/50">
+                <div className="overflow-x-auto">
+                    <table className="w-full">
+                        <thead>
+                            <tr className="border-b border-gray-200/50 bg-gradient-to-r from-gray-50/80 to-gray-100/80 dark:border-gray-700/50 dark:from-gray-700/50 dark:to-gray-600/50">
+                                <th className="px-6 py-4 text-left text-xs font-bold tracking-wider text-gray-700 uppercase dark:text-gray-300">
+                                    {userRole === 'cliente' ? 'Fundación' : 'Donante'}
+                                </th>
+                                {/* AÑADIDO: Condicional para mostrar la columna Refugio para el admin */}
+                                {userRole === 'admin' && (
+                                    <th className="px-6 py-4 text-left text-xs font-bold tracking-wider text-gray-700 uppercase dark:text-gray-300">
+                                        Fundación
+                                    </th>
                                 )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            {donations.length === 0 && <p className="p-6 text-center text-gray-500 dark:text-gray-400">No hay donaciones para mostrar.</p>}
+                                <th className="px-6 py-4 text-left text-xs font-bold tracking-wider text-gray-700 uppercase dark:text-gray-300">
+                                    Monto
+                                </th>
+                                <th className="px-6 py-4 text-left text-xs font-bold tracking-wider text-gray-700 uppercase dark:text-gray-300">
+                                    Fecha
+                                </th>
+                                <th className="px-6 py-4 text-left text-xs font-bold tracking-wider text-gray-700 uppercase dark:text-gray-300">
+                                    Descripción
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200/50 dark:divide-gray-700/50">
+                            {donations.map((donation: DonationType) => (
+                                <tr
+                                    key={donation.id}
+                                    className="group transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50/30 hover:to-purple-50/30 dark:hover:from-gray-700/30 dark:hover:to-gray-600/30"
+                                >
+                                    <td className="px-6 py-5 whitespace-nowrap">
+                                        <div className="font-semibold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+                                            {userRole === 'cliente' ? (donation.shelter?.name ?? 'N/A') : donation.donor_name}
+                                        </div>
+                                    </td>
+                                    {/* Celda para mostrar el nombre del refugio */}
+                                    {userRole === 'admin' && (
+                                        <td className="px-6 py-5 whitespace-nowrap">
+                                            <div className="font-medium text-gray-600 dark:text-gray-300">{donation.shelter?.name ?? 'N/A'}</div>
+                                        </td>
+                                    )}
+                                    <td className="px-6 py-5 whitespace-nowrap">
+                                        <span className="inline-flex items-center rounded-full bg-gradient-to-r from-green-500 to-green-600 px-3 py-1 text-xs font-bold text-white shadow-lg">
+                                            {formatCurrency(donation.amount)}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-5 font-medium whitespace-nowrap text-gray-600 dark:text-gray-300">
+                                        {new Date(donation.created_at)
+                                            .toLocaleDateString('es-ES', {
+                                                year: 'numeric',
+                                                month: '2-digit',
+                                                day: '2-digit',
+                                            })
+                                            .toString()}
+                                    </td>
+                                    <td className="px-6 py-5 whitespace-nowrap text-gray-600 dark:text-gray-300">
+                                        {donation.description ? (
+                                            <span className="text-sm font-medium">{donation.description}</span>
+                                        ) : (
+                                            <span className="text-sm text-gray-400 italic dark:text-gray-500">Sin descripción</span>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {/* Estado vacío mejorado */}
+            {donations.length === 0 && (
+                <div className="py-12 text-center">
+                    <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700">
+                        <svg className="h-10 w-10 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                            />
+                        </svg>
+                    </div>
+                    <h3 className="mb-2 text-lg font-semibold text-gray-600 dark:text-gray-300">No hay donaciones para mostrar</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Aún no se han registrado donaciones en el sistema</p>
+                </div>
+            )}
         </div>
     </div>
 );
@@ -100,23 +140,73 @@ const ClientView = ({
     onDonateClick: () => void;
 }) => (
     <>
-        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="rounded-lg bg-purple-50 p-4 dark:bg-purple-900">
-                <h3 className="text-sm font-medium text-purple-700 dark:text-purple-300">Total Donado</h3>
-                <p className="text-xl font-bold text-purple-800 dark:text-purple-200">{formatCurrency(stats.totalAmount)}</p>
+        <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {/* Tarjeta Total Donado */}
+            <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95">
+                <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-purple-500/20 to-transparent"></div>
+                <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-purple-300/10 to-transparent"></div>
+                <div className="relative text-center">
+                    <div className="mx-auto mb-4 w-fit rounded-2xl bg-gradient-to-r from-purple-500 to-purple-700 p-4 shadow-xl">
+                        <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                            />
+                        </svg>
+                    </div>
+                    <h3 className="mb-2 text-sm font-bold tracking-wider text-purple-700 uppercase dark:text-purple-300">Total Donado</h3>
+                    <p className="bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-3xl font-bold text-transparent dark:from-purple-400 dark:to-purple-600">
+                        {formatCurrency(stats.totalAmount)}
+                    </p>
+                </div>
             </div>
-            <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900">
-                <h3 className="text-sm font-medium text-green-700 dark:text-green-300">Total Donaciones</h3>
-                <p className="text-xl font-bold text-green-800 dark:text-green-200">{stats.donationsCount}</p>
+
+            {/* Tarjeta Total Donaciones */}
+            <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95">
+                <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-green-500/20 to-transparent"></div>
+                <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-green-300/10 to-transparent"></div>
+                <div className="relative text-center">
+                    <div className="mx-auto mb-4 w-fit rounded-2xl bg-gradient-to-r from-green-500 to-green-700 p-4 shadow-xl">
+                        <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                            />
+                        </svg>
+                    </div>
+                    <h3 className="mb-2 text-sm font-bold tracking-wider text-green-700 uppercase dark:text-green-300">Total Donaciones</h3>
+                    <p className="bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-3xl font-bold text-transparent dark:from-green-400 dark:to-green-600">
+                        {stats.donationsCount}
+                    </p>
+                </div>
             </div>
         </div>
-        <DonationsTable donations={donations} userRole="cliente" />
-        <div className="mt-6 text-center">
+
+        <div className="mb-8">
+            <DonationsTable donations={donations} userRole="cliente" />
+        </div>
+
+        <div className="text-center">
             <button
                 onClick={onDonateClick}
-                className="rounded-lg bg-purple-600 px-4 py-2 text-white transition hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800"
+                className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-500 to-purple-700 px-12 py-4 text-lg font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:from-purple-600 hover:to-purple-800"
             >
-                Quiero donar
+                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                <span className="relative flex items-center gap-3">
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                    </svg>
+                    Quiero donar
+                </span>
             </button>
         </div>
     </>
@@ -132,16 +222,76 @@ const AllyAdminView = ({
     userRole: string;
 }) => (
     <>
-        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="rounded-lg bg-purple-50 p-4 dark:bg-purple-900">
-                <h3 className="text-sm font-medium text-purple-700 dark:text-purple-300">Total Recaudado</h3>
-                <p className="text-xl font-bold text-purple-800 dark:text-purple-200">{formatCurrency(stats.totalAmount)}</p>
+        <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Tarjeta Total Recaudado */}
+            <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95">
+                <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-purple-500/20 to-transparent"></div>
+                <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-purple-300/10 to-transparent"></div>
+                <div className="relative text-center">
+                    <div className="mx-auto mb-4 w-fit rounded-2xl bg-gradient-to-r from-purple-500 to-purple-700 p-4 shadow-xl">
+                        <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                            />
+                        </svg>
+                    </div>
+                    <h3 className="mb-2 text-sm font-bold tracking-wider text-purple-700 uppercase dark:text-purple-300">Total Recaudado</h3>
+                    <p className="bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-3xl font-bold text-transparent dark:from-purple-400 dark:to-purple-600">
+                        {formatCurrency(stats.totalAmount)}
+                    </p>
+                </div>
             </div>
-            <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900">
-                <h3 className="text-sm font-medium text-green-700 dark:text-green-300">Total Donantes</h3>
-                <p className="text-xl font-bold text-green-800 dark:text-green-200">{stats.donorsCount}</p>
+
+            {/* Tarjeta Total Donantes */}
+            <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95">
+                <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-green-500/20 to-transparent"></div>
+                <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-green-300/10 to-transparent"></div>
+                <div className="relative text-center">
+                    <div className="mx-auto mb-4 w-fit rounded-2xl bg-gradient-to-r from-green-500 to-green-700 p-4 shadow-xl">
+                        <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+                            />
+                        </svg>
+                    </div>
+                    <h3 className="mb-2 text-sm font-bold tracking-wider text-green-700 uppercase dark:text-green-300">Total Donantes</h3>
+                    <p className="bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-3xl font-bold text-transparent dark:from-green-400 dark:to-green-600">
+                        {stats.donorsCount}
+                    </p>
+                </div>
+            </div>
+
+            {/* Tarjeta Total Donaciones */}
+            <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95">
+                <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-blue-500/20 to-transparent"></div>
+                <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-blue-300/10 to-transparent"></div>
+                <div className="relative text-center">
+                    <div className="mx-auto mb-4 w-fit rounded-2xl bg-gradient-to-r from-blue-500 to-blue-700 p-4 shadow-xl">
+                        <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                            />
+                        </svg>
+                    </div>
+                    <h3 className="mb-2 text-sm font-bold tracking-wider text-blue-700 uppercase dark:text-blue-300">
+                        {userRole === 'aliado' ? 'Donaciones Recibidas' : 'Total Donaciones'}
+                    </h3>
+                    <p className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-3xl font-bold text-transparent dark:from-blue-400 dark:to-blue-600">
+                        {stats.donationsCount}
+                    </p>
+                </div>
             </div>
         </div>
+
         <DonationsTable donations={donations} userRole={userRole} />
     </>
 );
@@ -200,25 +350,64 @@ export default function DonationsSummary() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Donaciones" />
-            <main className="flex-1 overflow-y-auto bg-gradient-to-r from-green-400 to-blue-500 p-6 dark:from-green-600 dark:to-blue-700">
-                <div className="container mx-auto space-y-6">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-                            {user.role === 'aliado' && !user.shelter ? '' : 'Donaciones'}
-                        </h1>
-                        {!(user.role === 'aliado' && !user.shelter) && (
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={handleGenerateReport}
-                                    className="rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
-                                >
+            <main className="relative flex-1 overflow-y-auto bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 p-6 dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
+                {/* Elementos decorativos de fondo */}
+                <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                    {/* Círculos decorativos grandes */}
+                    <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-white/5 blur-3xl"></div>
+                    <div className="absolute top-1/4 -right-32 h-80 w-80 rounded-full bg-blue-300/10 blur-3xl"></div>
+                    <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-purple-300/10 blur-3xl"></div>
+
+                    {/* Puntos animados */}
+                    <div className="absolute top-20 right-20 h-3 w-3 animate-pulse rounded-full bg-white/20 shadow-lg"></div>
+                    <div className="absolute top-1/3 left-1/4 h-4 w-4 animate-ping rounded-full bg-white/30 shadow-lg"></div>
+                    <div className="absolute right-1/3 bottom-32 h-2 w-2 animate-pulse rounded-full bg-white/25 shadow-md"></div>
+                </div>
+
+                <div className="relative z-10 container mx-auto">
+                    {/* Título de la página con gradiente */}
+                    {!(user.role === 'aliado' && !user.shelter) && (
+                        <div className="mb-8 text-center">
+                            <h1 className="text-4xl font-bold tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl">
+                                <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Sistema de Donaciones</span>
+                            </h1>
+                            <p className="mt-4 text-xl leading-relaxed font-medium text-white/90">
+                                {user.role === 'cliente' ? 'Apoya a las fundaciones de protección animal' : 'Gestiona las donaciones de tu fundación'}
+                            </p>
+
+                            {/* Línea decorativa */}
+                            <div className="mx-auto mt-6 h-1 w-32 rounded-full bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+                        </div>
+                    )}
+
+                    {/* Botones de acción mejorados */}
+                    {!(user.role === 'aliado' && !user.shelter) && (
+                        <div className="mb-8 flex justify-center gap-4">
+                            <button
+                                onClick={handleGenerateReport}
+                                className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-gradient-to-r from-green-500 to-green-700 px-8 py-3 font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:from-green-600 hover:to-green-800"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                <span className="relative flex items-center gap-2">
+                                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                        />
+                                    </svg>
                                     Generar reporte
-                                </button>
-                                {user.role === 'aliado' && Boolean(user.shelter) && <ExcelImportComponent onImportSuccess={handleImportSuccess} />}
-                            </div>
-                        )}
-                    </div>
-                    {renderContentByRole()}
+                                </span>
+                            </button>
+                            {user.role === 'aliado' && Boolean(user.shelter) && <ExcelImportComponent onImportSuccess={handleImportSuccess} />}
+                        </div>
+                    )}
+
+                    {/* Contenido específico por rol */}
+                    <div className="space-y-8">{renderContentByRole()}</div>
+
+                    {/* Modal de donación */}
                     {user.role === 'cliente' && (
                         <FormularioDonacion
                             showModal={showDonationFormModal}
@@ -228,7 +417,9 @@ export default function DonationsSummary() {
                     )}
                 </div>
             </main>
-            <ThemeSwitcher />
+
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
         </AppLayout>
     );
 }

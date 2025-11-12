@@ -155,398 +155,403 @@ export default function FormularioAdopcionModal({ mascota, show, onClose }: Form
                     <X className="h-6 w-6" />
                 </button>
 
-                <div className="max-h-[90vh] overflow-y-auto p-8">
-                    <div className="mb-6 text-center">
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                            Solicitud de Adopción para <span className="text-indigo-600 dark:text-indigo-400">{nombreMascota}</span>
-                        </h1>
-                        <p className="mt-2 text-gray-600 dark:text-gray-300">
-                            Gracias por tu interés en darle un hogar. Por favor, completa el siguiente formulario.
-                        </p>
-                    </div>
+                <div className="max-h-[calc(100vh-4rem)] overflow-hidden">
+                    <div className="overflow-y-auto p-8">
+                        <div className="mb-6 text-center">
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                                Solicitud de Adopción para <span className="text-indigo-600 dark:text-indigo-400">{nombreMascota}</span>
+                            </h1>
+                            <p className="mt-2 text-gray-600 dark:text-gray-300">
+                                Gracias por tu interés en darle un hogar. Por favor, completa el siguiente formulario.
+                            </p>
+                        </div>
 
-                    <form onSubmit={submit} className="space-y-6">
-                        {/* Mostrar errores generales */}
-                        {errors.mascota_id && (
-                            <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
-                                <div className="flex">
-                                    <div className="ml-3">
-                                        <h3 className="text-sm font-medium text-red-800 dark:text-red-200">Error en la solicitud</h3>
-                                        <div className="mt-2 text-sm text-red-700 dark:text-red-300">
-                                            <ul role="list" className="list-inside list-disc space-y-1">
-                                                {Array.isArray(errors.mascota_id) ? (
-                                                    errors.mascota_id.map((error, index) => <li key={index}>{error}</li>)
-                                                ) : (
-                                                    <li>{errors.mascota_id}</li>
-                                                )}
-                                            </ul>
+                        <form onSubmit={submit} className="space-y-6">
+                            {/* Mostrar errores generales */}
+                            {errors.mascota_id && (
+                                <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
+                                    <div className="flex">
+                                        <div className="ml-3">
+                                            <h3 className="text-sm font-medium text-red-800 dark:text-red-200">Error en la solicitud</h3>
+                                            <div className="mt-2 text-sm text-red-700 dark:text-red-300">
+                                                <ul role="list" className="list-inside list-disc space-y-1">
+                                                    {Array.isArray(errors.mascota_id) ? (
+                                                        errors.mascota_id.map((error, index) => <li key={index}>{error}</li>)
+                                                    ) : (
+                                                        <li>{errors.mascota_id}</li>
+                                                    )}
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
 
-                        {/* Información Personal */}
-                        <FormSection title="📋 Información Personal">
-                            <div className="space-y-2">
-                                <Label htmlFor="nombre_completo">Nombre Completo *</Label>
-                                <Input
-                                    id="nombre_completo"
-                                    type="text"
-                                    value={data.nombre_completo}
-                                    onChange={(e) => setData('nombre_completo', e.target.value)}
-                                    required
-                                />
-                                <InputError message={errors.nombre_completo} />
-                            </div>
+                            {/* Información Personal */}
+                            <FormSection title="📋 Información Personal">
+                                <div className="space-y-2">
+                                    <Label htmlFor="nombre_completo">Nombre Completo *</Label>
+                                    <Input
+                                        id="nombre_completo"
+                                        type="text"
+                                        value={data.nombre_completo}
+                                        onChange={(e) => setData('nombre_completo', e.target.value)}
+                                        required
+                                    />
+                                    <InputError message={errors.nombre_completo} />
+                                </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="cedula">Número de Cédula *</Label>
-                                <Input id="cedula" type="text" value={data.cedula} onChange={(e) => setData('cedula', e.target.value)} required />
-                                <InputError message={errors.cedula} />
-                            </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="cedula">Número de Cédula *</Label>
+                                    <Input id="cedula" type="text" value={data.cedula} onChange={(e) => setData('cedula', e.target.value)} required />
+                                    <InputError message={errors.cedula} />
+                                </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="email">Correo Electrónico *</Label>
-                                <Input id="email" type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} required />
-                                <InputError message={errors.email} />
-                            </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">Correo Electrónico *</Label>
+                                    <Input id="email" type="email" value={data.email} onChange={(e) => setData('email', e.target.value)} required />
+                                    <InputError message={errors.email} />
+                                </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="telefono">Teléfono *</Label>
-                                <Input
-                                    id="telefono"
-                                    type="tel"
-                                    value={data.telefono}
-                                    onChange={(e) => setData('telefono', e.target.value)}
-                                    required
-                                />
-                                <InputError message={errors.telefono} />
-                            </div>
-                        </FormSection>
+                                <div className="space-y-2">
+                                    <Label htmlFor="telefono">Teléfono *</Label>
+                                    <Input
+                                        id="telefono"
+                                        type="tel"
+                                        value={data.telefono}
+                                        onChange={(e) => setData('telefono', e.target.value)}
+                                        required
+                                    />
+                                    <InputError message={errors.telefono} />
+                                </div>
+                            </FormSection>
 
-                        {/* Información de Vivienda */}
-                        <FormSection title="🏠 Información de Vivienda">
-                            <div className="space-y-2">
-                                <Label htmlFor="direccion_ciudad">Ciudad *</Label>
-                                <Input
-                                    id="direccion_ciudad"
-                                    type="text"
-                                    value={data.direccion_ciudad}
-                                    onChange={(e) => setData('direccion_ciudad', e.target.value)}
-                                    required
-                                />
-                                <InputError message={errors.direccion_ciudad} />
-                            </div>
+                            {/* Información de Vivienda */}
+                            <FormSection title="🏠 Información de Vivienda">
+                                <div className="space-y-2">
+                                    <Label htmlFor="direccion_ciudad">Ciudad *</Label>
+                                    <Input
+                                        id="direccion_ciudad"
+                                        type="text"
+                                        value={data.direccion_ciudad}
+                                        onChange={(e) => setData('direccion_ciudad', e.target.value)}
+                                        required
+                                    />
+                                    <InputError message={errors.direccion_ciudad} />
+                                </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="direccion_barrio">Barrio/Localidad *</Label>
-                                <Input
-                                    id="direccion_barrio"
-                                    type="text"
-                                    value={data.direccion_barrio}
-                                    onChange={(e) => setData('direccion_barrio', e.target.value)}
-                                    required
-                                />
-                                <InputError message={errors.direccion_barrio} />
-                            </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="direccion_barrio">Barrio/Localidad *</Label>
+                                    <Input
+                                        id="direccion_barrio"
+                                        type="text"
+                                        value={data.direccion_barrio}
+                                        onChange={(e) => setData('direccion_barrio', e.target.value)}
+                                        required
+                                    />
+                                    <InputError message={errors.direccion_barrio} />
+                                </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="tipo_vivienda">Tipo de Vivienda *</Label>
-                                <Select value={data.tipo_vivienda} onValueChange={(value) => setData('tipo_vivienda', value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecciona el tipo" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="casa">Casa</SelectItem>
-                                        <SelectItem value="apartamento">Apartamento</SelectItem>
-                                        <SelectItem value="finca">Finca/Casa de Campo</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <InputError message={errors.tipo_vivienda} />
-                            </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="tipo_vivienda">Tipo de Vivienda *</Label>
+                                    <Select value={data.tipo_vivienda} onValueChange={(value) => setData('tipo_vivienda', value)}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecciona el tipo" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="casa">Casa</SelectItem>
+                                            <SelectItem value="apartamento">Apartamento</SelectItem>
+                                            <SelectItem value="finca">Finca/Casa de Campo</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <InputError message={errors.tipo_vivienda} />
+                                </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="propiedad_vivienda">Propiedad de la Vivienda *</Label>
-                                <Select value={data.propiedad_vivienda} onValueChange={(value) => setData('propiedad_vivienda', value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecciona" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="propia">Propia</SelectItem>
-                                        <SelectItem value="alquilada">Alquilada</SelectItem>
-                                        <SelectItem value="familiar">Familiar</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <InputError message={errors.propiedad_vivienda} />
-                            </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="propiedad_vivienda">Propiedad de la Vivienda *</Label>
+                                    <Select value={data.propiedad_vivienda} onValueChange={(value) => setData('propiedad_vivienda', value)}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecciona" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="propia">Propia</SelectItem>
+                                            <SelectItem value="alquilada">Alquilada</SelectItem>
+                                            <SelectItem value="familiar">Familiar</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <InputError message={errors.propiedad_vivienda} />
+                                </div>
 
-                            <div className="space-y-2">
-                                <Label>¿Tiene patio o espacio exterior? *</Label>
-                                <RadioGroup value={data.tiene_patio} onValueChange={(value) => setData('tiene_patio', value)}>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="si" id="patio_si" />
-                                        <Label htmlFor="patio_si">Sí</Label>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="no" id="patio_no" />
-                                        <Label htmlFor="patio_no">No</Label>
-                                    </div>
-                                </RadioGroup>
-                                <InputError message={errors.tiene_patio} />
-                            </div>
-
-                            {viviendaAlquilada && (
-                                <div className="space-y-2 md:col-span-2">
-                                    <Label>¿El propietario permite mascotas? *</Label>
-                                    <RadioGroup
-                                        value={data.permiten_mascotas_alquiler}
-                                        onValueChange={(value) => setData('permiten_mascotas_alquiler', value)}
-                                    >
+                                <div className="space-y-2">
+                                    <Label>¿Tiene patio o espacio exterior? *</Label>
+                                    <RadioGroup value={data.tiene_patio} onValueChange={(value) => setData('tiene_patio', value)}>
                                         <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="si" id="permite_si" />
-                                            <Label htmlFor="permite_si">Sí</Label>
+                                            <RadioGroupItem value="si" id="patio_si" />
+                                            <Label htmlFor="patio_si">Sí</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="no" id="permite_no" />
-                                            <Label htmlFor="permite_no">No</Label>
+                                            <RadioGroupItem value="no" id="patio_no" />
+                                            <Label htmlFor="patio_no">No</Label>
                                         </div>
                                     </RadioGroup>
-                                    <InputError message={errors.permiten_mascotas_alquiler} />
+                                    <InputError message={errors.tiene_patio} />
                                 </div>
-                            )}
-                        </FormSection>
 
-                        {/* Información del Hogar */}
-                        <FormSection title="👨‍👩‍👧‍👦 Información del Hogar">
-                            <div className="space-y-2">
-                                <Label htmlFor="cantidad_convivientes">¿Cuántas personas viven en casa? *</Label>
-                                <Input
-                                    id="cantidad_convivientes"
-                                    type="number"
-                                    min="1"
-                                    value={data.cantidad_convivientes}
-                                    onChange={(e) => setData('cantidad_convivientes', parseInt(e.target.value) || 0)}
-                                    required
-                                />
-                                <InputError message={errors.cantidad_convivientes} />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label>¿Hay niños en casa? *</Label>
-                                <RadioGroup value={data.hay_ninos} onValueChange={(value) => setData('hay_ninos', value)}>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="si" id="ninos_si" />
-                                        <Label htmlFor="ninos_si">Sí</Label>
+                                {viviendaAlquilada && (
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label>¿El propietario permite mascotas? *</Label>
+                                        <RadioGroup
+                                            value={data.permiten_mascotas_alquiler}
+                                            onValueChange={(value) => setData('permiten_mascotas_alquiler', value)}
+                                        >
+                                            <div className="flex items-center space-x-2">
+                                                <RadioGroupItem value="si" id="permite_si" />
+                                                <Label htmlFor="permite_si">Sí</Label>
+                                            </div>
+                                            <div className="flex items-center space-x-2">
+                                                <RadioGroupItem value="no" id="permite_no" />
+                                                <Label htmlFor="permite_no">No</Label>
+                                            </div>
+                                        </RadioGroup>
+                                        <InputError message={errors.permiten_mascotas_alquiler} />
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="no" id="ninos_no" />
-                                        <Label htmlFor="ninos_no">No</Label>
-                                    </div>
-                                </RadioGroup>
-                                <InputError message={errors.hay_ninos} />
-                            </div>
+                                )}
+                            </FormSection>
 
-                            {hayNinos && (
+                            {/* Información del Hogar */}
+                            <FormSection title="👨‍👩‍👧‍👦 Información del Hogar">
                                 <div className="space-y-2">
-                                    <Label htmlFor="edades_ninos">¿Qué edades tienen? *</Label>
+                                    <Label htmlFor="cantidad_convivientes">¿Cuántas personas viven en casa? *</Label>
                                     <Input
-                                        id="edades_ninos"
-                                        type="text"
-                                        placeholder="Ej: 5, 8, 12 años"
-                                        value={data.edades_ninos}
-                                        onChange={(e) => setData('edades_ninos', e.target.value)}
+                                        id="cantidad_convivientes"
+                                        type="number"
+                                        min="1"
+                                        value={data.cantidad_convivientes}
+                                        onChange={(e) => setData('cantidad_convivientes', parseInt(e.target.value) || 0)}
+                                        required
                                     />
-                                    <InputError message={errors.edades_ninos} />
+                                    <InputError message={errors.cantidad_convivientes} />
                                 </div>
-                            )}
 
-                            <div className="space-y-2 md:col-span-2">
-                                <Label>¿Todos en la familia están de acuerdo con la adopción? *</Label>
-                                <RadioGroup value={data.todos_acuerdo_adopcion} onValueChange={(value) => setData('todos_acuerdo_adopcion', value)}>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="si" id="acuerdo_si" />
-                                        <Label htmlFor="acuerdo_si">Sí</Label>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="no" id="acuerdo_no" />
-                                        <Label htmlFor="acuerdo_no">No</Label>
-                                    </div>
-                                </RadioGroup>
-                                <InputError message={errors.todos_acuerdo_adopcion} />
-                            </div>
-                        </FormSection>
+                                <div className="space-y-2">
+                                    <Label>¿Hay niños en casa? *</Label>
+                                    <RadioGroup value={data.hay_ninos} onValueChange={(value) => setData('hay_ninos', value)}>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="si" id="ninos_si" />
+                                            <Label htmlFor="ninos_si">Sí</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="no" id="ninos_no" />
+                                            <Label htmlFor="ninos_no">No</Label>
+                                        </div>
+                                    </RadioGroup>
+                                    <InputError message={errors.hay_ninos} />
+                                </div>
 
-                        {/* Experiencia con Mascotas */}
-                        <FormSection title="🐾 Experiencia con Mascotas">
-                            <div className="space-y-2">
-                                <Label>¿Tiene otras mascotas actualmente? *</Label>
-                                <RadioGroup value={data.tiene_otras_mascotas} onValueChange={(value) => setData('tiene_otras_mascotas', value)}>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="si" id="otras_si" />
-                                        <Label htmlFor="otras_si">Sí</Label>
+                                {hayNinos && (
+                                    <div className="space-y-2">
+                                        <Label htmlFor="edades_ninos">¿Qué edades tienen? *</Label>
+                                        <Input
+                                            id="edades_ninos"
+                                            type="text"
+                                            placeholder="Ej: 5, 8, 12 años"
+                                            value={data.edades_ninos}
+                                            onChange={(e) => setData('edades_ninos', e.target.value)}
+                                        />
+                                        <InputError message={errors.edades_ninos} />
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="no" id="otras_no" />
-                                        <Label htmlFor="otras_no">No</Label>
-                                    </div>
-                                </RadioGroup>
-                                <InputError message={errors.tiene_otras_mascotas} />
-                            </div>
+                                )}
 
-                            {tieneOtrasMascotas && (
                                 <div className="space-y-2 md:col-span-2">
-                                    <Label htmlFor="otras_mascotas_detalles">Describe tus otras mascotas *</Label>
+                                    <Label>¿Todos en la familia están de acuerdo con la adopción? *</Label>
+                                    <RadioGroup
+                                        value={data.todos_acuerdo_adopcion}
+                                        onValueChange={(value) => setData('todos_acuerdo_adopcion', value)}
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="si" id="acuerdo_si" />
+                                            <Label htmlFor="acuerdo_si">Sí</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="no" id="acuerdo_no" />
+                                            <Label htmlFor="acuerdo_no">No</Label>
+                                        </div>
+                                    </RadioGroup>
+                                    <InputError message={errors.todos_acuerdo_adopcion} />
+                                </div>
+                            </FormSection>
+
+                            {/* Experiencia con Mascotas */}
+                            <FormSection title="🐾 Experiencia con Mascotas">
+                                <div className="space-y-2">
+                                    <Label>¿Tiene otras mascotas actualmente? *</Label>
+                                    <RadioGroup value={data.tiene_otras_mascotas} onValueChange={(value) => setData('tiene_otras_mascotas', value)}>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="si" id="otras_si" />
+                                            <Label htmlFor="otras_si">Sí</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="no" id="otras_no" />
+                                            <Label htmlFor="otras_no">No</Label>
+                                        </div>
+                                    </RadioGroup>
+                                    <InputError message={errors.tiene_otras_mascotas} />
+                                </div>
+
+                                {tieneOtrasMascotas && (
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label htmlFor="otras_mascotas_detalles">Describe tus otras mascotas *</Label>
+                                        <Textarea
+                                            id="otras_mascotas_detalles"
+                                            placeholder="Tipo, edad, sexo, si están esterilizadas, etc."
+                                            value={data.otras_mascotas_detalles}
+                                            onChange={(e) => setData('otras_mascotas_detalles', e.target.value)}
+                                        />
+                                        <InputError message={errors.otras_mascotas_detalles} />
+                                    </div>
+                                )}
+
+                                <div className="space-y-2">
+                                    <Label>¿Tuvo mascotas antes? *</Label>
+                                    <RadioGroup value={data.tuvo_mascotas_antes} onValueChange={(value) => setData('tuvo_mascotas_antes', value)}>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="si" id="tuvo_si" />
+                                            <Label htmlFor="tuvo_si">Sí</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="no" id="tuvo_no" />
+                                            <Label htmlFor="tuvo_no">No</Label>
+                                        </div>
+                                    </RadioGroup>
+                                    <InputError message={errors.tuvo_mascotas_antes} />
+                                </div>
+
+                                {data.tuvo_mascotas_antes === 'si' && (
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label htmlFor="que_paso_mascotas_anteriores">¿Qué pasó con las mascotas anteriores?</Label>
+                                        <Textarea
+                                            id="que_paso_mascotas_anteriores"
+                                            placeholder="Cuéntanos qué ocurrió con tus mascotas anteriores..."
+                                            value={data.que_paso_mascotas_anteriores}
+                                            onChange={(e) => setData('que_paso_mascotas_anteriores', e.target.value)}
+                                        />
+                                        <InputError message={errors.que_paso_mascotas_anteriores} />
+                                    </div>
+                                )}
+                            </FormSection>
+
+                            {/* Motivación */}
+                            <FormSection title="💭 Motivación para Adoptar">
+                                <div className="space-y-2 md:col-span-3">
+                                    <Label htmlFor="porque_adopta">¿Por qué quieres adoptar esta mascota? *</Label>
                                     <Textarea
-                                        id="otras_mascotas_detalles"
-                                        placeholder="Tipo, edad, sexo, si están esterilizadas, etc."
-                                        value={data.otras_mascotas_detalles}
-                                        onChange={(e) => setData('otras_mascotas_detalles', e.target.value)}
+                                        id="porque_adopta"
+                                        placeholder="Comparte tus motivaciones..."
+                                        value={data.porque_adopta}
+                                        onChange={(e) => setData('porque_adopta', e.target.value)}
+                                        className="whitespace-pre-wrap"
+                                        required
                                     />
-                                    <InputError message={errors.otras_mascotas_detalles} />
+                                    <InputError message={errors.porque_adopta} />
                                 </div>
-                            )}
 
-                            <div className="space-y-2">
-                                <Label>¿Tuvo mascotas antes? *</Label>
-                                <RadioGroup value={data.tuvo_mascotas_antes} onValueChange={(value) => setData('tuvo_mascotas_antes', value)}>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="si" id="tuvo_si" />
-                                        <Label htmlFor="tuvo_si">Sí</Label>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="no" id="tuvo_no" />
-                                        <Label htmlFor="tuvo_no">No</Label>
-                                    </div>
-                                </RadioGroup>
-                                <InputError message={errors.tuvo_mascotas_antes} />
-                            </div>
-
-                            {data.tuvo_mascotas_antes === 'si' && (
-                                <div className="space-y-2 md:col-span-2">
-                                    <Label htmlFor="que_paso_mascotas_anteriores">¿Qué pasó con las mascotas anteriores?</Label>
+                                <div className="space-y-2 md:col-span-3">
+                                    <Label htmlFor="que_espera_convivencia">¿Qué esperas de la convivencia con la mascota? *</Label>
                                     <Textarea
-                                        id="que_paso_mascotas_anteriores"
-                                        placeholder="Cuéntanos qué ocurrió con tus mascotas anteriores..."
-                                        value={data.que_paso_mascotas_anteriores}
-                                        onChange={(e) => setData('que_paso_mascotas_anteriores', e.target.value)}
+                                        id="que_espera_convivencia"
+                                        placeholder="Describe qué esperas de vivir con tu nueva mascota..."
+                                        value={data.que_espera_convivencia}
+                                        onChange={(e) => setData('que_espera_convivencia', e.target.value)}
+                                        className="whitespace-pre-wrap"
+                                        required
                                     />
-                                    <InputError message={errors.que_paso_mascotas_anteriores} />
+                                    <InputError message={errors.que_espera_convivencia} />
                                 </div>
-                            )}
-                        </FormSection>
 
-                        {/* Motivación */}
-                        <FormSection title="💭 Motivación para Adoptar">
-                            <div className="space-y-2 md:col-span-3">
-                                <Label htmlFor="porque_adopta">¿Por qué quieres adoptar esta mascota? *</Label>
-                                <Textarea
-                                    id="porque_adopta"
-                                    placeholder="Comparte tus motivaciones..."
-                                    value={data.porque_adopta}
-                                    onChange={(e) => setData('porque_adopta', e.target.value)}
-                                    className="whitespace-pre-wrap"
-                                    required
-                                />
-                                <InputError message={errors.porque_adopta} />
-                            </div>
+                                <div className="space-y-2 md:col-span-3">
+                                    <Label htmlFor="que_haria_problemas_comportamiento">¿Qué harías ante problemas de comportamiento? *</Label>
+                                    <Textarea
+                                        id="que_haria_problemas_comportamiento"
+                                        placeholder="Explica cómo manejarías problemas de comportamiento..."
+                                        value={data.que_haria_problemas_comportamiento}
+                                        onChange={(e) => setData('que_haria_problemas_comportamiento', e.target.value)}
+                                        className="whitespace-pre-wrap"
+                                        required
+                                    />
+                                    <InputError message={errors.que_haria_problemas_comportamiento} />
+                                </div>
 
-                            <div className="space-y-2 md:col-span-3">
-                                <Label htmlFor="que_espera_convivencia">¿Qué esperas de la convivencia con la mascota? *</Label>
-                                <Textarea
-                                    id="que_espera_convivencia"
-                                    placeholder="Describe qué esperas de vivir con tu nueva mascota..."
-                                    value={data.que_espera_convivencia}
-                                    onChange={(e) => setData('que_espera_convivencia', e.target.value)}
-                                    className="whitespace-pre-wrap"
-                                    required
-                                />
-                                <InputError message={errors.que_espera_convivencia} />
-                            </div>
+                                <div className="space-y-2">
+                                    <Label>¿Aceptas visitas de seguimiento? *</Label>
+                                    <RadioGroup
+                                        value={data.acepta_visitas_seguimiento}
+                                        onValueChange={(value) => setData('acepta_visitas_seguimiento', value)}
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="si" id="visitas_si" />
+                                            <Label htmlFor="visitas_si">Sí</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="no" id="visitas_no" />
+                                            <Label htmlFor="visitas_no">No</Label>
+                                        </div>
+                                    </RadioGroup>
+                                    <InputError message={errors.acepta_visitas_seguimiento} />
+                                </div>
+                            </FormSection>
 
-                            <div className="space-y-2 md:col-span-3">
-                                <Label htmlFor="que_haria_problemas_comportamiento">¿Qué harías ante problemas de comportamiento? *</Label>
-                                <Textarea
-                                    id="que_haria_problemas_comportamiento"
-                                    placeholder="Explica cómo manejarías problemas de comportamiento..."
-                                    value={data.que_haria_problemas_comportamiento}
-                                    onChange={(e) => setData('que_haria_problemas_comportamiento', e.target.value)}
-                                    className="whitespace-pre-wrap"
-                                    required
-                                />
-                                <InputError message={errors.que_haria_problemas_comportamiento} />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label>¿Aceptas visitas de seguimiento? *</Label>
-                                <RadioGroup
-                                    value={data.acepta_visitas_seguimiento}
-                                    onValueChange={(value) => setData('acepta_visitas_seguimiento', value)}
-                                >
+                            {/* Compromisos */}
+                            <FormSection title="📝 Compromisos de Adopción">
+                                <div className="space-y-4 md:col-span-3">
                                     <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="si" id="visitas_si" />
-                                        <Label htmlFor="visitas_si">Sí</Label>
+                                        <Checkbox
+                                            id="acepta_proceso_evaluacion"
+                                            checked={data.acepta_proceso_evaluacion}
+                                            onCheckedChange={(checked) => setData('acepta_proceso_evaluacion', checked as boolean)}
+                                        />
+                                        <Label htmlFor="acepta_proceso_evaluacion" className="text-sm">
+                                            Acepto someterme al proceso de evaluación y entrevista *
+                                        </Label>
                                     </div>
+                                    <InputError message={errors.acepta_proceso_evaluacion} />
+
                                     <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="no" id="visitas_no" />
-                                        <Label htmlFor="visitas_no">No</Label>
+                                        <Checkbox
+                                            id="acepta_cuidado_responsable"
+                                            checked={data.acepta_cuidado_responsable}
+                                            onCheckedChange={(checked) => setData('acepta_cuidado_responsable', checked as boolean)}
+                                        />
+                                        <Label htmlFor="acepta_cuidado_responsable" className="text-sm">
+                                            Me comprometo a brindar cuidado responsable, alimentación, atención veterinaria y amor *
+                                        </Label>
                                     </div>
-                                </RadioGroup>
-                                <InputError message={errors.acepta_visitas_seguimiento} />
+                                    <InputError message={errors.acepta_cuidado_responsable} />
+
+                                    <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id="acepta_contrato_adopcion"
+                                            checked={data.acepta_contrato_adopcion}
+                                            onCheckedChange={(checked) => setData('acepta_contrato_adopcion', checked as boolean)}
+                                        />
+                                        <Label htmlFor="acepta_contrato_adopcion" className="text-sm">
+                                            Acepto firmar un contrato de adopción responsable *
+                                        </Label>
+                                    </div>
+                                    <InputError message={errors.acepta_contrato_adopcion} />
+                                </div>
+                            </FormSection>
+
+                            {/* Botones */}
+                            <div className="flex flex-col gap-4 pt-6 sm:flex-row sm:justify-end">
+                                <Button type="button" variant="outline" onClick={onClose} className="w-full sm:w-auto">
+                                    Cancelar
+                                </Button>
+                                <Button type="submit" disabled={processing} className="w-full bg-green-600 hover:bg-green-700 sm:w-auto">
+                                    {processing ? 'Enviando...' : 'Enviar Solicitud de Adopción'}
+                                </Button>
                             </div>
-                        </FormSection>
-
-                        {/* Compromisos */}
-                        <FormSection title="📝 Compromisos de Adopción">
-                            <div className="space-y-4 md:col-span-3">
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="acepta_proceso_evaluacion"
-                                        checked={data.acepta_proceso_evaluacion}
-                                        onCheckedChange={(checked) => setData('acepta_proceso_evaluacion', checked as boolean)}
-                                    />
-                                    <Label htmlFor="acepta_proceso_evaluacion" className="text-sm">
-                                        Acepto someterme al proceso de evaluación y entrevista *
-                                    </Label>
-                                </div>
-                                <InputError message={errors.acepta_proceso_evaluacion} />
-
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="acepta_cuidado_responsable"
-                                        checked={data.acepta_cuidado_responsable}
-                                        onCheckedChange={(checked) => setData('acepta_cuidado_responsable', checked as boolean)}
-                                    />
-                                    <Label htmlFor="acepta_cuidado_responsable" className="text-sm">
-                                        Me comprometo a brindar cuidado responsable, alimentación, atención veterinaria y amor *
-                                    </Label>
-                                </div>
-                                <InputError message={errors.acepta_cuidado_responsable} />
-
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="acepta_contrato_adopcion"
-                                        checked={data.acepta_contrato_adopcion}
-                                        onCheckedChange={(checked) => setData('acepta_contrato_adopcion', checked as boolean)}
-                                    />
-                                    <Label htmlFor="acepta_contrato_adopcion" className="text-sm">
-                                        Acepto firmar un contrato de adopción responsable *
-                                    </Label>
-                                </div>
-                                <InputError message={errors.acepta_contrato_adopcion} />
-                            </div>
-                        </FormSection>
-
-                        {/* Botones */}
-                        <div className="flex flex-col gap-4 pt-6 sm:flex-row sm:justify-end">
-                            <Button type="button" variant="outline" onClick={onClose} className="w-full sm:w-auto">
-                                Cancelar
-                            </Button>
-                            <Button type="submit" disabled={processing} className="w-full bg-green-600 hover:bg-green-700 sm:w-auto">
-                                {processing ? 'Enviando...' : 'Enviar Solicitud de Adopción'}
-                            </Button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

@@ -361,106 +361,110 @@ export default function GestionUsuarios() {
                                 </DialogContent>
                             </Dialog>
                             <Dialog open={isEmailModalOpen} onOpenChange={setIsEmailModalOpen}>
-                                <DialogContent className="max-w-4xl rounded-lg bg-white p-6 dark:bg-gray-800 dark:text-gray-100 max-h-[95vh] overflow-auto">
-                                    <DialogHeader>
-                                        <DialogTitle>Enviar Correo Masivo</DialogTitle>
-                                        <DialogDescription>
-                                            Envía un correo electrónico a los usuarios seleccionados con un asunto y descripción personalizados.
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <div className="space-y-6">
-                                        <div>
-                                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Destinatarios</Label>
-                                            <div className="mt-2 flex flex-wrap gap-2">
-                                                {(() => {
-                                                    const allRecipients = [
-                                                        ...selectedUsers
-                                                            .map((userId) => {
-                                                                const user = usuarios.find((u) => u.id === userId);
-                                                                return user ? { name: user.name, email: user.email } : null;
-                                                            })
-                                                            .filter(Boolean),
-                                                        ...additionalRecipients.map((email) => ({ name: '', email })),
-                                                    ];
-                                                    const displayedRecipients = showAllRecipients ? allRecipients : allRecipients.slice(0, 2);
-                                                    return (
-                                                        <>
-                                                            {displayedRecipients.map((recipient, index) => (
-                                                                <Badge key={index} variant="secondary" className="flex items-center gap-1">
-                                                                    {recipient!.name ? `${recipient!.name} <${recipient!.email}>` : recipient!.email}
-                                                                </Badge>
-                                                            ))}
-                                                            {allRecipients.length > 2 && (
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    onClick={() => setShowAllRecipients(!showAllRecipients)}
-                                                                    className="text-xs"
-                                                                >
-                                                                    {showAllRecipients ? 'Ver menos' : `Ver todos (${allRecipients.length - 2})`}
-                                                                </Button>
-                                                            )}
-                                                        </>
-                                                    );
-                                                })()}
+                                <DialogContent className="max-h-[calc(100vh-4rem)] max-w-4xl overflow-hidden rounded-lg bg-white dark:bg-gray-800 dark:text-gray-100">
+                                    <div className="overflow-y-auto p-6">
+                                        <DialogHeader>
+                                            <DialogTitle>Enviar Correo Masivo</DialogTitle>
+                                            <DialogDescription>
+                                                Envía un correo electrónico a los usuarios seleccionados con un asunto y descripción personalizados.
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <div className="space-y-6">
+                                            <div>
+                                                <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Destinatarios</Label>
+                                                <div className="mt-2 flex flex-wrap gap-2">
+                                                    {(() => {
+                                                        const allRecipients = [
+                                                            ...selectedUsers
+                                                                .map((userId) => {
+                                                                    const user = usuarios.find((u) => u.id === userId);
+                                                                    return user ? { name: user.name, email: user.email } : null;
+                                                                })
+                                                                .filter(Boolean),
+                                                            ...additionalRecipients.map((email) => ({ name: '', email })),
+                                                        ];
+                                                        const displayedRecipients = showAllRecipients ? allRecipients : allRecipients.slice(0, 2);
+                                                        return (
+                                                            <>
+                                                                {displayedRecipients.map((recipient, index) => (
+                                                                    <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                                                                        {recipient!.name
+                                                                            ? `${recipient!.name} <${recipient!.email}>`
+                                                                            : recipient!.email}
+                                                                    </Badge>
+                                                                ))}
+                                                                {allRecipients.length > 2 && (
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                        onClick={() => setShowAllRecipients(!showAllRecipients)}
+                                                                        className="text-xs"
+                                                                    >
+                                                                        {showAllRecipients ? 'Ver menos' : `Ver todos (${allRecipients.length - 2})`}
+                                                                    </Button>
+                                                                )}
+                                                            </>
+                                                        );
+                                                    })()}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div>
-                                            <Label htmlFor="email-subject" className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                                                Asunto
-                                            </Label>
-                                            <Input
-                                                id="email-subject"
-                                                placeholder="Escribe el asunto del correo..."
-                                                value={emailSubject}
-                                                onChange={(e) => setEmailSubject(e.target.value)}
-                                                className="mt-1 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label htmlFor="email-description" className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                                                Descripción
-                                            </Label>
-                                            <Textarea
-                                                id="email-description"
-                                                placeholder="Redacta el mensaje que deseas enviar..."
-                                                value={emailDescription}
-                                                onChange={(e) => setEmailDescription(e.target.value)}
-                                                rows={4}
-                                                className="mt-1 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Previsualización</Label>
-                                            <div className="mt-2 rounded-lg border bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
-                                                <iframe
-                                                    srcDoc={generateEmailHTML(emailSubject, emailDescription)}
-                                                    className="w-full rounded border-0"
-                                                    style={{ height: '400px' }}
-                                                    title="Email Preview"
+                                            <div>
+                                                <Label htmlFor="email-subject" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                                    Asunto
+                                                </Label>
+                                                <Input
+                                                    id="email-subject"
+                                                    placeholder="Escribe el asunto del correo..."
+                                                    value={emailSubject}
+                                                    onChange={(e) => setEmailSubject(e.target.value)}
+                                                    className="mt-1 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
                                                 />
                                             </div>
+                                            <div>
+                                                <Label htmlFor="email-description" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                                                    Descripción
+                                                </Label>
+                                                <Textarea
+                                                    id="email-description"
+                                                    placeholder="Redacta el mensaje que deseas enviar..."
+                                                    value={emailDescription}
+                                                    onChange={(e) => setEmailDescription(e.target.value)}
+                                                    rows={4}
+                                                    className="mt-1 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label className="text-sm font-medium text-gray-700 dark:text-gray-200">Previsualización</Label>
+                                                <div className="mt-2 rounded-lg border bg-gray-50 p-4 dark:border-gray-600 dark:bg-gray-700">
+                                                    <iframe
+                                                        srcDoc={generateEmailHTML(emailSubject, emailDescription)}
+                                                        className="w-full rounded border-0"
+                                                        style={{ height: '400px' }}
+                                                        title="Email Preview"
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex justify-end gap-2 pt-4">
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => setIsEmailModalOpen(false)}
-                                            className="border-gray-300 dark:border-gray-600 dark:text-gray-200"
-                                        >
-                                            Cancelar
-                                        </Button>
-                                        <Button
-                                            onClick={handleSendBulkEmail}
-                                            disabled={
-                                                !emailSubject.trim() ||
-                                                !emailDescription.trim() ||
-                                                selectedUsers.length + additionalRecipients.length === 0
-                                            }
-                                            className="bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 dark:bg-green-600 dark:text-white dark:hover:bg-green-700"
-                                        >
-                                            Enviar
-                                        </Button>
+                                        <div className="flex justify-end gap-2 pt-4">
+                                            <Button
+                                                variant="outline"
+                                                onClick={() => setIsEmailModalOpen(false)}
+                                                className="border-gray-300 dark:border-gray-600 dark:text-gray-200"
+                                            >
+                                                Cancelar
+                                            </Button>
+                                            <Button
+                                                onClick={handleSendBulkEmail}
+                                                disabled={
+                                                    !emailSubject.trim() ||
+                                                    !emailDescription.trim() ||
+                                                    selectedUsers.length + additionalRecipients.length === 0
+                                                }
+                                                className="bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 dark:bg-green-600 dark:text-white dark:hover:bg-green-700"
+                                            >
+                                                Enviar
+                                            </Button>
+                                        </div>
                                     </div>
                                 </DialogContent>
                             </Dialog>

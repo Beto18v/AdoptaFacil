@@ -1,3 +1,4 @@
+import ChatbotWidget from '@/components/chatbot-widget';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -47,140 +48,266 @@ export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPo
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Estadísticas de Adopción" />
-            <main className="flex-1 overflow-y-auto bg-gradient-to-r from-green-400 to-blue-500 p-6 dark:from-green-600 dark:to-blue-700">
-                <div className="container mx-auto">
-                    {/* Gráficos y tablas */}
-                    <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
-                        {/* Gráfico principal */}
-                        <div className="rounded-lg bg-white p-6 shadow-md lg:col-span-2 dark:bg-gray-800">
-                            <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Adopciones por mes</h2>
-                            <Chart data={adopcionesPorMes} />
+            <main className="relative flex-1 overflow-y-auto bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 p-6 dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
+                {/* Elementos decorativos de fondo */}
+                <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                    {/* Círculos decorativos grandes */}
+                    <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-white/5 blur-3xl"></div>
+                    <div className="absolute top-1/4 -right-32 h-80 w-80 rounded-full bg-blue-300/10 blur-3xl"></div>
+                    <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-purple-300/10 blur-3xl"></div>
+
+                    {/* Puntos animados */}
+                    <div className="absolute top-20 right-20 h-3 w-3 animate-pulse rounded-full bg-white/20 shadow-lg"></div>
+                    <div className="absolute top-1/3 left-1/4 h-4 w-4 animate-ping rounded-full bg-white/30 shadow-lg"></div>
+                    <div className="absolute right-1/3 bottom-32 h-2 w-2 animate-pulse rounded-full bg-white/25 shadow-md"></div>
+                </div>
+
+                <div className="relative z-10 container mx-auto">
+                    {/* Título de la página con gradiente */}
+                    <div className="mb-8 text-center">
+                        <h1 className="text-4xl font-bold tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl">
+                            <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Estadísticas de Adopción</span>
+                        </h1>
+                        <p className="mt-4 text-xl leading-relaxed font-medium text-white/90">Analiza las métricas de la plataforma</p>
+
+                        {/* Línea decorativa */}
+                        <div className="mx-auto mt-6 h-1 w-32 rounded-full bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
+                    </div>
+                    {/* Tarjetas de estadísticas principales */}
+                    <div className="mb-12 grid grid-cols-2 gap-8 md:grid-cols-4">
+                        {/* Total Adopciones */}
+                        <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95">
+                            <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-blue-500/20 to-transparent"></div>
+                            <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-blue-300/10 to-transparent"></div>
+                            <div className="relative text-center">
+                                <div className="mx-auto mb-4 w-fit rounded-2xl bg-gradient-to-r from-blue-500 to-blue-700 p-4 shadow-xl">
+                                    <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                                        />
+                                    </svg>
+                                </div>
+                                <h3 className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Total Adopciones</h3>
+                                <p className="text-3xl font-bold text-gray-800 dark:text-white">{generalStats.totalAdoptions}</p>
+                            </div>
                         </div>
 
-                        {/* Estadísticas adicionales */}
-                        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
-                            <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Distribución por tipo</h2>
-                            <div className="space-y-4">
-                                {distribucionTipos.length > 0 ? (
-                                    distribucionTipos.map((item, index) => {
-                                        // Asignar colores según el tipo
-                                        const colores = [
-                                            'bg-blue-500',
-                                            'bg-green-500',
-                                            'bg-purple-500',
-                                            'bg-yellow-500',
-                                            'bg-red-500',
-                                            'bg-indigo-500',
-                                        ];
-                                        const color = colores[index % colores.length];
+                        {/* Promedio Mensual */}
+                        <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95">
+                            <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-green-500/20 to-transparent"></div>
+                            <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-green-300/10 to-transparent"></div>
+                            <div className="relative text-center">
+                                <div className="mx-auto mb-4 w-fit rounded-2xl bg-gradient-to-r from-green-500 to-green-700 p-4 shadow-xl">
+                                    <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                        />
+                                    </svg>
+                                </div>
+                                <h3 className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Promedio Mensual</h3>
+                                <p className="text-3xl font-bold text-gray-800 dark:text-white">{generalStats.averageMonthly}</p>
+                            </div>
+                        </div>
 
-                                        return (
-                                            <div key={index} className="flex flex-col">
-                                                <div className="mb-1 flex justify-between">
-                                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                        {item.name} ({item.total})
-                                                    </span>
-                                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.value}%</span>
-                                                </div>
-                                                <div className="h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700">
-                                                    <div className={`${color} h-2.5 rounded-full`} style={{ width: `${item.value}%` }}></div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })
-                                ) : (
-                                    <div className="text-center text-gray-500 dark:text-gray-400">
-                                        <p>No hay datos de mascotas disponibles</p>
-                                    </div>
-                                )}
+                        {/* Tasa de Éxito */}
+                        <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95">
+                            <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-purple-500/20 to-transparent"></div>
+                            <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-purple-300/10 to-transparent"></div>
+                            <div className="relative text-center">
+                                <div className="mx-auto mb-4 w-fit rounded-2xl bg-gradient-to-r from-purple-500 to-purple-700 p-4 shadow-xl">
+                                    <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        />
+                                    </svg>
+                                </div>
+                                <h3 className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Tasa de Éxito</h3>
+                                <p className="text-3xl font-bold text-gray-800 dark:text-white">{generalStats.successRate}%</p>
+                            </div>
+                        </div>
+
+                        {/* Solicitudes Pendientes */}
+                        <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95">
+                            <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-yellow-500/20 to-transparent"></div>
+                            <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-yellow-300/10 to-transparent"></div>
+                            <div className="relative text-center">
+                                <div className="mx-auto mb-4 w-fit rounded-2xl bg-gradient-to-r from-yellow-500 to-yellow-700 p-4 shadow-xl">
+                                    <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        />
+                                    </svg>
+                                </div>
+                                <h3 className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Solicitudes Pendientes</h3>
+                                <p className="text-3xl font-bold text-gray-800 dark:text-white">{generalStats.pendingRequests}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
-                        <h1 className="mb-6 text-2xl font-bold text-gray-800 dark:text-white">Estadísticas de Adopción</h1>
-
-                        {/* Resumen de estadísticas */}
-                        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-                            <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900">
-                                <h3 className="text-sm font-medium text-blue-700 dark:text-blue-300">Total Adopciones</h3>
-                                <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">{generalStats.totalAdoptions}</p>
-                            </div>
-                            <div className="rounded-lg bg-green-50 p-4 dark:bg-green-900">
-                                <h3 className="text-sm font-medium text-green-700 dark:text-green-300">Promedio Mensual</h3>
-                                <p className="text-2xl font-bold text-green-800 dark:text-green-200">{generalStats.averageMonthly}</p>
-                            </div>
-                            <div className="rounded-lg bg-purple-50 p-4 dark:bg-purple-900">
-                                <h3 className="text-sm font-medium text-purple-700 dark:text-purple-300">Tasa de Éxito</h3>
-                                <p className="text-2xl font-bold text-purple-800 dark:text-purple-200">{generalStats.successRate}%</p>
-                            </div>
-                            <div className="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900">
-                                <h3 className="text-sm font-medium text-yellow-700 dark:text-yellow-300">Solicitudes Pendientes</h3>
-                                <p className="text-2xl font-bold text-yellow-800 dark:text-yellow-200">{generalStats.pendingRequests}</p>
+                    {/* Gráficos y tablas */}
+                    <div className="mb-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
+                        {/* Gráfico principal */}
+                        <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 lg:col-span-2 dark:bg-gray-800/95">
+                            <div className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-gradient-to-br from-blue-500/10 to-purple-500/5 blur-2xl"></div>
+                            <div className="absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-gradient-to-tr from-green-500/10 to-blue-500/5 blur-xl"></div>
+                            <div className="relative">
+                                <h2 className="mb-6 text-xl font-bold text-gray-800 dark:text-white">Adopciones por mes</h2>
+                                <Chart data={adopcionesPorMes} />
                             </div>
                         </div>
 
-                        {/* Tabla de estadísticas mensuales */}
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead className="bg-gray-50 dark:bg-gray-700">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                                            Mes
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                                            Adopciones
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                                            Devoluciones
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
-                                            Tasa de Éxito
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-                                    {monthlyStats.map((stat, index) => (
-                                        <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                            <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900 dark:text-white">
-                                                {stat.month}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{stat.adoptions}</td>
-                                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{stat.returns}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
-                                                    <span
-                                                        className={`inline-flex rounded-full px-2 text-xs leading-5 font-semibold ${
-                                                            stat.success >= 95
-                                                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                                                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                                                        }`}
-                                                    >
-                                                        {stat.success}%
-                                                    </span>
-                                                    <div className="ml-4 h-2.5 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
-                                                        <div
-                                                            className={`h-2.5 rounded-full ${stat.success >= 95 ? 'bg-green-500' : 'bg-yellow-500'}`}
-                                                            style={{ width: `${stat.success}%` }}
-                                                        ></div>
+                        {/* Estadísticas adicionales */}
+                        <div className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm transition-all duration-500 dark:bg-gray-800/95">
+                            <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-orange-500/20 to-transparent"></div>
+                            <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-orange-300/10 to-transparent"></div>
+                            <div className="relative">
+                                <h2 className="mb-6 text-xl font-bold text-gray-800 dark:text-white">Distribución por tipo</h2>
+                                <div className="space-y-4">
+                                    {distribucionTipos.length > 0 ? (
+                                        distribucionTipos.map((item, index) => {
+                                            // Asignar colores según el tipo
+                                            const colores = [
+                                                'bg-blue-500',
+                                                'bg-green-500',
+                                                'bg-purple-500',
+                                                'bg-yellow-500',
+                                                'bg-red-500',
+                                                'bg-indigo-500',
+                                            ];
+                                            const color = colores[index % colores.length];
+
+                                            return (
+                                                <div key={index} className="flex flex-col">
+                                                    <div className="mb-1 flex justify-between">
+                                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                            {item.name} ({item.total})
+                                                        </span>
+                                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.value}%</span>
+                                                    </div>
+                                                    <div className="h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+                                                        <div className={`${color} h-2.5 rounded-full`} style={{ width: `${item.value}%` }}></div>
                                                     </div>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className="text-center text-gray-500 dark:text-gray-400">
+                                            <p>No hay datos de mascotas disponibles</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
+                    </div>
 
-                        <div className="mt-6 text-right">
-                            <button className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                                Ver informe completo
-                            </button>
+                    {/* Tabla de estadísticas mensuales mejorada */}
+                    <div className="relative overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm dark:bg-gray-800/95">
+                        {/* Elementos decorativos para la tabla */}
+                        <div className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-gradient-to-br from-blue-500/10 to-purple-500/5 blur-2xl"></div>
+                        <div className="absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-gradient-to-tr from-green-500/10 to-blue-500/5 blur-xl"></div>
+
+                        <div className="relative">
+                            {/* Header de la sección */}
+                            <div className="mb-6 flex items-center justify-between">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Estadísticas Mensuales</h2>
+                                    <p className="text-gray-600 dark:text-gray-300">Rendimiento detallado por mes</p>
+                                </div>
+                                <div className="rounded-2xl bg-gradient-to-r from-blue-500/20 to-green-500/20 p-3">
+                                    <svg className="h-6 w-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                        />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Línea decorativa */}
+                            <div className="mb-6 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent dark:via-gray-600"></div>
+
+                            {/* Tabla de estadísticas mensuales */}
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead className="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                                                Mes
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                                                Adopciones
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                                                Devoluciones
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-300">
+                                                Tasa de Éxito
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
+                                        {monthlyStats.map((stat, index) => (
+                                            <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                                <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900 dark:text-white">
+                                                    {stat.month}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                                                    {stat.adoptions}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                                                    {stat.returns}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="flex items-center">
+                                                        <span
+                                                            className={`inline-flex rounded-full px-2 text-xs leading-5 font-semibold ${
+                                                                stat.success >= 95
+                                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                                                                    : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                                                            }`}
+                                                        >
+                                                            {stat.success}%
+                                                        </span>
+                                                        <div className="ml-4 h-2.5 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
+                                                            <div
+                                                                className={`h-2.5 rounded-full ${stat.success >= 95 ? 'bg-green-500' : 'bg-yellow-500'}`}
+                                                                style={{ width: `${stat.success}%` }}
+                                                            ></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div className="mt-6 text-right">
+                                <button className="rounded-xl bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-2 text-sm font-medium text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:ring-4 focus:ring-blue-300/50 focus:outline-none">
+                                    Ver informe completo
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </main>
-            <ThemeSwitcher />
+
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
         </AppLayout>
     );
 }
