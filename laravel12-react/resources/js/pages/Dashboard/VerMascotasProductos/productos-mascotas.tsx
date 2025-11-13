@@ -102,7 +102,6 @@ export default function ProductosMascotas() {
     const [busqueda, setBusqueda] = useState('');
     const [filtro, setFiltro] = useState<'todo' | 'producto' | 'mascota'>('todo');
     const [mensaje, setMensaje] = useState<string | null>(null);
-    const [adoptarMascotaId, setAdoptarMascotaId] = useState<number | null>(null);
 
     // Estados para edición
     const [mascotaEditando, setMascotaEditando] = useState<CardItem | null>(null);
@@ -118,18 +117,6 @@ export default function ProductosMascotas() {
             mostrarMensaje(success as string);
         }
     }, [success]);
-
-    /**
-     * Effect para manejar adopción automática desde URL
-     * Se ejecuta al montar el componente para detectar parámetros de adopción
-     */
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const adoptarMascota = params.get('adoptar_mascota');
-        if (adoptarMascota) {
-            setAdoptarMascotaId(Number(adoptarMascota));
-        }
-    }, []);
 
     /**
      * Función de filtrado optimizada para buscar por nombre y tipo
@@ -201,23 +188,6 @@ export default function ProductosMascotas() {
         setProductoEditando(null);
         setModoEdicion(false);
         setProductoModalOpen(true);
-    };
-
-    /**
-     * Función para manejar acciones de cliente (compra/adopción)
-     * Envía solicitudes al backend y proporciona feedback inmediato
-     * @param item - Elemento seleccionado para la acción
-     */
-    const handleAction = (item: CardItem) => {
-        const actionType = item.tipo === 'producto' ? 'compra' : 'adopcion';
-        router.post(
-            route('acciones-solicitud.store'),
-            { tipo: actionType, item_id: item.id },
-            {
-                onSuccess: () => mostrarMensaje(`¡Solicitud de ${actionType} enviada para "${item.nombre}"!`),
-                onError: () => mostrarMensaje('Ocurrió un error al registrar la solicitud.'),
-            },
-        );
     };
 
     const handleEdit = async (item: CardItem) => {
@@ -485,11 +455,8 @@ export default function ProductosMascotas() {
                                         <ProductoMascotaCard
                                             key={`${item.tipo}-${item.id}`}
                                             item={item}
-                                            onAction={handleAction}
                                             onDelete={handleDelete}
                                             onEdit={handleEdit}
-                                            autoOpenAdopcion={adoptarMascotaId === item.id}
-                                            onAutoOpenHandled={() => setAdoptarMascotaId(null)}
                                         />
                                     ))}
                                 </div>
