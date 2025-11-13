@@ -25,6 +25,7 @@
  */
 
 // Dashboard unificado: productos y mascotas para gestión de aliados
+import ChatbotWidget from '@/components/chatbot-widget';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -495,7 +496,8 @@ export default function ProductosMascotas() {
                     {/* Mensaje de confirmación o error */}
                 </div>
             </main>
-            <ThemeSwitcher />
+            <ThemeSwitcher hasChatbot={true} />
+            <ChatbotWidget />
         </AppLayout>
     );
 }
