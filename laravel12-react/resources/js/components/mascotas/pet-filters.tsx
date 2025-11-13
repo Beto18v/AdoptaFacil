@@ -121,7 +121,7 @@ function PetFilters({ filters, availableEspecies, availableCiudades, onFilterCha
                         <option value="all">🐾 Todas las especies</option>
                         {availableEspecies.map((especie) => (
                             <option key={especie} value={especie}>
-                                {especie === 'Perro' ? '🐕' : especie === 'Gato' ? '🐱' : '🐾'} {especie}
+                                {especie === 'Perros' ? '🐕' : especie === 'Gatos' ? '🐱' : '🐾'} {especie}
                             </option>
                         ))}
                     </select>
