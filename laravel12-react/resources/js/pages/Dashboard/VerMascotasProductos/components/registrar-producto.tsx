@@ -22,12 +22,13 @@ interface RegistrarProductoProps {
 
 export default function RegistrarProducto({ isOpen, onClose, setMensaje, productoEditar, modoEdicion = false }: RegistrarProductoProps) {
     // Form handler para productos con array de imágenes
-    const { data, setData, post, put, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         nombre: '',
         descripcion: '',
         precio: '',
         cantidad: '',
         imagenes: [] as File[], // Array para hasta 3 imágenes
+        _method: '' as string, // Para el workaround de FormData con PUT
     });
 
     const modalRef = useRef<HTMLDivElement>(null);
@@ -54,24 +55,32 @@ export default function RegistrarProducto({ isOpen, onClose, setMensaje, product
         e.preventDefault();
 
         if (modoEdicion && productoEditar?.id) {
-            // Actualizar producto existente
-            put(`/productos/${productoEditar.id}`, {
-                forceFormData: true,
-                onSuccess: () => {
-                    reset();
-                    setAdditionalFiles([]);
-                    setImagePreviews([]);
-                    setImagenesExistentes([]);
-                    onClose();
-                    setMensaje('¡Producto actualizado exitosamente!');
-                },
-                onError: () => {
-                    setMensaje('Error al actualizar producto. Revisa los datos e intenta nuevamente.');
-                    setTimeout(() => {
-                        setData('imagenes', []);
-                    }, 3000);
-                },
-            });
+            // Actualizar producto existente - usar POST con _method para FormData
+            console.log('Enviando actualización con datos:', data);
+
+            // Actualizar el formulario de Inertia con _method
+            setData('_method', 'PUT');
+
+            // Enviar usando POST con _method=PUT (workaround para FormData)
+            setTimeout(() => {
+                post(`/productos/${productoEditar.id}`, {
+                    forceFormData: true,
+                    onSuccess: () => {
+                        reset();
+                        setAdditionalFiles([]);
+                        setImagePreviews([]);
+                        setImagenesExistentes([]);
+                        onClose();
+                        setMensaje('¡Producto actualizado exitosamente!');
+                    },
+                    onError: () => {
+                        setMensaje('Error al actualizar producto. Revisa los datos e intenta nuevamente.');
+                        setTimeout(() => {
+                            setData('imagenes', []);
+                        }, 3000);
+                    },
+                });
+            }, 100);
         } else {
             // Crear nuevo producto
             post('/productos/store', {
@@ -106,26 +115,24 @@ export default function RegistrarProducto({ isOpen, onClose, setMensaje, product
             // Resetear primero para limpiar cualquier estado previo
             reset();
 
-            // Usar un setTimeout más largo para asegurar que el formulario se actualice después del render
-            setTimeout(() => {
-                // Crear un nuevo objeto con todos los datos
-                const formData = {
-                    nombre: productoEditar.nombre || '',
-                    descripcion: productoEditar.descripcion || '',
-                    precio: productoEditar.precio || '',
-                    cantidad: productoEditar.cantidad || '',
-                    imagenes: [] as File[],
-                };
+            // Crear un nuevo objeto con todos los datos
+            const formData = {
+                nombre: productoEditar.nombre || '',
+                descripcion: productoEditar.descripcion || '',
+                precio: productoEditar.precio || '',
+                cantidad: productoEditar.cantidad || '',
+                imagenes: [] as File[],
+                _method: '',
+            };
 
-                // Actualizar todo de una vez
-                Object.entries(formData).forEach(([key, value]) => {
-                    setData(key as keyof typeof formData, value);
-                });
+            // Actualizar todo de una vez
+            Object.entries(formData).forEach(([key, value]) => {
+                setData(key as keyof typeof formData, value);
+            });
 
-                // Cargar imágenes existentes
-                setImagenesExistentes((productoEditar.imagenes_existentes || []).filter((img) => img && img !== 'undefined'));
-                console.log('Datos de producto cargados en el formulario:', formData);
-            }, 300); // Aumentamos el timeout
+            // Cargar imágenes existentes
+            setImagenesExistentes((productoEditar.imagenes_existentes || []).filter((img) => img && img !== 'undefined'));
+            console.log('Datos de producto cargados en el formulario:', formData);
         } else if (isOpen && !modoEdicion) {
             // Limpiar al abrir en modo creación
             reset();
