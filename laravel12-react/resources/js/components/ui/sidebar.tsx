@@ -1,6 +1,6 @@
 import { Slot } from '@radix-ui/react-slot';
 import { VariantProps, cva } from 'class-variance-authority';
-import { PanelLeftIcon } from 'lucide-react';
+import { ChevronRightCircle } from 'lucide-react';
 import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -244,7 +244,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
             }}
             {...props}
         >
-            <PanelLeftIcon />
+            <ChevronRightCircle />
             <span className="sr-only">Toggle Sidebar</span>
         </Button>
     );

@@ -1,5 +1,6 @@
 import ChatbotWidget from '@/components/chatbot-widget';
 import InputError from '@/components/input-error';
+import ParticlesComponent from '@/components/particles';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,6 +45,7 @@ export default function Register({ role }: { role: string }) {
 
     return (
         <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
+            <ParticlesComponent />
             {/* Elementos decorativos de fondo */}
             <div className="pointer-events-none absolute top-1/4 left-1/4 h-96 w-96 animate-pulse rounded-full bg-white/5 blur-3xl"></div>
             <div className="pointer-events-none absolute right-1/5 bottom-1/3 h-64 w-64 rounded-full bg-blue-300/10 blur-2xl"></div>
