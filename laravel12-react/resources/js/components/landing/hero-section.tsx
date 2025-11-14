@@ -1,6 +1,9 @@
+import ParticlesComponent from '../particles';
+
 export default function HeroSection() {
     return (
         <section className="relative min-h-auto bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 pt-30 pb-8 md:pt-36 md:pb-10 dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
+            <ParticlesComponent />
             {/* Elementos decorativos de fondo */}
             <div className="absolute inset-0 overflow-hidden">
                 {/* Círculos grandes */}

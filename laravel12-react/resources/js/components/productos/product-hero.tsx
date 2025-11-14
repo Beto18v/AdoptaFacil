@@ -1,3 +1,5 @@
+import ParticlesHero from '../particles-hero';
+
 /**
  * Componente Hero optimizado para la página de productos
  *
@@ -10,6 +12,8 @@
 export default function ProductHero() {
     return (
         <section className="relative min-h-auto bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 pt-30 pb-8 md:pt-36 md:pb-10 dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
+            <ParticlesHero />
+
             {/* Elementos decorativos de fondo según PALETA */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
                 {/* Círculos grandes */}
