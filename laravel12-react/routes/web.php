@@ -226,8 +226,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
      */
     // Mapa interactivo de mascotas y refugios
     Route::get('mapa', [MapaController::class, 'index'])->name('mapa.index');
+    
     // Dashboard de estadísticas y métricas avanzadas
     Route::get('estadisticas', [EstadisticasController::class, 'index'])->name('estadisticas.index');
+    // Generar y descargar reporte PDF de estadísticas
+    Route::post('estadisticas/generar-pdf', [EstadisticasController::class, 'generarReportePdf'])->name('estadisticas.generar-pdf');
 
     /*
     |--------------------------------------------------------------------------
@@ -309,12 +312,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| ARCHIVOS DE RUTAS ADICIONALES
+| RUTAS PERSONALIZADAS DE AUTENTICACIÓN
 |--------------------------------------------------------------------------
-| 
-| Importación de archivos de rutas modulares para mantener organización:
-| - settings.php: Configuraciones de perfil y cuenta de usuario
-| - auth.php: Rutas de autenticación (login, registro, verificación, etc.)
 */
 
 // Rutas personalizadas para recuperación de contraseña (React/Inertia)
@@ -329,6 +328,16 @@ Route::middleware('guest')->group(function () {
         ]);
     })->name('auth.reset-password');
 });
+
+/*
+|--------------------------------------------------------------------------
+| ARCHIVOS DE RUTAS ADICIONALES
+|--------------------------------------------------------------------------
+| 
+| Importación de archivos de rutas modulares para mantener organización:
+| - settings.php: Configuraciones de perfil y cuenta de usuario
+| - auth.php: Rutas de autenticación (login, registro, verificación, etc.)
+*/
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

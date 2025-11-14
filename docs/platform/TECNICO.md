@@ -11,7 +11,7 @@ Frontend (React/TypeScript)
        ↕ Inertia.js
 Backend (Laravel 12/PHP)
        ↕ Eloquent ORM
-Base de Datos (MySQL)
+Base de Datos (mySQL)
 ```
 
 ### Tecnologías Principales
