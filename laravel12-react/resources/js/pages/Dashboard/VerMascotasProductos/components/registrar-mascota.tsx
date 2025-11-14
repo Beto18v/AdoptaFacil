@@ -584,277 +584,372 @@ export default function RegistrarMascota({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-            <div ref={modalRef} className="w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl dark:bg-gray-800">
-                <h2 className="mb-6 text-center text-2xl font-bold text-gray-800 dark:text-white">
-                    {modoEdicion ? 'Editar Mascota' : 'Registrar Nueva Mascota'}
-                </h2>
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    {/* Campo Nombre */}
-                    <div>
-                        <input
-                            id="nombre"
-                            name="nombre"
-                            type="text"
-                            value={data.nombre}
-                            onChange={(e) => setData('nombre', e.target.value)}
-                            placeholder="Nombre de la mascota"
-                            className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                        />
-                        {errors.nombre && <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>}
+            <div ref={modalRef} className="w-full max-w-4xl rounded-3xl bg-white/95 p-0 shadow-2xl backdrop-blur-sm dark:bg-gray-800/95">
+                {/* Elementos decorativos del modal */}
+                <div className="pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full bg-gradient-to-br from-green-500/15 to-transparent"></div>
+                <div className="pointer-events-none absolute top-1/3 -left-8 h-20 w-20 rounded-full bg-gradient-to-tr from-blue-500/10 to-transparent"></div>
+                <div className="pointer-events-none absolute right-1/4 -bottom-6 h-24 w-24 rounded-full bg-gradient-to-tl from-purple-500/8 to-transparent"></div>
+
+                <div className="relative max-h-[calc(100vh-4rem)] overflow-y-auto p-8">
+                    <div className="relative mb-8 text-center">
+                        <h2 className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-3xl font-bold text-transparent dark:from-blue-400 dark:to-green-400">
+                            {modoEdicion ? '✏️ Editar Mascota' : '🐾 Registrar Nueva Mascota'}
+                        </h2>
+                        <p className="mt-3 text-lg leading-relaxed text-gray-600 dark:text-gray-300">
+                            {modoEdicion ? 'Actualiza la información de tu mascota' : 'Completa la información para dar en adopción a tu mascota'}
+                        </p>
+                        {/* Línea decorativa */}
+                        <div className="mx-auto mt-4 h-1 w-32 rounded-full bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                        {/* Campo Especie */}
-                        <div>
-                            <select
-                                id="especie"
-                                name="especie"
-                                value={data.especie}
-                                onChange={(e) => setData('especie', e.target.value)}
-                                className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            >
-                                <option value="">Selecciona una especie</option>
-                                <option value="perro">Perro</option>
-                                <option value="gato">Gato</option>
-                            </select>
-                            {errors.especie && <p className="mt-1 text-sm text-red-600">{errors.especie}</p>}
-                        </div>
-                        {/* Campo Raza */}
-                        <div>
-                            <select
-                                id="raza"
-                                name="raza"
-                                value={data.raza}
-                                onChange={(e) => setData('raza', e.target.value)}
-                                disabled={!data.especie}
-                                className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-600"
-                            >
-                                <option value="">{!data.especie ? 'Agrega una especie' : 'Selecciona una raza'}</option>
-                                {data.especie === 'perro' &&
-                                    RAZAS_PERROS.map((raza) => (
-                                        <option key={raza} value={raza}>
-                                            {raza}
+                    <form onSubmit={handleSubmit} className="relative space-y-8">
+                        {/* --- INFORMACIÓN BÁSICA --- */}
+                        <fieldset className="relative space-y-6 overflow-hidden rounded-3xl border-2 border-blue-200/50 bg-gradient-to-br from-blue-50/50 to-green-50/30 p-6 dark:border-blue-700/30 dark:from-blue-900/20 dark:to-green-900/20">
+                            <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-gradient-to-br from-blue-300/30 to-transparent blur-lg"></div>
+                            <legend className="relative px-4 text-lg font-bold text-blue-700 dark:text-blue-300">
+                                <span className="rounded-xl bg-white/90 px-3 py-1 shadow-lg dark:bg-gray-800/90">🐾 Información Básica</span>
+                            </legend>
+
+                            {/* Campo Nombre */}
+                            <div>
+                                <label htmlFor="nombre" className="mb-3 block text-sm font-bold text-gray-700 dark:text-gray-300">
+                                    Nombre de la mascota *
+                                </label>
+                                <input
+                                    id="nombre"
+                                    name="nombre"
+                                    type="text"
+                                    value={data.nombre}
+                                    onChange={(e) => setData('nombre', e.target.value)}
+                                    placeholder="Ej: Max, Luna, Toby..."
+                                    autoComplete="off"
+                                    className="w-full rounded-xl border-2 border-gray-300 bg-gradient-to-r from-white to-gray-50 p-4 text-gray-800 shadow-lg transition-all duration-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-200 dark:border-gray-600 dark:from-gray-700 dark:to-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-800/30"
+                                    required
+                                />
+                                {errors.nombre && <p className="mt-2 text-sm font-medium text-red-600">{errors.nombre}</p>}
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                {/* Campo Especie */}
+                                <div>
+                                    <label htmlFor="especie" className="mb-3 block text-sm font-bold text-gray-700 dark:text-gray-300">
+                                        🐾 Especie *
+                                    </label>
+                                    <select
+                                        id="especie"
+                                        name="especie"
+                                        value={data.especie}
+                                        onChange={(e) => setData('especie', e.target.value)}
+                                        className="w-full rounded-xl border-2 border-gray-300 bg-gradient-to-r from-white to-gray-50 p-4 text-gray-800 shadow-lg transition-all duration-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-200 dark:border-gray-600 dark:from-gray-700 dark:to-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-800/30 [&>option]:bg-white [&>option]:text-gray-800 dark:[&>option]:bg-gray-700 dark:[&>option]:text-white"
+                                        required
+                                    >
+                                        <option value="" disabled className="text-gray-500 dark:text-gray-400">
+                                            Selecciona una especie
                                         </option>
-                                    ))}
-                                {data.especie === 'gato' &&
-                                    RAZAS_GATOS.map((raza) => (
-                                        <option key={raza} value={raza}>
-                                            {raza}
+                                        <option value="perro" className="py-2">
+                                            🐕 Perro
                                         </option>
-                                    ))}
-                            </select>
-                            {errors.raza && <p className="mt-1 text-sm text-red-600">{errors.raza}</p>}
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                        {/* Campo Fecha de Nacimiento */}
-                        <div>
-                            <label htmlFor="fecha_nacimiento" className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                Fecha de Nacimiento
-                            </label>
-                            <input
-                                id="fecha_nacimiento"
-                                name="fecha_nacimiento"
-                                type="date"
-                                value={data.fecha_nacimiento}
-                                onChange={(e) => {
-                                    setData('fecha_nacimiento', e.target.value);
-                                    calcularEdad(e.target.value);
-                                }}
-                                max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
-                                className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            />
-                            {errors.fecha_nacimiento && <p className="mt-1 text-sm text-red-600">{errors.fecha_nacimiento}</p>}
-                        </div>
-
-                        {/* Campo Edad Calculada (solo lectura) */}
-                        <div>
-                            <label htmlFor="edad_calculada" className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                Edad Actual
-                            </label>
-                            <input
-                                id="edad_calculada"
-                                name="edad_calculada"
-                                type="text"
-                                value={edadCalculada}
-                                readOnly
-                                placeholder="Se calculará automáticamente"
-                                className="w-full cursor-not-allowed rounded-md border-gray-300 bg-gray-50 p-3 text-gray-600 shadow-sm dark:border-gray-600 dark:bg-gray-600 dark:text-gray-300"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                        {/* Campo Sexo */}
-                        <div>
-                            <select
-                                id="sexo"
-                                name="sexo"
-                                value={data.sexo}
-                                onChange={(e) => setData('sexo', e.target.value)}
-                                className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            >
-                                <option value="">Selecciona el sexo</option>
-                                <option value="Macho">Macho</option>
-                                <option value="Hembra">Hembra</option>
-                            </select>
-                            {errors.sexo && <p className="mt-1 text-sm text-red-600">{errors.sexo}</p>}
-                        </div>
-                        {/* Campo Ciudad */}
-                        <div>
-                            <select
-                                id="ciudad"
-                                name="ciudad"
-                                value={data.ciudad}
-                                onChange={(e) => setData('ciudad', e.target.value)}
-                                className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            >
-                                <option value="">Selecciona una ciudad</option>
-                                {CIUDADES_COLOMBIA.map((ciudad) => (
-                                    <option key={ciudad} value={ciudad}>
-                                        {ciudad}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.ciudad && <p className="mt-1 text-sm text-red-600">{errors.ciudad}</p>}
-                        </div>
-                    </div>
-
-                    {/* Campo Descripción */}
-                    <div>
-                        <div className="relative">
-                            <label
-                                htmlFor="descripcion"
-                                className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
-                            >
-                                Descripción y personalidad
-                            </label>
-                            <textarea
-                                id="descripcion"
-                                name="descripcion"
-                                value={data.descripcion}
-                                onChange={(e) => setData('descripcion', e.target.value)}
-                                placeholder="Descripción y personalidad de la mascota..."
-                                rows={4}
-                                className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                            />
-                        </div>
-                        {errors.descripcion && <p className="mt-1 text-sm text-red-600">{errors.descripcion}</p>}
-                    </div>
-
-                    {/* Campo Imágenes (hasta 3) */}
-                    <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Imágenes de la mascota (hasta 3)</label>
-
-                        {/* Vista previa de imágenes existentes (solo en modo edición) */}
-                        {modoEdicion && imagenesExistentes.length > 0 && (
-                            <>
-                                <p className="mb-2 text-sm text-gray-600 dark:text-gray-400">Imágenes actuales:</p>
-                                <div className="mb-4 grid grid-cols-3 gap-3">
-                                    {imagenesExistentes.map((imagen, index) => (
-                                        <div key={`existing-${index}`} className="group relative">
-                                            <img
-                                                src={`/storage/${imagen}`}
-                                                alt={`Imagen existente ${index + 1}`}
-                                                className="h-20 w-full rounded-md border border-gray-300 object-cover dark:border-gray-600"
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeExistingImage(index)}
-                                                className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 hover:bg-red-600"
-                                            >
-                                                <X className="h-3 w-3" />
-                                            </button>
-                                        </div>
-                                    ))}
+                                        <option value="gato" className="py-2">
+                                            🐱 Gato
+                                        </option>
+                                    </select>
+                                    {errors.especie && <p className="mt-2 text-sm font-medium text-red-600">{errors.especie}</p>}
                                 </div>
-                            </>
-                        )}
 
-                        {/* Vista previa de imágenes nuevas seleccionadas */}
-                        {imagePreviews.length > 0 && (
-                            <>
-                                {modoEdicion && <p className="mb-2 text-sm text-gray-600 dark:text-gray-400">Nuevas imágenes:</p>}
-                                <div className="mb-4 grid grid-cols-3 gap-3">
-                                    {imagePreviews.map((preview, index) => (
-                                        <div key={`new-${index}`} className="group relative">
-                                            <img
-                                                src={preview}
-                                                alt={`Preview ${index + 1}`}
-                                                className="h-20 w-full rounded-md border border-gray-300 object-cover dark:border-gray-600"
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeImage(index)}
-                                                className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 hover:bg-red-600"
+                                {/* Campo Raza */}
+                                <div>
+                                    <label htmlFor="raza" className="mb-3 block text-sm font-bold text-gray-700 dark:text-gray-300">
+                                        🏷️ Raza *
+                                    </label>
+                                    <select
+                                        id="raza"
+                                        name="raza"
+                                        value={data.raza}
+                                        onChange={(e) => setData('raza', e.target.value)}
+                                        disabled={!data.especie}
+                                        className="w-full rounded-xl border-2 border-gray-300 bg-gradient-to-r from-white to-gray-50 p-4 text-gray-800 shadow-lg transition-all duration-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-200 disabled:cursor-not-allowed disabled:bg-gray-100/50 disabled:text-gray-400 dark:border-gray-600 dark:from-gray-700 dark:to-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-800/30 dark:disabled:bg-gray-600/50 [&>option]:bg-white [&>option]:text-gray-800 dark:[&>option]:bg-gray-700 dark:[&>option]:text-white"
+                                        required
+                                    >
+                                        <option value="" disabled className="text-gray-500 dark:text-gray-400">
+                                            {!data.especie ? 'Primero selecciona una especie' : 'Selecciona una raza'}
+                                        </option>
+                                        {data.especie === 'perro' &&
+                                            RAZAS_PERROS.map((raza) => (
+                                                <option key={raza} value={raza} className="py-2">
+                                                    {raza}
+                                                </option>
+                                            ))}
+                                        {data.especie === 'gato' &&
+                                            RAZAS_GATOS.map((raza) => (
+                                                <option key={raza} value={raza} className="py-2">
+                                                    {raza}
+                                                </option>
+                                            ))}
+                                    </select>
+                                    {errors.raza && <p className="mt-2 text-sm font-medium text-red-600">{errors.raza}</p>}
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        {/* --- DATOS PERSONALES --- */}
+                        <fieldset className="relative space-y-6 overflow-hidden rounded-3xl border-2 border-green-200/50 bg-gradient-to-br from-green-50/50 to-blue-50/30 p-6 dark:border-green-700/30 dark:from-green-900/20 dark:to-blue-900/20">
+                            <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-gradient-to-br from-green-300/30 to-transparent blur-lg"></div>
+                            <legend className="relative px-4 text-lg font-bold text-green-700 dark:text-green-300">
+                                <span className="rounded-xl bg-white/90 px-3 py-1 shadow-lg dark:bg-gray-800/90">📋 Datos Personales</span>
+                            </legend>
+
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                {/* Campo Fecha de Nacimiento */}
+                                <div>
+                                    <label htmlFor="fecha_nacimiento" className="mb-3 block text-sm font-bold text-gray-700 dark:text-gray-300">
+                                        Fecha de Nacimiento *
+                                    </label>
+                                    <input
+                                        id="fecha_nacimiento"
+                                        name="fecha_nacimiento"
+                                        type="date"
+                                        value={data.fecha_nacimiento}
+                                        onChange={(e) => {
+                                            setData('fecha_nacimiento', e.target.value);
+                                            calcularEdad(e.target.value);
+                                        }}
+                                        max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
+                                        className="w-full rounded-xl border-2 border-gray-300 bg-gradient-to-r from-white to-gray-50 p-4 text-gray-800 shadow-lg transition-all duration-200 focus:border-green-500 focus:ring-4 focus:ring-green-200 dark:border-gray-600 dark:from-gray-700 dark:to-gray-800 dark:text-white dark:focus:border-green-400 dark:focus:ring-green-800/30"
+                                        required
+                                    />
+                                    {errors.fecha_nacimiento && <p className="mt-2 text-sm font-medium text-red-600">{errors.fecha_nacimiento}</p>}
+                                </div>
+
+                                {/* Campo Edad Calculada (solo lectura) */}
+                                <div>
+                                    <label htmlFor="edad_calculada" className="mb-3 block text-sm font-bold text-gray-700 dark:text-gray-300">
+                                        🎂 Edad Actual
+                                    </label>
+                                    <input
+                                        id="edad_calculada"
+                                        name="edad_calculada"
+                                        type="text"
+                                        value={edadCalculada}
+                                        readOnly
+                                        placeholder="Se calculará automáticamente"
+                                        className="w-full cursor-not-allowed rounded-xl border-2 border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 p-4 text-gray-600 shadow-lg dark:border-gray-600 dark:from-gray-600 dark:to-gray-700 dark:text-gray-300"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                {/* Campo Sexo */}
+                                <div>
+                                    <label htmlFor="sexo" className="mb-3 block text-sm font-bold text-gray-700 dark:text-gray-300">
+                                        ⚧️ Sexo *
+                                    </label>
+                                    <select
+                                        id="sexo"
+                                        name="sexo"
+                                        value={data.sexo}
+                                        onChange={(e) => setData('sexo', e.target.value)}
+                                        className="w-full rounded-xl border-2 border-gray-300 bg-gradient-to-r from-white to-gray-50 p-4 text-gray-800 shadow-lg transition-all duration-200 focus:border-green-500 focus:ring-4 focus:ring-green-200 dark:border-gray-600 dark:from-gray-700 dark:to-gray-800 dark:text-white dark:focus:border-green-400 dark:focus:ring-green-800/30 [&>option]:bg-white [&>option]:text-gray-800 dark:[&>option]:bg-gray-700 dark:[&>option]:text-white"
+                                        required
+                                    >
+                                        <option value="" disabled className="text-gray-500 dark:text-gray-400">
+                                            Selecciona el sexo
+                                        </option>
+                                        <option value="Macho" className="py-2">
+                                            ♂️ Macho
+                                        </option>
+                                        <option value="Hembra" className="py-2">
+                                            ♀️ Hembra
+                                        </option>
+                                    </select>
+                                    {errors.sexo && <p className="mt-2 text-sm font-medium text-red-600">{errors.sexo}</p>}
+                                </div>
+
+                                {/* Campo Ciudad */}
+                                <div>
+                                    <label htmlFor="ciudad" className="mb-3 block text-sm font-bold text-gray-700 dark:text-gray-300">
+                                        🏙️ Ciudad *
+                                    </label>
+                                    <select
+                                        id="ciudad"
+                                        name="ciudad"
+                                        value={data.ciudad}
+                                        onChange={(e) => setData('ciudad', e.target.value)}
+                                        className="w-full rounded-xl border-2 border-gray-300 bg-gradient-to-r from-white to-gray-50 p-4 text-gray-800 shadow-lg transition-all duration-200 focus:border-green-500 focus:ring-4 focus:ring-green-200 dark:border-gray-600 dark:from-gray-700 dark:to-gray-800 dark:text-white dark:focus:border-green-400 dark:focus:ring-green-800/30 [&>option]:bg-white [&>option]:text-gray-800 dark:[&>option]:bg-gray-700 dark:[&>option]:text-white"
+                                        required
+                                    >
+                                        <option value="" disabled className="text-gray-500 dark:text-gray-400">
+                                            Selecciona una ciudad
+                                        </option>
+                                        {CIUDADES_COLOMBIA.map((ciudad) => (
+                                            <option key={ciudad} value={ciudad} className="py-2">
+                                                {ciudad}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.ciudad && <p className="mt-2 text-sm font-medium text-red-600">{errors.ciudad}</p>}
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        {/* --- DESCRIPCIÓN --- */}
+                        <fieldset className="relative space-y-6 overflow-hidden rounded-3xl border-2 border-purple-200/50 bg-gradient-to-br from-purple-50/50 to-pink-50/30 p-6 dark:border-purple-700/30 dark:from-purple-900/20 dark:to-pink-900/20">
+                            <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-gradient-to-br from-purple-300/30 to-transparent blur-lg"></div>
+                            <legend className="relative px-4 text-lg font-bold text-purple-700 dark:text-purple-300">
+                                <span className="rounded-xl bg-white/90 px-3 py-1 shadow-lg dark:bg-gray-800/90">📝 Descripción</span>
+                            </legend>
+
+                            <div>
+                                <div className="relative">
+                                    <label
+                                        htmlFor="descripcion"
+                                        className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300"
+                                    >
+                                        📝 Descripción y personalidad *
+                                    </label>
+                                    <textarea
+                                        id="descripcion"
+                                        name="descripcion"
+                                        value={data.descripcion}
+                                        onChange={(e) => setData('descripcion', e.target.value)}
+                                        placeholder="Cuéntanos sobre la personalidad, comportamiento y características especiales de tu mascota..."
+                                        rows={5}
+                                        autoComplete="off"
+                                        className="w-full resize-none rounded-xl border-2 border-gray-300 bg-gradient-to-r from-white to-gray-50 p-4 text-gray-800 shadow-lg transition-all duration-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 dark:border-gray-600 dark:from-gray-700 dark:to-gray-800 dark:text-white dark:focus:border-purple-400 dark:focus:ring-purple-800/30"
+                                        required
+                                    />
+                                    {errors.descripcion && <p className="mt-2 text-sm font-medium text-red-600">{errors.descripcion}</p>}
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        {/* --- IMÁGENES --- */}
+                        <fieldset className="relative space-y-6 overflow-hidden rounded-3xl border-2 border-orange-200/50 bg-gradient-to-br from-orange-50/50 to-yellow-50/30 p-6 dark:border-orange-700/30 dark:from-orange-900/20 dark:to-yellow-900/20">
+                            <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-gradient-to-br from-orange-300/30 to-transparent blur-lg"></div>
+                            <legend className="relative px-4 text-lg font-bold text-orange-700 dark:text-orange-300">
+                                <span className="rounded-xl bg-white/90 px-3 py-1 shadow-lg dark:bg-gray-800/90">📸 Imágenes (hasta 3)</span>
+                            </legend>
+
+                            {/* Vista previa de imágenes existentes (solo en modo edición) */}
+                            {modoEdicion && imagenesExistentes.length > 0 && (
+                                <div className="space-y-4">
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">📂 Imágenes actuales:</p>
+                                    <div className="grid grid-cols-3 gap-4">
+                                        {imagenesExistentes.map((imagen, index) => (
+                                            <div
+                                                key={`existing-${index}`}
+                                                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg dark:bg-gray-800"
                                             >
-                                                <X className="h-3 w-3" />
-                                            </button>
-                                            <div className="bg-opacity-50 absolute right-0 bottom-0 left-0 truncate rounded-b-md bg-black p-1 text-xs text-white">
-                                                {additionalFiles[index]?.name}
+                                                <img
+                                                    src={`/storage/${imagen}`}
+                                                    alt={`Imagen existente ${index + 1}`}
+                                                    className="h-24 w-full rounded-xl object-cover transition-transform duration-200 group-hover:scale-105"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeExistingImage(index)}
+                                                    className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1.5 text-white opacity-0 shadow-lg transition-all duration-200 group-hover:opacity-100 hover:scale-110 hover:bg-red-600"
+                                                >
+                                                    <X className="h-3 w-3" />
+                                                </button>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
-                            </>
-                        )}
+                            )}
 
-                        {/* Botón para agregar imágenes (solo si no se ha llegado al límite) */}
-                        {imagenesExistentes.length + additionalFiles.length < 3 && (
-                            <label
-                                htmlFor="imagenes-mascota"
-                                className="flex cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-300 bg-gray-50 p-6 text-center transition hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600"
+                            {/* Vista previa de imágenes nuevas seleccionadas */}
+                            {imagePreviews.length > 0 && (
+                                <div className="space-y-4">
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                        {modoEdicion ? '🆕 Nuevas imágenes:' : '📸 Imágenes seleccionadas:'}
+                                    </p>
+                                    <div className="grid grid-cols-3 gap-4">
+                                        {imagePreviews.map((preview, index) => (
+                                            <div
+                                                key={`new-${index}`}
+                                                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg dark:bg-gray-800"
+                                            >
+                                                <img
+                                                    src={preview}
+                                                    alt={`Vista previa ${index + 1}`}
+                                                    className="h-24 w-full rounded-xl object-cover transition-transform duration-200 group-hover:scale-105"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeImage(index)}
+                                                    className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1.5 text-white opacity-0 shadow-lg transition-all duration-200 group-hover:opacity-100 hover:scale-110 hover:bg-red-600"
+                                                >
+                                                    <X className="h-3 w-3" />
+                                                </button>
+                                                <div className="absolute right-0 bottom-0 left-0 truncate rounded-b-xl bg-black/70 p-2 text-xs text-white">
+                                                    {additionalFiles[index]?.name}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Botón para agregar imágenes (solo si no se ha llegado al límite) */}
+                            {imagenesExistentes.length + additionalFiles.length < 3 && (
+                                <label
+                                    htmlFor="imagenes-mascota"
+                                    className="group flex cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-orange-300/60 bg-gradient-to-r from-orange-50 to-yellow-50 p-8 text-center transition-all duration-300 hover:border-orange-400 hover:from-orange-100 hover:to-yellow-100 hover:shadow-lg dark:border-orange-600/50 dark:from-orange-900/30 dark:to-yellow-900/30 dark:hover:border-orange-500 dark:hover:from-orange-800/40 dark:hover:to-yellow-800/40"
+                                >
+                                    <Plus className="h-12 w-12 text-orange-400 transition-transform duration-300 group-hover:scale-110 dark:text-orange-300" />
+                                    <span className="mt-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                        {imagenesExistentes.length + additionalFiles.length === 0
+                                            ? '📸 Seleccionar imágenes de tu mascota'
+                                            : `➕ Agregar más imágenes (${3 - (imagenesExistentes.length + additionalFiles.length)} disponibles)`}
+                                    </span>
+                                    <span className="mt-1 text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF • Máximo 2MB cada una</span>
+                                </label>
+                            )}
+
+                            <input
+                                id="imagenes-mascota"
+                                name="imagenes-mascota"
+                                ref={multipleFileInputRef}
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                autoComplete="off"
+                                onChange={(e) => handleAddImages(e.target.files)}
+                                className="hidden"
+                            />
+
+                            {errors.imagenes && <p className="mt-2 text-sm font-medium text-red-600">{errors.imagenes}</p>}
+                        </fieldset>
+
+                        {/* Botones de Acción */}
+                        <div className="flex justify-center gap-4 pt-8">
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-gradient-to-r from-gray-400 to-gray-600 px-8 py-3 font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 dark:from-gray-600 dark:to-gray-800"
                             >
-                                <Plus className="h-10 w-10 text-gray-400" />
-                                <span className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-                                    {imagenesExistentes.length + additionalFiles.length === 0
-                                        ? 'Seleccionar imágenes de la mascota'
-                                        : `Agregar más imágenes (${3 - (imagenesExistentes.length + additionalFiles.length)} disponibles)`}
+                                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                <span className="relative">Cancelar</span>
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="group hover:shadow-3xl relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-500 to-green-600 px-8 py-3 font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                <span className="relative">
+                                    {processing
+                                        ? modoEdicion
+                                            ? '🔄 Actualizando...'
+                                            : '🔄 Registrando...'
+                                        : modoEdicion
+                                          ? '💾 Guardar cambios'
+                                          : '🐾 Registrar Mascota'}
                                 </span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF hasta 2MB cada una</span>
-                            </label>
-                        )}
-
-                        <input
-                            id="imagenes-mascota"
-                            name="imagenes-mascota"
-                            ref={multipleFileInputRef}
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            autoComplete="off"
-                            onChange={(e) => handleAddImages(e.target.files)}
-                            className="hidden"
-                        />
-
-                        {errors.imagenes && <p className="mt-1 text-sm text-red-600">{errors.imagenes}</p>}
-                    </div>
-
-                    {/* Botones de Acción */}
-                    <div className="flex justify-end gap-4 pt-2">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="rounded-md bg-gray-200 px-6 py-2 font-semibold text-gray-700 transition hover:bg-gray-300 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
-                        >
-                            Cancelar
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="rounded-md bg-blue-600 px-6 py-2 font-semibold text-white shadow-md transition hover:bg-blue-700 disabled:opacity-50"
-                        >
-                            {processing
-                                ? modoEdicion
-                                    ? 'Actualizando...'
-                                    : 'Registrando...'
-                                : modoEdicion
-                                  ? 'Guardar cambios'
-                                  : 'Registrar Mascota'}
-                        </button>
-                    </div>
-                </form>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

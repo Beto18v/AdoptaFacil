@@ -1,3 +1,4 @@
+import ParticlesComponent from '@/components/particles';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -15,6 +16,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
 
     return (
         <div className="flex h-screen items-center justify-center bg-gradient-to-r from-green-400 to-blue-500 dark:from-green-600 dark:to-blue-700">
+            <ParticlesComponent />
             {/* Contenedor principal */}
             <div className="container w-full max-w-md rounded-lg border border-white/20 bg-white/10 p-5 text-center shadow-lg backdrop-blur-md transition-transform duration-300 ease-in-out hover:scale-[1.005] hover:shadow-xl">
                 {/* Logo */}

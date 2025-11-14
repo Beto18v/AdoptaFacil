@@ -108,7 +108,12 @@ export default function Mascotas({ mascotas = [] }: MascotasProps) {
                 id: mascota.id,
                 type: 'pet' as const,
                 name: mascota.nombre,
-                especie: mascota.especie,
+                especie:
+                    mascota.especie === 'perro'
+                        ? 'Perros'
+                        : mascota.especie === 'gato'
+                          ? 'Gatos'
+                          : mascota.especie.charAt(0).toUpperCase() + mascota.especie.slice(1).toLowerCase(),
                 raza: mascota.raza,
                 edad: mascota.edad,
                 sexo: mascota.sexo, // <-- AÑADIDO
@@ -134,7 +139,13 @@ export default function Mascotas({ mascotas = [] }: MascotasProps) {
     useEffect(() => {
         const especieFromUrl = getEspecieFromUrl();
         if (especieFromUrl !== 'all') {
-            setFilters((prev) => ({ ...prev, selectedEspecie: especieFromUrl }));
+            const normalizedEspecie =
+                especieFromUrl === 'perro' || especieFromUrl === 'perros'
+                    ? 'Perros'
+                    : especieFromUrl === 'gato' || especieFromUrl === 'gatos'
+                      ? 'Gatos'
+                      : especieFromUrl.charAt(0).toUpperCase() + especieFromUrl.slice(1).toLowerCase();
+            setFilters((prev) => ({ ...prev, selectedEspecie: normalizedEspecie }));
         }
     }, []);
 

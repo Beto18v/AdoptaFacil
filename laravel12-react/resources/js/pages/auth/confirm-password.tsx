@@ -1,4 +1,5 @@
 import InputError from '@/components/input-error';
+import ParticlesComponent from '@/components/particles';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +25,7 @@ export default function ConfirmPassword() {
 
     return (
         <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
+            <ParticlesComponent />
             <Head title="Confirmar contraseña" />
 
             {/* Elementos decorativos de fondo */}

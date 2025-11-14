@@ -2,7 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { Heart, Pencil, ShoppingCart, Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 
 // Tipo para items de producto/mascota
 export type CardItem = {
@@ -25,12 +25,9 @@ interface ProductoMascotaCardProps {
     item: CardItem;
     onDelete: (item: CardItem) => void;
     onEdit: (item: CardItem) => void;
-    onAction: (item: CardItem) => void;
-    autoOpenAdopcion?: boolean;
-    onAutoOpenHandled?: () => void;
 }
 
-export default function ProductoMascotaCard({ item, onDelete, onEdit, onAction }: ProductoMascotaCardProps) {
+export default function ProductoMascotaCard({ item, onDelete, onEdit }: ProductoMascotaCardProps) {
     // Obtenemos el usuario autenticado para determinar el rol
     const { auth } = usePage<SharedData>().props;
     const user = auth.user;
@@ -39,126 +36,122 @@ export default function ProductoMascotaCard({ item, onDelete, onEdit, onAction }
     const esPropietario = user.role === 'aliado' && user.id === item.user_id;
     const esAdmin = user.role === 'admin';
 
-    // El cliente ve los botones de acción principales
-    const esCliente = !esPropietario && !esAdmin;
-
-    // Manejador de acción diferenciado por tipo
-    const handleActionClick = () => {
-        if (item.tipo === 'mascota') {
-            // Para mascotas, simplemente ejecuta la acción (puede ser abrir un modal desde el componente padre)
-            onAction(item);
-        } else {
-            onAction(item); // Compra directa para productos
-        }
-    };
-
     return (
         <>
-            <div className="group relative flex transform flex-col overflow-hidden rounded-xl bg-white text-gray-800 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl dark:bg-gray-800 dark:text-gray-200">
-                {/* Contenedor de la imagen */}
-                <div className="relative h-48 w-full">
+            <div
+                className="group hover:shadow-3xl relative flex h-full flex-col overflow-hidden rounded-3xl bg-white/95 p-6 shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] dark:bg-gray-800/95"
+                style={{ minHeight: '550px' }}
+            >
+                {/* Elementos decorativos */}
+                <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full bg-gradient-to-br from-blue-500/10 to-transparent"></div>
+                <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-gradient-to-tr from-purple-300/10 to-transparent"></div>
+
+                {/* Contenedor de la imagen - Altura fija */}
+                <div className="relative mb-4 h-48 w-full shrink-0 overflow-hidden rounded-2xl">
                     <img
                         src={item.imagen ? `/storage/${item.imagen}` : 'https://via.placeholder.com/300'}
                         alt={item.nombre}
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <span
-                        className={`absolute top-2 right-2 inline-block rounded-full px-3 py-1 text-xs font-bold ${
+                    <div
+                        className={`absolute top-3 right-3 inline-flex items-center rounded-full px-3 py-1.5 text-xs font-bold shadow-lg backdrop-blur-sm ${
                             item.tipo === 'producto'
-                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/70 dark:text-blue-300'
-                                : 'bg-pink-100 text-pink-800 dark:bg-pink-900/70 dark:text-pink-300'
+                                ? 'bg-blue-500/90 text-white dark:bg-blue-600/90'
+                                : 'bg-pink-500/90 text-white dark:bg-pink-600/90'
                         }`}
                     >
-                        {item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}
-                    </span>
+                        <span className="drop-shadow-sm">{item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}</span>
+                    </div>
                 </div>
 
-                {/* Contenido de la tarjeta */}
-                <div className="flex flex-grow flex-col p-4">
-                    <h3 className="mb-1 text-lg font-bold text-gray-900 dark:text-white">{item.nombre}</h3>
-                    <p className="mb-4 line-clamp-2 flex-grow text-sm text-gray-600 dark:text-gray-400">{item.descripcion}</p>
-
-                    <div className="mb-4 text-xl font-semibold text-green-600 dark:text-green-400">
-                        {item.tipo === 'producto'
-                            ? item.precio !== null && item.precio !== undefined
-                                ? `$${item.precio.toLocaleString('es-CO')}`
-                                : 'Precio no disponible'
-                            : 'En Adopción'}
+                {/* Contenido que crece - Ocupa el espacio restante */}
+                <div className="relative flex flex-1 flex-col justify-between">
+                    {/* Información superior */}
+                    <div className="space-y-4">
+                        <h3 className="line-clamp-2 text-lg font-bold text-gray-900 dark:text-white">{item.nombre}</h3>
+                        <p className="line-clamp-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{item.descripcion}</p>
                     </div>
 
-                    {/* ✨ SECCIÓN "PUBLICADO POR" CON AVATAR ✨ */}
-                    <div className="mb-3 border-t border-gray-200 pt-3 dark:border-gray-700">
-                        {esPropietario ? (
-                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                                <Avatar className="h-6 w-6">
-                                    <AvatarImage src={user?.avatar ? `/storage/${user.avatar}` : undefined} alt={user?.name} />
-                                    <AvatarFallback className="text-xs">{user?.name?.substring(0, 2).toUpperCase() || 'TU'}</AvatarFallback>
-                                </Avatar>
-                                <span>
-                                    Publicado por <span className="font-semibold">ti</span>
-                                </span>
-                            </div>
-                        ) : (
-                            item.user?.name && (
-                                <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                                    <Avatar className="h-6 w-6">
-                                        <AvatarImage src={item.user?.avatar ? `/storage/${item.user.avatar}` : undefined} alt={item.user.name} />
-                                        <AvatarFallback className="text-xs">{item.user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    {/* Información inferior - Precio, Avatar y Acciones */}
+                    <div className="shrink-0 space-y-4">
+                        {/* Precio/Estado */}
+                        <div>
+                            <span
+                                className={`inline-flex items-center rounded-xl px-4 py-2 text-lg font-semibold shadow-sm ${
+                                    item.tipo === 'producto'
+                                        ? 'bg-gradient-to-r from-green-500 to-green-600 text-white'
+                                        : 'bg-gradient-to-r from-pink-500 to-purple-500 text-white'
+                                }`}
+                            >
+                                {item.tipo === 'producto'
+                                    ? item.precio !== null && item.precio !== undefined
+                                        ? `$${item.precio.toLocaleString('es-CO')}`
+                                        : 'Precio no disponible'
+                                    : '💝 En Adopción'}
+                            </span>
+                        </div>
+
+                        {/* ✨ SECCIÓN "PUBLICADO POR" CON AVATAR ✨ */}
+                        <div className="border-t border-gray-200/50 pt-4 dark:border-gray-700/50">
+                            {esPropietario ? (
+                                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                                    <Avatar className="h-8 w-8 border-2 border-blue-200 dark:border-blue-700">
+                                        <AvatarImage src={user?.avatar ? `/storage/${user.avatar}` : undefined} alt={user?.name} />
+                                        <AvatarFallback className="bg-blue-100 text-xs font-semibold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                                            {user?.name?.substring(0, 2).toUpperCase() || 'TU'}
+                                        </AvatarFallback>
                                     </Avatar>
                                     <span>
-                                        Publicado por: <span className="font-semibold">{item.user.name}</span>
+                                        Publicado por <span className="font-semibold text-blue-600 dark:text-blue-400">ti</span>
                                     </span>
                                 </div>
-                            )
-                        )}
-                    </div>
+                            ) : (
+                                item.user?.name && (
+                                    <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                                        <Avatar className="h-8 w-8 border-2 border-gray-200 dark:border-gray-600">
+                                            <AvatarImage src={item.user?.avatar ? `/storage/${item.user.avatar}` : undefined} alt={item.user.name} />
+                                            <AvatarFallback className="bg-gray-100 text-xs font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                                {item.user.name.substring(0, 2).toUpperCase()}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <span>
+                                            Publicado por: <span className="font-semibold text-gray-800 dark:text-gray-200">{item.user.name}</span>
+                                        </span>
+                                    </div>
+                                )
+                            )}
+                        </div>
 
-                    {/* Botones de Acción Condicionales */}
-                    <div className="mt-auto">
-                        {esCliente ? (
-                            // --- Vista para Cliente ---
-                            <button
-                                onClick={handleActionClick}
-                                className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white transition hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
-                            >
-                                {item.tipo === 'producto' ? (
-                                    <>
-                                        <ShoppingCart className="h-5 w-5" /> Comprar
-                                    </>
-                                ) : (
-                                    <>
-                                        <Heart className="h-5 w-5" /> Adoptar
-                                    </>
-                                )}
-                            </button>
-                        ) : (
-                            // --- Vista para Admin y Aliado ---
-                            <div className="flex items-center justify-between">
-                                <span className="text-xs text-gray-500">{esPropietario ? 'Tus acciones:' : 'Acciones de Admin:'}</span>
-                                <div className="flex gap-2">
-                                    {/* Botón de Editar */}
-                                    {esPropietario && (
-                                        <button
-                                            onClick={() => onEdit(item)}
-                                            className="rounded-full p-2 text-blue-500 transition hover:bg-blue-100 dark:hover:bg-blue-900/50"
-                                            aria-label="Editar"
-                                        >
-                                            <Pencil className="h-5 w-5" />
-                                        </button>
-                                    )}
-                                    {/* Botón de Eliminar */}
-                                    {(esAdmin || esPropietario) && (
-                                        <button
-                                            onClick={() => onDelete(item)}
-                                            className="rounded-full p-2 text-red-500 transition hover:bg-red-100 dark:hover:bg-red-900/50"
-                                            aria-label="Eliminar"
-                                        >
-                                            <Trash2 className="h-5 w-5" />
-                                        </button>
-                                    )}
+                        {/* Botones de Acción */}
+                        <div>
+                            <div className="rounded-xl bg-gray-50 p-3 dark:bg-gray-700/50">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Acciones:</span>
+                                    <div className="flex gap-2">
+                                        {/* Botón de Editar */}
+                                        {esPropietario && (
+                                            <button
+                                                onClick={() => onEdit(item)}
+                                                className="rounded-xl bg-blue-500 p-2 text-white shadow-md transition-all duration-300 hover:scale-110 hover:bg-blue-600 hover:shadow-lg"
+                                                aria-label="Editar"
+                                            >
+                                                <Pencil className="h-5 w-5" />
+                                            </button>
+                                        )}
+                                        {/* Botón de Eliminar */}
+                                        {(esAdmin || esPropietario) && (
+                                            <button
+                                                onClick={() => onDelete(item)}
+                                                className="rounded-xl bg-red-500 p-2 text-white shadow-md transition-all duration-300 hover:scale-110 hover:bg-red-600 hover:shadow-lg"
+                                                aria-label="Eliminar"
+                                            >
+                                                <Trash2 className="h-5 w-5" />
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        )}
+                        </div>
                     </div>
                 </div>
             </div>

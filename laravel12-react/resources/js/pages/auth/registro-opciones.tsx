@@ -1,4 +1,5 @@
 import ChatbotWidget from '@/components/chatbot-widget';
+import ParticlesComponent from '@/components/particles';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Head, Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
@@ -33,6 +34,7 @@ export default function RegistroOpciones() {
 
     return (
         <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 text-white dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
+            <ParticlesComponent />
             <Head title="Opciones de Registro" />
 
             {/* Elementos de fondo decorativos */}

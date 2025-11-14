@@ -1,4 +1,5 @@
 import InputError from '@/components/input-error';
+import ParticlesComponent from '@/components/particles';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -113,6 +114,7 @@ export default function ResetPassword({ email }: ResetPasswordProps) {
 
     return (
         <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 px-4 dark:from-green-600 dark:via-blue-700 dark:to-purple-800">
+            <ParticlesComponent />
             {/* Elementos decorativos de fondo */}
             <div className="pointer-events-none absolute top-1/4 left-1/4 h-64 w-64 animate-pulse rounded-full bg-white/5 blur-3xl" />
             <div className="pointer-events-none absolute top-3/4 right-1/4 h-48 w-48 animate-ping rounded-full bg-blue-300/10 blur-2xl" />
