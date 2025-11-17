@@ -10,6 +10,7 @@ import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import Logo from '../../../../public/Logo/Logo.png';
 import LogoWhite from '../../../../public/Logo/LogoWhite.png';
+import { refreshCsrfToken } from '../../app';
 
 type RegisterForm = {
     name: string;
@@ -31,10 +32,12 @@ export default function Register({ role }: { role: string }) {
         role: role, // Valor por defecto;
     });
 
-    const submit: FormEventHandler = (e) => {
+    const submit: FormEventHandler = async (e) => {
         e.preventDefault();
+        await refreshCsrfToken();
         post(route('register'), {
-            onSuccess: () => {
+            onSuccess: async () => {
+                await refreshCsrfToken();
                 window.location.href = route('dashboard');
             },
             onFinish: () => {
