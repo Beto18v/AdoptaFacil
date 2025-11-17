@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\GoogleController;
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -32,6 +33,10 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+    // Google OAuth routes
+    Route::get('auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
+    Route::get('auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 });
 
 Route::middleware('auth')->group(function () {
