@@ -6,6 +6,8 @@
 .env.production
 .env.staging
 storage/app/*
+!storage/app/public/
+!storage/app/public/.gitkeep
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
