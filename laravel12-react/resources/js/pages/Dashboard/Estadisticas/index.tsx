@@ -1,4 +1,5 @@
 import ChatbotWidget from '@/components/chatbot-widget';
+import { SpeciesDonutChart } from '@/components/species-donut-chart';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -49,6 +50,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPorMes, distribucionTipos }: Props) {
     const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
     const [pdfError, setPdfError] = useState<string | null>(null);
+
+    const totalGatos = distribucionTipos.find((item) => item.name.toLowerCase() === 'gato')?.total ?? 0;
+
+    const totalPerros = distribucionTipos.find((item) => item.name.toLowerCase() === 'perro')?.total ?? 0;
 
     const descargarReportePDF = async () => {
         setIsGeneratingPdf(true);
@@ -316,6 +321,15 @@ export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPo
                                         </div>
                                     )}
                                 </div>
+
+                                {/* Gráfico de anillos gatos vs perros */}
+                                {totalGatos + totalPerros > 0 ? (
+                                    <div className="mb-6">
+                                        <SpeciesDonutChart gatos={totalGatos} perros={totalPerros} />
+                                    </div>
+                                ) : (
+                                    <p className="mb-6 text-center text-gray-500 dark:text-gray-400">No hay datos de gatos y perros para mostrar.</p>
+                                )}
                             </div>
                         </div>
                     </div>
