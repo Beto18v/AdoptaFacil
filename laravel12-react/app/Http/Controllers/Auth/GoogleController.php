@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
@@ -22,6 +24,8 @@ class GoogleController extends Controller
 
             $user = User::where('email', $googleUser->getEmail())->first();
 
+
+            $isNewUser = false;
             if (!$user) {
                 $user = User::create([
                     'name' => $googleUser->getName(),
@@ -30,10 +34,23 @@ class GoogleController extends Controller
                     'password' => bcrypt(uniqid()), // Random password since Google handles auth
                     'email_verified_at' => now(),
                 ]);
+                $isNewUser = true;
             } else {
                 // Update Google ID if not set
                 if (!$user->google_id) {
                     $user->update(['google_id' => $googleUser->getId()]);
+                }
+            }
+
+            // Enviar email de bienvenida solo si es nuevo usuario
+            if ($isNewUser) {
+                try {
+                    Http::post('http://localhost:8080/api/send-welcome-email', [
+                        'email' => $user->email,
+                        'name' => $user->name,
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('Error enviando email de bienvenida (Google): ' . $e->getMessage());
                 }
             }
 
