@@ -115,160 +115,184 @@ class EstadisticasController extends Controller
     public function generarReportePdf(Request $request)
     {
         try {
-            $request->validate([
-                'fecha_inicio' => 'nullable|date',
-                'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
-            ]);
+        $request->validate([
+            'fecha_inicio' => 'nullable|date',
+            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+        ]);
 
-            $fechaInicio = $request->input('fecha_inicio', Carbon::now()->subYear()->format('Y-m-d'));
-            $fechaFin = $request->input('fecha_fin', Carbon::now()->format('Y-m-d'));
+        $fechaInicio = $request->input('fecha_inicio', Carbon::now()->subYear()->format('Y-m-d'));
+        $fechaFin = $request->input('fecha_fin', Carbon::now()->format('Y-m-d'));
 
-            $estadisticas = $this->obtenerEstadisticasCompletas($fechaInicio, $fechaFin);
-            
-            $datosPdf = [
-                'titulo' => 'Reporte Estadísticos AdoptaFácil',
-                'fechaInicio' => Carbon::parse($fechaInicio)->format('d/m/Y'),
-                'fechaFin' => Carbon::parse($fechaFin)->format('d/m/Y'),
-                'datosGenerales' => [
-                    'Total de Adopciones' => $estadisticas['generalStats']['totalAdoptions'],
-                    'Promedio Mensual' => round($estadisticas['generalStats']['averageMonthly'], 1),
-                    'Tasa de Éxito' => $estadisticas['generalStats']['successRate'] . '%',
-                    'Solicitudes Pendientes' => $estadisticas['generalStats']['pendingRequests'],
-                    'Total de Solicitudes' => $estadisticas['totalRequests'],
-                    'Total de Usuarios' => User::count(),
-                    'Total de Mascotas Registradas' => Mascota::count(),
-                ],
-                'tablaDetalle' => $estadisticas['monthlyStats']
-            ];
+        $estadisticas = $this->obtenerEstadisticasCompletas($fechaInicio, $fechaFin);
+        
+        $datosPdf = [
+            'titulo' => 'Reporte Estadísticos AdoptaFácil',
+            'fechaInicio' => Carbon::parse($fechaInicio)->format('d/m/Y'),
+            'fechaFin' => Carbon::parse($fechaFin)->format('d/m/Y'),
+            'datosGenerales' => [
+                'Total de Adopciones' => $estadisticas['generalStats']['totalAdoptions'],
+                'Promedio Mensual' => round($estadisticas['generalStats']['averageMonthly'], 1),
+                'Tasa de Éxito' => $estadisticas['generalStats']['successRate'] . '%',
+                'Solicitudes Pendientes' => $estadisticas['generalStats']['pendingRequests'],
+                'Total de Solicitudes' => $estadisticas['totalRequests'],
+                'Total de Usuarios' => User::count(),
+                'Total de Mascotas Registradas' => Mascota::count(),
+            ],
+            'tablaDetalle' => $estadisticas['monthlyStats'],
+            'distribucionEspecies' => $estadisticas['distribucionEspecies'] ?? [] // distribucion por especie
+        ];
 
-            Log::info('Generando PDF de estadísticas', [
-                'url' => $this->microserviceUrl,
-                'fecha_inicio' => $fechaInicio,
-                'fecha_fin' => $fechaFin
-            ]);
+        Log::info('Generando PDF de estadísticas', [
+            'url' => $this->microserviceUrl,
+            'fecha_inicio' => $fechaInicio,
+            'fecha_fin' => $fechaFin,
+            'distribucion_especies' => $estadisticas['distribucionEspecies'] ?? [] // Para debug
+        ]);
+        
+        $response = Http::timeout(60)
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/pdf'
+            ])
+            ->post($this->microserviceUrl . '/api/estadisticas/generar-pdf', $datosPdf);
+        
+        if ($response->successful()) {
+            $filename = 'reporte_adopciones_' . date('Ymd_His') . '.pdf';
             
-            $response = Http::timeout(60)
-                ->withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/pdf'
-                ])
-                ->post($this->microserviceUrl . '/api/estadisticas/generar-pdf', $datosPdf);
+            Log::info('PDF generado exitosamente', ['filename' => $filename]);
             
-            if ($response->successful()) {
-                $filename = 'reporte_adopciones_' . date('Ymd_His') . '.pdf';
-                
-                Log::info('PDF generado exitosamente', ['filename' => $filename]);
-                
-                return response($response->body(), 200)
-                    ->header('Content-Type', 'application/pdf')
-                    ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
-                    ->header('Cache-Control', 'no-cache, must-revalidate');
-            } else {
-                Log::error('Error del microservicio al generar PDF', [
-                    'status' => $response->status(),
-                    'body' => $response->body()
-                ]);
-                
-                return response()->json([
-                    'message' => 'Error al generar el reporte PDF. Por favor, intente nuevamente.'
-                ], 500);
-            }
-            
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error('Error de conexión con microservicio de PDF', [
-                'error' => $e->getMessage(),
-                'url' => $this->microserviceUrl
+            return response($response->body(), 200)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
+                ->header('Cache-Control', 'no-cache, must-revalidate');
+        } else {
+            Log::error('Error del microservicio al generar PDF', [
+                'status' => $response->status(),
+                'body' => $response->body()
             ]);
             
             return response()->json([
-                'message' => 'No se pudo conectar con el servicio de reportes. Verifique que el microservicio esté activo en ' . $this->microserviceUrl
-            ], 503);
-            
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'message' => 'Datos de validación inválidos',
-                'errors' => $e->errors()
-            ], 422);
-            
-        } catch (\Exception $e) {
-            Log::error('Excepción al generar PDF de estadísticas', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return response()->json([
-                'message' => 'Error inesperado al generar el reporte: ' . $e->getMessage()
+                'message' => 'Error al generar el reporte PDF. Por favor, intente nuevamente.'
             ], 500);
         }
+        
+    } catch (\Illuminate\Http\Client\ConnectionException $e) {
+        Log::error('Error de conexión con microservicio de PDF', [
+            'error' => $e->getMessage(),
+            'url' => $this->microserviceUrl
+        ]);
+        
+        return response()->json([
+            'message' => 'No se pudo conectar con el servicio de reportes. Verifique que el microservicio esté activo en ' . $this->microserviceUrl
+        ], 503);
+        
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'message' => 'Datos de validación inválidos',
+            'errors' => $e->errors()
+        ], 422);
+        
+    } catch (\Exception $e) {
+        Log::error('Excepción al generar PDF de estadísticas', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        return response()->json([
+            'message' => 'Error inesperado al generar el reporte: ' . $e->getMessage()
+        ], 500);
     }
+}
 
     private function obtenerEstadisticasCompletas($fechaInicio, $fechaFin)
-    {
-        $inicio = Carbon::parse($fechaInicio)->startOfDay();
-        $fin = Carbon::parse($fechaFin)->endOfDay();
+{
+    $inicio = Carbon::parse($fechaInicio)->startOfDay();
+    $fin = Carbon::parse($fechaFin)->endOfDay();
 
-        // Estadísticas generales en el rango de fechas
-        $totalAdoptions = Solicitud::where('estado', 'Aprobada')
-            ->whereBetween('created_at', [$inicio, $fin])
+    // Estadísticas generales en el rango de fechas
+    $totalAdoptions = Solicitud::where('estado', 'Aprobada')
+        ->whereBetween('created_at', [$inicio, $fin])
+        ->count();
+
+    $pendingRequests = Solicitud::whereIn('estado', ['Enviada', 'En Proceso'])
+        ->whereBetween('created_at', [$inicio, $fin])
+        ->count();
+
+    $totalRequests = Solicitud::whereBetween('created_at', [$inicio, $fin])->count();
+    
+    $successRate = $totalRequests > 0 
+        ? round(($totalAdoptions / $totalRequests) * 100, 2) 
+        : 0;
+
+    // Calcular promedio mensual
+    $mesesDiferencia = max($inicio->diffInMonths($fin) + 1, 1);
+    $averageMonthly = round($totalAdoptions / $mesesDiferencia, 1);
+
+    // Estadísticas mensuales detalladas
+    $monthlyStats = [];
+    $currentDate = $inicio->copy()->startOfMonth();
+    
+    while ($currentDate <= $fin) {
+        $year = $currentDate->year;
+        $month = $currentDate->month;
+        $monthName = ucfirst($currentDate->locale('es')->translatedFormat('F'));
+
+        $adoptions = Solicitud::where('estado', 'Aprobada')
+            ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [$year])
+            ->whereRaw('EXTRACT(MONTH FROM created_at) = ?', [$month])
             ->count();
 
-        $pendingRequests = Solicitud::whereIn('estado', ['Enviada', 'En Proceso'])
-            ->whereBetween('created_at', [$inicio, $fin])
+        $returns = Solicitud::where('estado', 'Rechazada')
+            ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [$year])
+            ->whereRaw('EXTRACT(MONTH FROM created_at) = ?', [$month])
             ->count();
 
-        $totalRequests = Solicitud::whereBetween('created_at', [$inicio, $fin])->count();
-        
-        $successRate = $totalRequests > 0 
-            ? round(($totalAdoptions / $totalRequests) * 100, 2) 
-            : 0;
+        $totalMonth = $adoptions + $returns;
+        $success = $totalMonth > 0 
+            ? round(($adoptions / $totalMonth) * 100, 2) 
+            : 100;
 
-        //Calcular promedio mensual
-        $mesesDiferencia = max($inicio->diffInMonths($fin) + 1, 1);
-        $averageMonthly = round($totalAdoptions / $mesesDiferencia, 1);
-
-        //Estadisticas mensuales detalladas
-        $monthlyStats = [];
-        $currentDate = $inicio->copy()->startOfMonth();
-        
-        while ($currentDate <= $fin) {
-            $year = $currentDate->year;
-            $month = $currentDate->month;
-            $monthName = ucfirst($currentDate->locale('es')->translatedFormat('F'));
-
-            $adoptions = Solicitud::where('estado', 'Aprobada')
-                ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [$year])
-                ->whereRaw('EXTRACT(MONTH FROM created_at) = ?', [$month])
-                ->count();
-
-            $returns = Solicitud::where('estado', 'Rechazada')
-                ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [$year])
-                ->whereRaw('EXTRACT(MONTH FROM created_at) = ?', [$month])
-                ->count();
-
-            $totalMonth = $adoptions + $returns;
-            $success = $totalMonth > 0 
-                ? round(($adoptions / $totalMonth) * 100, 2) 
-                : 100;
-
-            $monthlyStats[] = [
-                'Mes' => $monthName . ' ' . $year,
-                'Adopciones' => $adoptions,
-                'Rechazadas' => $returns,
-                'Tasa de Éxito' => $success . '%',
-            ];
-
-            $currentDate->addMonth();
-        }
-
-        return [
-            'generalStats' => [
-                'totalAdoptions' => $totalAdoptions,
-                'averageMonthly' => $averageMonthly,
-                'successRate' => $successRate,
-                'pendingRequests' => $pendingRequests,
-            ],
-            'totalRequests' => $totalRequests,
-            'monthlyStats' => $monthlyStats,
+        $monthlyStats[] = [
+            'Mes' => $monthName . ' ' . $year,
+            'Adopciones' => $adoptions,
+            'Rechazadas' => $returns,
+            'Tasa de Éxito' => $success . '%',
         ];
+
+        $currentDate->addMonth();
     }
+
+    // Distribución por especie de mascotas adoptadas
+    $adoptedPetIds = Solicitud::where('estado', 'Aprobada')
+        ->whereBetween('created_at', [$inicio, $fin])
+        ->pluck('mascota_id');
+    
+    $speciesDistribution = Mascota::whereIn('id', $adoptedPetIds)
+        ->select('especie', DB::raw('COUNT(*) as count'))
+        ->groupBy('especie')
+        ->orderBy('count', 'desc')
+        ->get();
+
+    $totalAdoptedPets = $speciesDistribution->sum('count');
+    $distribucionTipos = $speciesDistribution->map(function ($item) use ($totalAdoptedPets) {
+        $percentage = $totalAdoptedPets > 0 ? round(($item->count / $totalAdoptedPets) * 100, 1) : 0;
+        return [
+            'Especie' => ucfirst($item->especie),
+            'Cantidad' => $item->count,
+            'Porcentaje' => $percentage . '%',
+        ];
+    })->toArray();
+
+    return [
+        'generalStats' => [
+            'totalAdoptions' => $totalAdoptions,
+            'averageMonthly' => $averageMonthly,
+            'successRate' => $successRate,
+            'pendingRequests' => $pendingRequests,
+        ],
+        'totalRequests' => $totalRequests,
+        'monthlyStats' => $monthlyStats,
+        'distribucionEspecies' => $distribucionTipos,
+    ];
+}
 }

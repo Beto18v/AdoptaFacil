@@ -9,7 +9,8 @@ public class EstadisticasDTO {
     private String fechaFin;
     private Map<String, Object> datosGenerales;
     private List<Map<String, Object>> tablaDetalle;
-    
+    private List<Map<String, Object>> distribucionEspecies;
+
     // Constructores
     public EstadisticasDTO() {}
     
@@ -58,5 +59,12 @@ public class EstadisticasDTO {
     
     public void setTablaDetalle(List<Map<String, Object>> tablaDetalle) {
         this.tablaDetalle = tablaDetalle;
+    }
+    public List<Map<String, Object>> getDistribucionEspecies() {
+        return distribucionEspecies;
+    }
+    
+    public void setDistribucionEspecies(List<Map<String, Object>> distribucionEspecies) {
+        this.distribucionEspecies = distribucionEspecies;
     }
 }
