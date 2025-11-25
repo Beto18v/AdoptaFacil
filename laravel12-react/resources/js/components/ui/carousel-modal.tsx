@@ -294,7 +294,7 @@ export default function CarouselModal({ isOpen, onClose, items, initialIndex }: 
                                 </div>
                             </div>
 
-                            <div className="grid max-h-[85vh] min-h-[600px] grid-cols-1 overflow-hidden lg:grid-cols-2">
+                            <div className="grid max-h-[85vh] min-h-[600px] grid-cols-1 overflow-y-auto lg:grid-cols-2">
                                 {/* Image Section */}
                                 <div className="relative flex items-center justify-center bg-gradient-to-br from-blue-50/50 via-white/30 to-green-50/50 dark:from-blue-950/20 dark:via-gray-900/50 dark:to-green-950/20">
                                     {/* Elementos decorativos en la sección de imagen */}
@@ -401,7 +401,7 @@ export default function CarouselModal({ isOpen, onClose, items, initialIndex }: 
                                 </div>
 
                                 {/* Content Section */}
-                                <div className="relative flex flex-col overflow-hidden bg-gradient-to-br from-white/50 via-white/80 to-blue-50/30 p-6 backdrop-blur-sm dark:from-gray-900/50 dark:via-gray-900/80 dark:to-blue-950/30">
+                                <div className="relative flex max-h-[85vh] flex-col overflow-y-auto bg-gradient-to-br from-white/50 via-white/80 to-blue-50/30 p-6 backdrop-blur-sm dark:from-gray-900/50 dark:via-gray-900/80 dark:to-blue-950/30">
                                     {/* Elementos decorativos en el contenido */}
                                     <div className="pointer-events-none absolute top-0 right-0 h-32 w-32 rounded-full bg-gradient-to-br from-green-100/30 to-blue-100/30 blur-2xl dark:from-green-900/20 dark:to-blue-900/20"></div>
                                     <div className="pointer-events-none absolute bottom-0 left-0 h-24 w-24 rounded-full bg-gradient-to-br from-blue-100/30 to-purple-100/30 blur-xl dark:from-blue-900/20 dark:to-purple-900/20"></div>
