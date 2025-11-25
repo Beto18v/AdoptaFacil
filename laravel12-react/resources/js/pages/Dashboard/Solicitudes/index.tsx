@@ -833,17 +833,31 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                         <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl dark:bg-gray-800">
                             <h3 className="mb-4 text-xl font-bold text-gray-800 dark:text-white">Rechazar Solicitud</h3>
                             <p className="mb-4 text-gray-600 dark:text-gray-300">
-                                ¿Está seguro de que desea rechazar esta solicitud? Puede agregar un comentario explicando el motivo:
+                                ¿Está seguro de que desea rechazar esta solicitud? Seleccione el motivo principal del rechazo:
                             </p>
-                            <textarea
+                            <select
                                 value={comentarioRechazo}
                                 onChange={(e) => setComentarioRechazo(e.target.value)}
-                                placeholder="Motivo del rechazo (opcional)"
-                                rows={4}
                                 className="w-full rounded-md border-gray-300 p-3 shadow-sm focus:border-red-500 focus:ring-red-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                maxLength={1000}
-                            />
-                            <div className="mt-2 text-right text-sm text-gray-500">{comentarioRechazo.length}/1000 caracteres</div>
+                                required
+                            >
+                                <option value="">-- Seleccione un motivo de rechazo --</option>
+                                <option value="Vivienda inadecuada">
+                                    Vivienda inadecuada (sin patio, no permiten mascotas, espacio insuficiente)
+                                </option>
+                                <option value="Falta de experiencia">
+                                    Falta de experiencia previa con mascotas o historial problemático
+                                </option>
+                                <option value="Incompatibilidad familiar">
+                                    Incompatibilidad familiar (niños pequeños, no todos de acuerdo, otras mascotas)
+                                </option>
+                                <option value="Motivación insuficiente">
+                                    Motivación insuficiente o expectativas no realistas sobre la convivencia
+                                </option>
+                                <option value="Compromiso dudoso">
+                                    Falta de compromiso (no acepta visitas, cuidado veterinario, contrato)
+                                </option>
+                            </select>
                             <div className="mt-6 flex justify-end gap-4">
                                 <button
                                     type="button"
