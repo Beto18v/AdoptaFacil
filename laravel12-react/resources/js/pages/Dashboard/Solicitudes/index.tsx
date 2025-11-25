@@ -845,18 +845,14 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                                 <option value="Vivienda inadecuada">
                                     Vivienda inadecuada (sin patio, no permiten mascotas, espacio insuficiente)
                                 </option>
-                                <option value="Falta de experiencia">
-                                    Falta de experiencia previa con mascotas o historial problemático
-                                </option>
+                                <option value="Falta de experiencia">Falta de experiencia previa con mascotas o historial problemático</option>
                                 <option value="Incompatibilidad familiar">
                                     Incompatibilidad familiar (niños pequeños, no todos de acuerdo, otras mascotas)
                                 </option>
                                 <option value="Motivación insuficiente">
                                     Motivación insuficiente o expectativas no realistas sobre la convivencia
                                 </option>
-                                <option value="Compromiso dudoso">
-                                    Falta de compromiso (no acepta visitas, cuidado veterinario, contrato)
-                                </option>
+                                <option value="Compromiso dudoso">Falta de compromiso (no acepta visitas, cuidado veterinario, contrato)</option>
                             </select>
                             <div className="mt-6 flex justify-end gap-4">
                                 <button
