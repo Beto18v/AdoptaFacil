@@ -226,7 +226,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
      */
     // Mapa interactivo de mascotas y refugios
     Route::get('mapa', [MapaController::class, 'index'])->name('mapa.index');
-    
+
     // Dashboard de estadísticas y métricas avanzadas
     Route::get('estadisticas', [EstadisticasController::class, 'index'])->name('estadisticas.index');
     // Generar y descargar reporte PDF de estadísticas
@@ -246,8 +246,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [SolicitudesController::class, 'index'])->name('index');
         // Crear nueva solicitud de adopción
         Route::post('/', [SolicitudesController::class, 'store'])->name('adopcion.store');
-        // Ver detalles específicos de una solicitud
-        Route::get('/{id}', [SolicitudesController::class, 'show'])->name('show');
         // Actualizar estado de una solicitud (para refugios)
         Route::post('/{id}/estado', [SolicitudesController::class, 'updateEstado'])->name('updateEstado');
         // Cancelar/eliminar solicitud propia

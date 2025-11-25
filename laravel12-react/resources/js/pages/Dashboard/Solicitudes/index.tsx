@@ -343,99 +343,224 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                 </div>
                 {/* Modal/Card para mostrar el detalle de la solicitud */}
                 {selectedSolicitud && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-                        <div className="max-h-[calc(100vh-4rem)] w-full max-w-4xl overflow-hidden rounded-xl bg-white shadow-2xl dark:bg-gray-800">
-                            <div className="overflow-y-auto p-6">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                        <div className="relative mx-4 my-8 max-h-[calc(100vh-4rem)] w-full max-w-5xl overflow-hidden rounded-3xl bg-white/95 shadow-2xl backdrop-blur-sm dark:bg-gray-800/95">
+                            {/* Elementos decorativos */}
+                            <div className="absolute -top-8 -right-8 h-32 w-32 rounded-full bg-gradient-to-br from-blue-500/20 to-transparent blur-xl"></div>
+                            <div className="absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-gradient-to-tr from-green-500/15 to-transparent blur-lg"></div>
+
+                            <div className="relative max-h-[calc(100vh-4rem)] overflow-y-auto">
                                 <button
-                                    className="absolute top-3 right-3 z-10 rounded-full bg-white p-1 text-2xl text-gray-400 shadow transition-colors hover:text-red-500 dark:bg-gray-900"
+                                    className="group absolute top-4 right-4 z-10 rounded-full p-3 text-gray-500 transition-all duration-200 hover:bg-red-100 hover:text-red-600 dark:text-gray-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                                     onClick={() => setSelectedSolicitud(null)}
                                     aria-label="Cerrar"
                                 >
-                                    ×
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-6 w-6 transition-transform group-hover:scale-110"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
                                 </button>
-                                <div className="p-6">
-                                    <h2 className="mb-6 text-center text-2xl font-bold text-gray-800 dark:text-white">
-                                        Detalle de Solicitud de Adopción
-                                    </h2>
+                                <div className="p-6 sm:p-8">
+                                    <div className="mb-10 text-center">
+                                        <h2 className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-3xl font-bold text-transparent dark:from-blue-400 dark:to-green-400">
+                                            📋 Detalle de Solicitud de Adopción
+                                        </h2>
+                                        <p className="mt-4 text-lg leading-relaxed text-gray-600 dark:text-gray-300">
+                                            Información completa proporcionada por el solicitante
+                                        </p>
+                                        {/* Línea decorativa */}
+                                        <div className="mx-auto mt-6 h-1 w-32 rounded-full bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
+                                    </div>
                                     <div className="space-y-5">
                                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                                            <div>
-                                                <h3 className="mb-3 text-lg font-semibold text-green-600 dark:text-green-400">
-                                                    Datos del Solicitante
+                                            <div className="relative overflow-hidden rounded-3xl border-2 border-blue-200/50 bg-gradient-to-br from-blue-50/80 to-indigo-50/60 p-6 shadow-xl dark:border-blue-700/30 dark:from-blue-900/25 dark:to-indigo-900/20">
+                                                {/* Elemento decorativo */}
+                                                <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-gradient-to-br from-blue-300/30 to-transparent blur-lg"></div>
+
+                                                <h3 className="relative mb-6 flex items-center text-xl font-bold text-blue-700 dark:text-blue-300">
+                                                    <div className="mr-3 rounded-xl bg-blue-600 p-2 shadow-lg dark:bg-blue-500">
+                                                        <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                    👤 Datos del Solicitante
                                                 </h3>
-                                                <div className="space-y-2">
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">Nombre completo:</strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">
+                                                <div className="relative space-y-3">
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-blue-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-blue-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">👤</span>
+                                                            <strong className="font-semibold text-blue-700 dark:text-blue-300">
+                                                                Nombre completo:
+                                                            </strong>
+                                                        </div>
+                                                        <div className="ml-6 font-medium text-gray-800 dark:text-gray-200">
                                                             {selectedSolicitud.nombre_completo}
-                                                        </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">Cédula:</strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">{selectedSolicitud.cedula}</span>
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-blue-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-blue-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">🆔</span>
+                                                            <strong className="font-semibold text-blue-700 dark:text-blue-300">Cédula:</strong>
+                                                        </div>
+                                                        <div className="ml-6 font-medium text-gray-800 dark:text-gray-200">
+                                                            {selectedSolicitud.cedula}
+                                                        </div>
                                                     </div>
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">Email:</strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">{selectedSolicitud.email}</span>
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-blue-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-blue-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">📧</span>
+                                                            <strong className="font-semibold text-blue-700 dark:text-blue-300">Email:</strong>
+                                                        </div>
+                                                        <div className="ml-6 font-medium text-gray-800 dark:text-gray-200">
+                                                            {selectedSolicitud.email}
+                                                        </div>
                                                     </div>
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">Teléfono:</strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">{selectedSolicitud.telefono}</span>
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-blue-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-blue-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">📱</span>
+                                                            <strong className="font-semibold text-blue-700 dark:text-blue-300">Teléfono:</strong>
+                                                        </div>
+                                                        <div className="ml-6 font-medium text-gray-800 dark:text-gray-200">
+                                                            {selectedSolicitud.telefono}
+                                                        </div>
                                                     </div>
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">Ciudad:</strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-blue-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-blue-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">🏙️</span>
+                                                            <strong className="font-semibold text-blue-700 dark:text-blue-300">Ciudad:</strong>
+                                                        </div>
+                                                        <div className="ml-6 font-medium text-gray-800 dark:text-gray-200">
                                                             {selectedSolicitud.direccion_ciudad}
-                                                        </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">Barrio:</strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-blue-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-blue-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">🏘️</span>
+                                                            <strong className="font-semibold text-blue-700 dark:text-blue-300">Barrio:</strong>
+                                                        </div>
+                                                        <div className="ml-6 font-medium text-gray-800 dark:text-gray-200">
                                                             {selectedSolicitud.direccion_barrio}
-                                                        </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">Código Postal:</strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-blue-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-blue-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">📮</span>
+                                                            <strong className="font-semibold text-blue-700 dark:text-blue-300">Código Postal:</strong>
+                                                        </div>
+                                                        <div className="ml-6 font-medium text-gray-800 dark:text-gray-200">
                                                             {selectedSolicitud.direccion_postal}
-                                                        </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <h3 className="mb-3 text-lg font-semibold text-green-600 dark:text-green-400">Vivienda</h3>
-                                                <div className="space-y-2">
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">Tipo de vivienda:</strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">
+                                            <div className="relative overflow-hidden rounded-3xl border-2 border-green-200/50 bg-gradient-to-br from-green-50/80 to-emerald-50/60 p-6 shadow-xl dark:border-green-700/30 dark:from-green-900/25 dark:to-emerald-900/20">
+                                                {/* Elemento decorativo */}
+                                                <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-gradient-to-br from-green-300/30 to-transparent blur-lg"></div>
+
+                                                <h3 className="relative mb-6 flex items-center text-xl font-bold text-green-700 dark:text-green-300">
+                                                    <div className="mr-3 rounded-xl bg-green-600 p-2 shadow-lg dark:bg-green-500">
+                                                        <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                    🏠 Vivienda
+                                                </h3>
+                                                <div className="relative space-y-3">
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-green-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-green-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">🏠</span>
+                                                            <strong className="font-semibold text-green-700 dark:text-green-300">
+                                                                Tipo de vivienda:
+                                                            </strong>
+                                                        </div>
+                                                        <div className="ml-6 font-medium text-gray-800 dark:text-gray-200">
                                                             {selectedSolicitud.tipo_vivienda}
-                                                        </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">Propiedad de la vivienda:</strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-green-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-green-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">📋</span>
+                                                            <strong className="font-semibold text-green-700 dark:text-green-300">
+                                                                Propiedad de la vivienda:
+                                                            </strong>
+                                                        </div>
+                                                        <div className="ml-6 font-medium text-gray-800 dark:text-gray-200">
                                                             {selectedSolicitud.propiedad_vivienda}
-                                                        </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">Tiene patio:</strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">{selectedSolicitud.tiene_patio}</span>
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-green-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-green-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">🌳</span>
+                                                            <strong className="font-semibold text-green-700 dark:text-green-300">Tiene patio:</strong>
+                                                        </div>
+                                                        <div className="ml-6 flex items-center">
+                                                            <span
+                                                                className={`mr-2 text-lg ${selectedSolicitud.tiene_patio === 'si' ? '✅' : '❌'}`}
+                                                            ></span>
+                                                            <div
+                                                                className={`font-medium ${selectedSolicitud.tiene_patio === 'si' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}
+                                                            >
+                                                                {selectedSolicitud.tiene_patio === 'si' ? 'Sí tiene' : 'No tiene'}
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
-                                                        <strong className="text-green-600 dark:text-green-400">
-                                                            ¿Permiten mascotas en alquiler?:
-                                                        </strong>
-                                                        <span className="ml-2 text-gray-600 dark:text-gray-300">
-                                                            {selectedSolicitud.permiten_mascotas_alquiler}
-                                                        </span>
+                                                    <div className="rounded-xl bg-gradient-to-r from-white/80 to-green-50/80 p-4 shadow-md transition-all duration-200 hover:shadow-lg dark:from-gray-800/80 dark:to-green-900/20">
+                                                        <div className="mb-2 flex items-center">
+                                                            <span className="mr-2 text-lg">🏘️</span>
+                                                            <strong className="font-semibold text-green-700 dark:text-green-300">
+                                                                ¿Permiten mascotas en alquiler?:
+                                                            </strong>
+                                                        </div>
+                                                        <div className="ml-6 flex items-center">
+                                                            <span
+                                                                className={`mr-2 text-lg ${selectedSolicitud.permiten_mascotas_alquiler === 'si' ? '✅' : '❌'}`}
+                                                            ></span>
+                                                            <div
+                                                                className={`font-medium ${selectedSolicitud.permiten_mascotas_alquiler === 'si' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}
+                                                            >
+                                                                {selectedSolicitud.permiten_mascotas_alquiler === 'si'
+                                                                    ? 'Sí permiten'
+                                                                    : 'No permiten'}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                                            <div>
-                                                <h3 className="mb-3 text-lg font-semibold text-green-600 dark:text-green-400">Convivientes</h3>
-                                                <div className="space-y-2">
+                                            <div className="relative overflow-hidden rounded-3xl border-2 border-purple-200/50 bg-gradient-to-br from-purple-50/80 to-pink-50/60 p-6 shadow-xl dark:border-purple-700/30 dark:from-purple-900/25 dark:to-pink-900/20">
+                                                {/* Elemento decorativo */}
+                                                <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-gradient-to-br from-purple-300/30 to-transparent blur-lg"></div>
+
+                                                <h3 className="relative mb-6 flex items-center text-xl font-bold text-purple-700 dark:text-purple-300">
+                                                    <div className="mr-3 rounded-xl bg-purple-600 p-2 shadow-lg dark:bg-purple-500">
+                                                        <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                    👥 Convivientes
+                                                </h3>
+                                                <div className="relative space-y-3">
                                                     <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
                                                         <strong className="text-green-600 dark:text-green-400">Cantidad de convivientes:</strong>
                                                         <span className="ml-2 text-gray-600 dark:text-gray-300">
@@ -462,9 +587,24 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <h3 className="mb-3 text-lg font-semibold text-green-600 dark:text-green-400">Otras Mascotas</h3>
-                                                <div className="space-y-2">
+                                            <div className="relative overflow-hidden rounded-3xl border-2 border-orange-200/50 bg-gradient-to-br from-orange-50/80 to-yellow-50/60 p-6 shadow-xl dark:border-orange-700/30 dark:from-orange-900/25 dark:to-yellow-900/20">
+                                                {/* Elemento decorativo */}
+                                                <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-gradient-to-br from-orange-300/30 to-transparent blur-lg"></div>
+
+                                                <h3 className="relative mb-6 flex items-center text-xl font-bold text-orange-700 dark:text-orange-300">
+                                                    <div className="mr-3 rounded-xl bg-orange-600 p-2 shadow-lg dark:bg-orange-500">
+                                                        <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                    🐕 Otras Mascotas
+                                                </h3>
+                                                <div className="relative space-y-3">
                                                     <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
                                                         <strong className="text-green-600 dark:text-green-400">¿Tiene otras mascotas?:</strong>
                                                         <span className="ml-2 text-gray-600 dark:text-gray-300">
@@ -501,9 +641,24 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                                                 </div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <h3 className="mb-3 text-lg font-semibold text-green-600 dark:text-green-400">Detalles de Adopción</h3>
-                                            <div className="space-y-2">
+                                        <div className="relative overflow-hidden rounded-3xl border-2 border-pink-200/50 bg-gradient-to-br from-pink-50/80 to-rose-50/60 p-6 shadow-xl dark:border-pink-700/30 dark:from-pink-900/25 dark:to-rose-900/20">
+                                            {/* Elemento decorativo */}
+                                            <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-gradient-to-br from-pink-300/30 to-transparent blur-lg"></div>
+
+                                            <h3 className="relative mb-6 flex items-center text-xl font-bold text-pink-700 dark:text-pink-300">
+                                                <div className="mr-3 rounded-xl bg-pink-600 p-2 shadow-lg dark:bg-pink-500">
+                                                    <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                💖 Detalles de Adopción
+                                            </h3>
+                                            <div className="relative space-y-4">
                                                 <div className="rounded-md border-gray-300 bg-gray-50 p-3 dark:border-gray-600 dark:bg-gray-700">
                                                     <strong className="text-green-600 dark:text-green-400">¿Por qué desea adoptar?:</strong>
                                                     <p className="mt-1 text-gray-600 dark:text-gray-300">{selectedSolicitud.porque_adopta}</p>
@@ -606,36 +761,64 @@ export default function SolicitudesIndex({ auth, solicitudes }: SolicitudesPageP
                                     </div>
 
                                     {/* Botones de Acción */}
-                                    <div className="flex justify-end gap-4 pt-6">
+                                    <div className="flex flex-col gap-4 pt-8 sm:flex-row sm:justify-center">
                                         {auth.user.role === 'aliado' && selectedSolicitud.mascota?.user_id === auth.user.id && (
                                             <>
                                                 <button
                                                     type="button"
-                                                    className="rounded-md bg-green-600 px-6 py-2 font-semibold text-white shadow-md transition hover:bg-green-700 disabled:opacity-50"
+                                                    className="group hover:shadow-3xl relative w-full overflow-hidden rounded-3xl bg-gradient-to-r from-green-500 to-green-700 px-8 py-4 font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 disabled:scale-100 disabled:opacity-50 sm:w-auto"
                                                     onClick={handleApprove}
                                                     disabled={selectedSolicitud.estado === 'Aprobada'}
                                                 >
-                                                    Aprobar
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                                    <span className="relative flex items-center gap-2">
+                                                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                        ✅ Aprobar Solicitud
+                                                    </span>
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    className="rounded-md bg-red-600 px-6 py-2 font-semibold text-white shadow-md transition hover:bg-red-700 disabled:opacity-50"
+                                                    className="group hover:shadow-3xl relative w-full overflow-hidden rounded-3xl bg-gradient-to-r from-red-500 to-red-700 px-8 py-4 font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 disabled:scale-100 disabled:opacity-50 sm:w-auto"
                                                     onClick={() => {
                                                         setComentarioRechazo('');
                                                         setShowRejectModal(true);
                                                     }}
                                                     disabled={selectedSolicitud.estado === 'Rechazada'}
                                                 >
-                                                    Rechazar
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                                    <span className="relative flex items-center gap-2">
+                                                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M6 18L18 6M6 6l12 12"
+                                                            />
+                                                        </svg>
+                                                        ❌ Rechazar Solicitud
+                                                    </span>
                                                 </button>
                                             </>
                                         )}
                                         <button
                                             type="button"
                                             onClick={() => setSelectedSolicitud(null)}
-                                            className="rounded-md bg-gray-200 px-6 py-2 font-semibold text-gray-700 transition hover:bg-gray-300 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
+                                            className="group hover:shadow-3xl relative w-full overflow-hidden rounded-3xl bg-gradient-to-r from-gray-400 to-gray-600 px-8 py-4 font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 sm:w-auto dark:from-gray-600 dark:to-gray-800"
                                         >
-                                            Cerrar
+                                            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                            <span className="relative flex items-center gap-2">
+                                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                                                    />
+                                                </svg>
+                                                🔙 Cerrar
+                                            </span>
                                         </button>
                                     </div>
                                 </div>

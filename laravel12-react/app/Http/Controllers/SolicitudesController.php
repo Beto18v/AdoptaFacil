@@ -70,17 +70,6 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Muestra el detalle de una solicitud de adopción.
-     */
-    public function show($id)
-    {
-        $solicitud = Solicitud::with(['user', 'mascota'])->findOrFail($id);
-        return Inertia::render('Dashboard/Solicitudes/Show', [
-            'solicitud' => $solicitud,
-        ]);
-    }
-
-    /**
      * ✨ MÉTODO AÑADIDO: Guarda una nueva solicitud de adopción en la base de datos.
      */
     public function store(Request $request)
