@@ -98,6 +98,21 @@ class EstadisticasController extends Controller
                 'total' => $item->count,
             ];
         })->toArray();
+        
+        // Motivos de rechazo
+        $motivosRechazo = Solicitud::where('estado', 'Rechazada')
+             ->whereNotNull('comentario_rechazo')
+              ->where('comentario_rechazo', '!=', '')
+              ->groupBy('comentario_rechazo')
+              ->select('comentario_rechazo', DB::raw('COUNT(*) as count'))
+              ->orderBy('count', 'desc')
+              ->get()
+            ->map(function ($item) {
+        return [
+            'motivo' => $item->comentario_rechazo,
+            'cantidad' => $item->count,
+        ];
+        })->toArray();
 
         return Inertia::render('Dashboard/Estadisticas/index', [
             'generalStats' => [
@@ -109,6 +124,7 @@ class EstadisticasController extends Controller
             'monthlyStats' => $monthlyStats,
             'adopcionesPorMes' => $adopcionesPorMes,
             'distribucionTipos' => $distribucionTipos,
+            'motivosRechazo' => $motivosRechazo,
         ]);
     }
 
@@ -376,7 +392,7 @@ class EstadisticasController extends Controller
         $percentage = $totalAdoptedPets > 0 ? round(($item->count / $totalAdoptedPets) * 100, 1) : 0;
         return [
             'Especie' => ucfirst($item->especie),
-            'Cantidad' => $item->count,
+            'Cantidad' => $item->count, 
             'Porcentaje' => $percentage . '%',
         ];
     })->toArray();

@@ -38,6 +38,7 @@ interface Props {
     monthlyStats: MonthlyStat[];
     adopcionesPorMes: AdoptionData[];
     distribucionTipos: SpeciesDistribution[];
+    motivosRechazo: { motivo: string; cantidad: number }[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -47,7 +48,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPorMes, distribucionTipos }: Props) {
+export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPorMes, distribucionTipos, motivosRechazo }: Props) {
     const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
     const [pdfError, setPdfError] = useState<string | null>(null);
 
@@ -491,6 +492,80 @@ export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPo
                             </div>
                         </div>
                     </div>
+                    {/* Gráfico de Motivos de Rechazo */}
+                    {motivosRechazo && motivosRechazo.length > 0 && (
+                        <div className="relative mt-8 overflow-hidden rounded-3xl bg-white/95 p-8 shadow-2xl backdrop-blur-sm dark:bg-gray-800/95">
+                            {/* Elementos decorativos */}
+                            <div className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-gradient-to-br from-red-500/10 to-red-500/5 blur-2xl"></div>
+                            <div className="absolute -bottom-8 -left-8 h-24 w-24 rounded-full bg-gradient-to-tr from-red-500/10 to-red-500/5 blur-xl"></div>
+
+                            <div className="relative">
+                                {/* Header de la sección */}
+                                <div className="mb-6 flex items-center justify-between">
+                                    <div>
+                                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Motivos de Rechazo</h2>
+                                        <p className="text-gray-600 dark:text-gray-300">Análisis de solicitudes rechazadas</p>
+                                    </div>
+                                    <div className="rounded-2xl bg-gradient-to-r from-red-500/20 to-red-500/20 p-3">
+                                        <svg
+                                            className="h-6 w-6 text-gray-700 dark:text-gray-300"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                {/* Línea decorativa */}
+                                <div className="mb-6 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent dark:via-gray-600"></div>
+
+                                {/* Gráfico de barras */}
+                                <div className="mb-6">
+                                    <div className="space-y-4">
+                                        {motivosRechazo.map((item, index) => {
+                                            const maxCantidad = Math.max(...motivosRechazo.map((m) => m.cantidad));
+                                            const porcentaje = (item.cantidad / maxCantidad) * 100;
+
+                                            return (
+                                                <div key={index} className="group">
+                                                    <div className="mb-2 flex items-center justify-between">
+                                                        <span className="max-w-md truncate text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                            {item.motivo}
+                                                        </span>
+                                                        <span className="ml-2 text-sm font-bold text-red-600 dark:text-red-400">{item.cantidad}</span>
+                                                    </div>
+                                                    <div className="relative h-8 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700">
+                                                        <div
+                                                            className="h-full rounded-lg bg-gradient-to-r from-red-500 to-red-600 transition-all duration-1000 ease-out group-hover:from-red-600 group-hover:to-red-700"
+                                                            style={{ width: `${porcentaje}%` }}
+                                                        >
+                                                            <div className="flex h-full w-full items-center justify-end pr-3">
+                                                                <span className="text-xs font-semibold text-white drop-shadow-lg">
+                                                                    {item.cantidad} rechazo{item.cantidad !== 1 ? 's' : ''}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* Resumen */}
+                                <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+                                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                                        <span className="font-semibold">Total de rechazos registrados:</span>{' '}
+                                        <span className="font-bold text-red-600 dark:text-red-400">
+                                            {motivosRechazo.reduce((sum, item) => sum + item.cantidad, 0)}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </main>
 
