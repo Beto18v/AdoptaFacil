@@ -84,7 +84,6 @@ public class PdfGeneratorService {
             document.add(Chunk.NEWLINE);
 
             // Gráfico y Tabla de Distribución por Especies
-
             if (datos.getDistribucionEspecies() != null && !datos.getDistribucionEspecies().isEmpty()) {
                 document.add(Chunk.NEWLINE);
 
@@ -252,34 +251,6 @@ public class PdfGeneratorService {
             document.add(new LineSeparator());
             document.add(Chunk.NEWLINE);
 
-            // Resumen de datos generales
-            if (datos.getDatosGenerales() != null && !datos.getDatosGenerales().isEmpty()) {
-                Paragraph subtituloResumen = new Paragraph("Resumen General", FONT_SUBTITLE);
-                subtituloResumen.setSpacingAfter(10);
-                document.add(subtituloResumen);
-
-                PdfPTable tablaResumen = new PdfPTable(2);
-                tablaResumen.setWidthPercentage(100);
-                tablaResumen.setWidths(new float[] { 3, 1 });
-                tablaResumen.setSpacingAfter(20);
-
-                for (Map.Entry<String, Object> entry : datos.getDatosGenerales().entrySet()) {
-                    PdfPCell cellLabel = new PdfPCell(new Phrase(entry.getKey(), FONT_NORMAL));
-                    cellLabel.setPadding(8);
-                    cellLabel.setBorderColor(COLOR_BORDER);
-                    cellLabel.setBackgroundColor(COLOR_ROW_ALT);
-                    tablaResumen.addCell(cellLabel);
-
-                    PdfPCell cellValue = new PdfPCell(new Phrase(String.valueOf(entry.getValue()), FONT_NORMAL));
-                    cellValue.setPadding(8);
-                    cellValue.setBorderColor(COLOR_BORDER);
-                    cellValue.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    tablaResumen.addCell(cellValue);
-                }
-
-                document.add(tablaResumen);
-            }
-
             // Gráfico y tabla de motivos de rechazo
             if (datos.getMotivosRechazo() != null && !datos.getMotivosRechazo().isEmpty()) {
                 Paragraph subtituloMotivos = new Paragraph("Distribución de Motivos de Rechazo", FONT_SUBTITLE);
@@ -297,12 +268,50 @@ public class PdfGeneratorService {
                         try {
                             int cantidad = Integer.parseInt(cantidadStr);
                             // Truncar nombres muy largos para mejor visualización
-                            String nombreCorto = nombre.length() > 30 ? nombre.substring(0, 27) + "..." : nombre;
+                            String nombreCorto = nombre.length() > 30 ? nombre.substring(0, 30) + "..." : nombre;
                             dataset.addValue(cantidad, "Rechazos", nombreCorto);
                         } catch (NumberFormatException e) {
                             System.err.println("Error parseando cantidad: " + cantidadStr);
                         }
                     }
+                    // Tabla detallada de motivos
+                    Paragraph subtituloTabla = new Paragraph("Detalle de Motivos", FONT_SUBTITLE);
+                    subtituloTabla.setSpacingAfter(10);
+                    document.add(subtituloTabla);
+
+                    PdfPTable tablaMotivos = new PdfPTable(2);
+                    tablaMotivos.setWidthPercentage(100);
+                    tablaMotivos.setWidths(new float[] { 4, 1 });
+                    tablaMotivos.setSpacingAfter(20);
+
+                    // Headers
+                    String[] headers = { "Motivo de Rechazo", "Cantidad" };
+                    BaseColor COLOR_HEADER_ROJO = new BaseColor(231, 76, 60); // Rojo
+                    for (String header : headers) {
+                        PdfPCell cell = new PdfPCell(new Phrase(header, FONT_HEADER));
+                        cell.setBackgroundColor(COLOR_HEADER_ROJO);
+                        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        cell.setBorderColor(COLOR_BORDER);
+                        cell.setPadding(8);
+                        tablaMotivos.addCell(cell);
+                    }
+
+                    // Datos
+                    boolean alternar = false;
+                    for (Map<String, Object> motivo : datos.getMotivosRechazo()) {
+                        for (Object valor : motivo.values()) {
+                            PdfPCell cell = new PdfPCell(new Phrase(String.valueOf(valor), FONT_NORMAL));
+                            cell.setPadding(8);
+                            cell.setBorderColor(COLOR_BORDER);
+                            if (alternar) {
+                                cell.setBackgroundColor(COLOR_ROW_ALT);
+                            }
+                            tablaMotivos.addCell(cell);
+                        }
+                        alternar = !alternar;
+                    }
+
+                    document.add(tablaMotivos);
 
                     // Crear gráfico de barras
                     JFreeChart barChart = ChartFactory.createBarChart(
@@ -316,7 +325,7 @@ public class PdfGeneratorService {
                             false // URLs
                     );
 
-                    // Personalizar el gráfico
+                    // gráfico personalizado
                     org.jfree.chart.plot.CategoryPlot plot = barChart.getCategoryPlot();
                     plot.setBackgroundPaint(Color.WHITE);
                     plot.setOutlineVisible(false);
@@ -327,21 +336,7 @@ public class PdfGeneratorService {
                     org.jfree.chart.renderer.category.BarRenderer renderer = (org.jfree.chart.renderer.category.BarRenderer) plot
                             .getRenderer();
 
-                    // Asignar colores a las barras
-                    Color[] colores = {
-                            new Color(231, 76, 60), // Rojo
-                            new Color(241, 196, 15), // Amarillo
-                            new Color(230, 126, 34), // Naranja
-                            new Color(155, 89, 182), // Púrpura
-                            new Color(149, 165, 166), // Gris
-                            new Color(52, 152, 219), // Azul
-                            new Color(46, 204, 113), // Verde
-                            new Color(26, 188, 156) // Turquesa
-                    };
-
-                    for (int i = 0; i < datos.getMotivosRechazo().size(); i++) {
-                        renderer.setSeriesPaint(0, colores[i % colores.length]);
-                    }
+                    renderer.setSeriesPaint(0, new Color(231, 76, 60)); // Rojo
 
                     // Hacer las barras más bonitas
                     renderer.setBarPainter(new org.jfree.chart.renderer.category.StandardBarPainter());
@@ -372,44 +367,6 @@ public class PdfGeneratorService {
                     System.err.println("Error generando gráfico: " + e.getMessage());
                     e.printStackTrace();
                 }
-
-                // Tabla detallada de motivos
-                Paragraph subtituloTabla = new Paragraph("Detalle de Motivos", FONT_SUBTITLE);
-                subtituloTabla.setSpacingAfter(10);
-                document.add(subtituloTabla);
-
-                PdfPTable tablaMotivos = new PdfPTable(2);
-                tablaMotivos.setWidthPercentage(100);
-                tablaMotivos.setWidths(new float[] { 4, 1 });
-                tablaMotivos.setSpacingAfter(20);
-
-                // Headers
-                String[] headers = { "Motivo de Rechazo", "Cantidad" };
-                for (String header : headers) {
-                    PdfPCell cell = new PdfPCell(new Phrase(header, FONT_HEADER));
-                    cell.setBackgroundColor(COLOR_HEADER);
-                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cell.setBorderColor(COLOR_BORDER);
-                    cell.setPadding(8);
-                    tablaMotivos.addCell(cell);
-                }
-
-                // Datos
-                boolean alternar = false;
-                for (Map<String, Object> motivo : datos.getMotivosRechazo()) {
-                    for (Object valor : motivo.values()) {
-                        PdfPCell cell = new PdfPCell(new Phrase(String.valueOf(valor), FONT_NORMAL));
-                        cell.setPadding(8);
-                        cell.setBorderColor(COLOR_BORDER);
-                        if (alternar) {
-                            cell.setBackgroundColor(COLOR_ROW_ALT);
-                        }
-                        tablaMotivos.addCell(cell);
-                    }
-                    alternar = !alternar;
-                }
-
-                document.add(tablaMotivos);
             }
 
         } catch (Exception e) {

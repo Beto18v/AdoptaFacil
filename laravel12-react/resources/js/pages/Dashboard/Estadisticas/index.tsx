@@ -192,7 +192,7 @@ export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPo
                         <div className="mx-auto mt-6 h-1 w-32 rounded-full bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
                     </div>
 
-                    {/* Botones de acción mejorados */}
+                    {/* Botones de acción*/}
                     <div className="mb-8 flex justify-center gap-4">
                         <div className="mb-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
                             <div className="w-full sm:w-auto">
