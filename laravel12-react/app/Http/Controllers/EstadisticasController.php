@@ -142,7 +142,7 @@ class EstadisticasController extends Controller
         $estadisticas = $this->obtenerEstadisticasCompletas($fechaInicio, $fechaFin);
         
         $datosPdf = [
-            'titulo' => 'Reporte Estadísticos AdoptaFácil',
+            'titulo' => 'Reporte Adopciones por Especie - AdoptaFácil',
             'fechaInicio' => Carbon::parse($fechaInicio)->format('d/m/Y'),
             'fechaFin' => Carbon::parse($fechaFin)->format('d/m/Y'),
             'datosGenerales' => [
