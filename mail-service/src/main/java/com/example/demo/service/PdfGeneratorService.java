@@ -82,37 +82,7 @@ public class PdfGeneratorService {
             document.add(new LineSeparator());
             document.add(Chunk.NEWLINE);
 
-            // Tabla Resumen General
-            if (datos.getDatosGenerales() != null && !datos.getDatosGenerales().isEmpty()) {
-                Paragraph subtitulo = new Paragraph("Resumen General", FONT_SUBTITLE);
-                subtitulo.setSpacingAfter(10);
-                document.add(subtitulo);
-
-                PdfPTable tablaResumen = new PdfPTable(2);
-                tablaResumen.setWidthPercentage(100);
-                tablaResumen.setSpacingAfter(20);
-
-                boolean alternar = false;
-
-                for (Map.Entry<String, Object> entry : datos.getDatosGenerales().entrySet()) {
-                    PdfPCell keyCell = new PdfPCell(new Phrase(entry.getKey(), FONT_HEADER));
-                    keyCell.setPadding(8);
-                    keyCell.setBorderColor(COLOR_BORDER);
-                    keyCell.setBackgroundColor(COLOR_HEADER);
-
-                    PdfPCell valueCell = new PdfPCell(new Phrase(String.valueOf(entry.getValue()), FONT_NORMAL));
-                    valueCell.setPadding(8);
-                    valueCell.setBorderColor(COLOR_BORDER);
-                    valueCell.setBackgroundColor(alternar ? COLOR_ROW_ALT : BaseColor.WHITE);
-
-                    tablaResumen.addCell(keyCell);
-                    tablaResumen.addCell(valueCell);
-
-                    alternar = !alternar;
-                }
-
-                document.add(tablaResumen);
-            }
+            // Gráfico y Tabla de Distribución por Especies
 
             if (datos.getDistribucionEspecies() != null && !datos.getDistribucionEspecies().isEmpty()) {
                 document.add(Chunk.NEWLINE);
@@ -124,6 +94,44 @@ public class PdfGeneratorService {
                 try {
                     // Crear el dataset para el gráfico de torta
                     DefaultPieDataset dataset = new DefaultPieDataset();
+
+                    // Tabla de datos detallados
+                    Paragraph subtituloTablaEspecies = new Paragraph("Detalle Numérico de Especies", FONT_SUBTITLE);
+                    subtituloTablaEspecies.setSpacingAfter(10);
+                    document.add(subtituloTablaEspecies);
+
+                    PdfPTable tablaEspecies = new PdfPTable(3);
+                    tablaEspecies.setWidthPercentage(100);
+                    tablaEspecies.setSpacingAfter(20);
+
+                    // Headers
+                    String[] headers = { "Especie", "Cantidad", "Porcentaje" };
+                    for (String header : headers) {
+                        PdfPCell cell = new PdfPCell(new Phrase(header, FONT_HEADER));
+                        cell.setBackgroundColor(COLOR_HEADER);
+                        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        cell.setBorderColor(COLOR_BORDER);
+                        cell.setPadding(8);
+                        tablaEspecies.addCell(cell);
+                    }
+
+                    // Datos
+                    boolean alternar = false;
+                    for (Map<String, Object> especie : datos.getDistribucionEspecies()) {
+                        for (Object valor : especie.values()) {
+                            PdfPCell cell = new PdfPCell(new Phrase(String.valueOf(valor), FONT_NORMAL));
+                            cell.setPadding(8);
+                            cell.setBorderColor(COLOR_BORDER);
+                            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                            if (alternar) {
+                                cell.setBackgroundColor(COLOR_ROW_ALT);
+                            }
+                            tablaEspecies.addCell(cell);
+                        }
+                        alternar = !alternar;
+                    }
+
+                    document.add(tablaEspecies);
 
                     for (Map<String, Object> especie : datos.getDistribucionEspecies()) {
                         String nombre = String.valueOf(especie.get("Especie"));
@@ -142,9 +150,8 @@ public class PdfGeneratorService {
                             null,
                             dataset,
                             true,
-                            true, 
-                            false 
-                    );
+                            true,
+                            false);
 
                     // Personalizar colores del gráfico
                     PiePlot plot = (PiePlot) pieChart.getPlot();
@@ -195,84 +202,6 @@ public class PdfGeneratorService {
                     document.add(Chunk.NEWLINE);
                 }
 
-                // Tabla de datos detallados
-                Paragraph subtituloTablaEspecies = new Paragraph("Detalle Numérico de Especies", FONT_SUBTITLE);
-                subtituloTablaEspecies.setSpacingAfter(10);
-                document.add(subtituloTablaEspecies);
-
-                PdfPTable tablaEspecies = new PdfPTable(3);
-                tablaEspecies.setWidthPercentage(100);
-                tablaEspecies.setSpacingAfter(20);
-
-                // Headers
-                String[] headers = { "Especie", "Cantidad", "Porcentaje" };
-                for (String header : headers) {
-                    PdfPCell cell = new PdfPCell(new Phrase(header, FONT_HEADER));
-                    cell.setBackgroundColor(COLOR_HEADER);
-                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cell.setBorderColor(COLOR_BORDER);
-                    cell.setPadding(8);
-                    tablaEspecies.addCell(cell);
-                }
-
-                // Datos
-                boolean alternar = false;
-                for (Map<String, Object> especie : datos.getDistribucionEspecies()) {
-                    for (Object valor : especie.values()) {
-                        PdfPCell cell = new PdfPCell(new Phrase(String.valueOf(valor), FONT_NORMAL));
-                        cell.setPadding(8);
-                        cell.setBorderColor(COLOR_BORDER);
-                        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                        if (alternar) {
-                            cell.setBackgroundColor(COLOR_ROW_ALT);
-                        }
-                        tablaEspecies.addCell(cell);
-                    }
-                    alternar = !alternar;
-                }
-
-                document.add(tablaEspecies);
-            }
-
-            // Tabla Detalle Mensual de Registros
-            if (datos.getTablaDetalle() != null && !datos.getTablaDetalle().isEmpty()) {
-                Paragraph subtituloDetalle = new Paragraph("Detalle Mensual de Adopciones", FONT_SUBTITLE);
-                subtituloDetalle.setSpacingAfter(10);
-                document.add(subtituloDetalle);
-
-                Map<String, Object> primerRegistro = datos.getTablaDetalle().get(0);
-                int numColumnas = primerRegistro.size();
-
-                PdfPTable tablaDetalle = new PdfPTable(numColumnas);
-                tablaDetalle.setWidthPercentage(100);
-                tablaDetalle.setSpacingAfter(20);
-
-                // Encabezados
-                for (String key : primerRegistro.keySet()) {
-                    PdfPCell header = new PdfPCell(new Phrase(key, FONT_HEADER));
-                    header.setBackgroundColor(COLOR_HEADER);
-                    header.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    header.setBorderColor(COLOR_BORDER);
-                    header.setPadding(8);
-                    tablaDetalle.addCell(header);
-                }
-
-                boolean alternar = false;
-                for (Map<String, Object> fila : datos.getTablaDetalle()) {
-                    for (Object valor : fila.values()) {
-                        PdfPCell cell = new PdfPCell(new Phrase(String.valueOf(valor), FONT_NORMAL));
-                        cell.setPadding(8);
-                        cell.setBorderColor(COLOR_BORDER);
-                        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                        if (alternar) {
-                            cell.setBackgroundColor(COLOR_ROW_ALT);
-                        }
-                        tablaDetalle.addCell(cell);
-                    }
-                    alternar = !alternar;
-                }
-
-                document.add(tablaDetalle);
             }
 
         } catch (Exception e) {
@@ -287,13 +216,13 @@ public class PdfGeneratorService {
         return baos.toByteArray();
     }
 
-    //Convierte un string de porcentaje a float
+    // Convierte un string de porcentaje a float
     private float parsePercentage(String porcentaje) {
         try {
-            // Eliminar el símbolo % 
+            // Eliminar el símbolo %
             String numStr = porcentaje.replace("%", "").trim();
             float valor = Float.parseFloat(numStr);
-            return Math.max(5f, Math.min(100f, valor)); 
+            return Math.max(5f, Math.min(100f, valor));
         } catch (Exception e) {
             System.err.println("Error parsing percentage: " + porcentaje);
             return 10f; // Valor por defecto
