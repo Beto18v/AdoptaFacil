@@ -231,6 +231,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('estadisticas', [EstadisticasController::class, 'index'])->name('estadisticas.index');
     // Generar y descargar reporte PDF de estadísticas
     Route::post('estadisticas/generar-pdf', [EstadisticasController::class, 'generarReportePdf'])->name('estadisticas.generar-pdf');
+    // Generar y descargar reporte PDF de rechazos de adopción
+    Route::post('estadisticas/generar-pdf-rechazos', [EstadisticasController::class, 'generarReportePdfRechazos'])->name('estadisticas.generar-pdf-rechazos');
 
     /*
     |--------------------------------------------------------------------------

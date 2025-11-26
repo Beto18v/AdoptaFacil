@@ -51,6 +51,8 @@ export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPo
     const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
     const [pdfError, setPdfError] = useState<string | null>(null);
 
+    const [tipoReporte, setTipoReporte] = useState<'general' | 'rechazos'>('general');
+
     const totalGatos = distribucionTipos.find((item) => item.name.toLowerCase() === 'gato')?.total ?? 0;
 
     const totalPerros = distribucionTipos.find((item) => item.name.toLowerCase() === 'perro')?.total ?? 0;
@@ -110,6 +112,57 @@ export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPo
         }
     };
 
+    const descargarReporteRechazos = async () => {
+        setIsGeneratingPdf(true);
+        setPdfError(null);
+
+        try {
+            const fechaFin = new Date();
+            const fechaInicio = new Date();
+            fechaInicio.setFullYear(fechaFin.getFullYear() - 1);
+
+            const response = await axios.post(
+                '/estadisticas/generar-pdf-rechazos',
+                {
+                    fecha_inicio: fechaInicio.toISOString().split('T')[0],
+                    fecha_fin: fechaFin.toISOString().split('T')[0],
+                },
+                {
+                    responseType: 'blob',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/pdf',
+                    },
+                },
+            );
+
+            const blob = new Blob([response.data], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `reporteRechazos${new Date().getTime()}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            alert('Reporte de rechazos descargado correctamente');
+        } catch (err: unknown) {
+            console.error('Error al generar el pdf de rechazos:', err);
+            let mensaje = 'Error al generar el reporte. Por favor, intente nuevamente.';
+
+            if (axios.isAxiosError(err)) {
+                mensaje = err.response?.data?.message ?? err.message ?? mensaje;
+            } else if (err instanceof Error) {
+                mensaje = err.message || mensaje;
+            }
+
+            setPdfError(mensaje);
+        } finally {
+            setIsGeneratingPdf(false);
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Estadísticas de Adopción" />
@@ -141,50 +194,69 @@ export default function AdoptionStats({ generalStats, monthlyStats, adopcionesPo
 
                     {/* Botones de acción mejorados */}
                     <div className="mb-8 flex justify-center gap-4">
-                        <button
-                            onClick={descargarReportePDF}
-                            disabled={isGeneratingPdf}
-                            className={`group hover:shadow-3xl relative overflow-hidden rounded-3xl px-8 py-3 font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 ${
-                                isGeneratingPdf
-                                    ? 'cursor-not-allowed bg-gray-400'
-                                    : 'bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800'
-                            } `}
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                            <span className="relative flex items-center gap-2">
-                                {isGeneratingPdf ? (
-                                    <>
-                                        <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                            <path
-                                                className="opacity-75"
-                                                fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                            ></path>
-                                        </svg>
-                                        <span>Generando...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                            />
-                                        </svg>
-                                        <span>Descargar PDF</span>
-                                    </>
-                                )}
-                            </span>
-                        </button>
+                        <div className="mb-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+                            <div className="w-full sm:w-auto">
+                                <select
+                                    value={tipoReporte}
+                                    onChange={(e) => setTipoReporte(e.target.value as 'general' | 'rechazos')}
+                                    className="w-full rounded-2xl border-2 border-white/30 bg-white/20 px-6 py-3 font-semibold text-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/30 focus:border-white/50 focus:ring-2 focus:ring-white/50 focus:outline-none"
+                                >
+                                    <option value="general" className="bg-gray-800 text-white">
+                                        Reporte Adopciones Por Especie
+                                    </option>
+                                    <option value="rechazos" className="bg-gray-800 text-white">
+                                        Reporte de Motivos de Rechazo
+                                    </option>
+                                </select>
+                            </div>
 
-                        {/* Mensaje de error */}
-                        {pdfError && (
-                            <div className="mt-2 rounded-lg bg-red-100 p-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">{pdfError}</div>
-                        )}
+                            <button
+                                onClick={tipoReporte === 'general' ? descargarReportePDF : descargarReporteRechazos}
+                                disabled={isGeneratingPdf}
+                                className={`group hover:shadow-3xl relative overflow-hidden rounded-3xl px-8 py-3 font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 ${
+                                    isGeneratingPdf
+                                        ? 'cursor-not-allowed bg-gray-400'
+                                        : 'bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800'
+                                }`}
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                                <span className="relative flex items-center gap-2">
+                                    {isGeneratingPdf ? (
+                                        <>
+                                            <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path
+                                                    className="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                ></path>
+                                            </svg>
+                                            <span>Generando...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                />
+                                            </svg>
+                                            <span>Descargar PDF</span>
+                                        </>
+                                    )}
+                                </span>
+                            </button>
+                        </div>
                     </div>
+
+                    {/* Mensaje de error */}
+                    {pdfError && (
+                        <div className="mb-4 rounded-lg bg-red-100 p-3 text-center text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                            {pdfError}
+                        </div>
+                    )}
 
                     {/* Tarjetas de estadísticas principales */}
                     <div className="mb-12 grid grid-cols-2 gap-8 md:grid-cols-4">

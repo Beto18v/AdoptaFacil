@@ -204,6 +204,104 @@ class EstadisticasController extends Controller
     }
 }
 
+     public function generarReportePdfRechazos(Request $request)
+{
+    try {
+        $request->validate([
+            'fecha_inicio' => 'nullable|date',
+            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+        ]);
+
+        $fechaInicio = $request->input('fecha_inicio', Carbon::now()->subYear()->format('Y-m-d'));
+        $fechaFin = $request->input('fecha_fin', Carbon::now()->format('Y-m-d'));
+
+        $inicio = Carbon::parse($fechaInicio)->startOfDay();
+        $fin = Carbon::parse($fechaFin)->endOfDay();
+
+        // Obtener motivos de rechazo con detalles
+        $motivosRechazo = Solicitud::where('estado', 'Rechazada')
+            ->whereBetween('created_at', [$inicio, $fin])
+            ->whereNotNull('comentario_rechazo')
+            ->where('comentario_rechazo', '!=', '')
+            ->select('comentario_rechazo', DB::raw('COUNT(*) as count'))
+            ->groupBy('comentario_rechazo')
+            ->orderBy('count', 'desc')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'Motivo' => $item->comentario_rechazo,
+                    'Cantidad' => $item->count,
+                ];
+            })->toArray();
+
+        $totalRechazos = Solicitud::where('estado', 'Rechazada')
+            ->whereBetween('created_at', [$inicio, $fin])
+            ->count();
+
+        $rechazosConComentario = Solicitud::where('estado', 'Rechazada')
+            ->whereBetween('created_at', [$inicio, $fin])
+            ->whereNotNull('comentario_rechazo')
+            ->where('comentario_rechazo', '!=', '')
+            ->count();
+
+        $datosPdf = [
+            'titulo' => 'Reporte de Motivos de Rechazo - AdoptaFácil',
+            'fechaInicio' => Carbon::parse($fechaInicio)->format('d/m/Y'),
+            'fechaFin' => Carbon::parse($fechaFin)->format('d/m/Y'),
+            'datosGenerales' => [
+                'Total de Rechazos' => $totalRechazos,
+                'Rechazos con Comentario' => $rechazosConComentario,
+                'Rechazos sin Comentario' => $totalRechazos - $rechazosConComentario,
+            ],
+            'motivosRechazo' => $motivosRechazo,
+        ];
+
+        Log::info('Generando PDF de motivos de rechazo', [
+            'url' => $this->microserviceUrl,
+            'fecha_inicio' => $fechaInicio,
+            'fecha_fin' => $fechaFin,
+            'total_motivos' => count($motivosRechazo)
+        ]);
+        
+        $response = Http::timeout(60)
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/pdf'
+            ])
+            ->post($this->microserviceUrl . '/api/estadisticas/generar-pdf-rechazos', $datosPdf);
+        
+        if ($response->successful()) {
+            $filename = 'reporte_rechazos_' . date('Ymd_His') . '.pdf';
+            
+            Log::info('PDF de rechazos generado exitosamente', ['filename' => $filename]);
+            
+            return response($response->body(), 200)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
+                ->header('Cache-Control', 'no-cache, must-revalidate');
+        } else {
+            Log::error('Error del microservicio al generar PDF de rechazos', [
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
+            
+            return response()->json([
+                'message' => 'Error al generar el reporte PDF de rechazos.'
+            ], 500);
+        }
+        
+    } catch (\Exception $e) {
+        Log::error('Excepción al generar PDF de rechazos', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        return response()->json([
+            'message' => 'Error inesperado: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
     private function obtenerEstadisticasCompletas($fechaInicio, $fechaFin)
 {
     $inicio = Carbon::parse($fechaInicio)->startOfDay();

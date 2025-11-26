@@ -16,40 +16,70 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/api/estadisticas")
 @CrossOrigin(origins = "*")
 public class EstadisticasController {
-    
+
     @Autowired
     private PdfGeneratorService pdfGeneratorService;
-    
+
     @PostMapping("/generar-pdf")
-public ResponseEntity<byte[]> generarPdf(@RequestBody EstadisticasDTO datos) {
-    try {
-        System.out.println("Título: " + datos.getTitulo());
-        System.out.println("Fecha Inicio: " + datos.getFechaInicio());
-        System.out.println("Fecha Fin: " + datos.getFechaFin());
-        System.out.println("Datos Generales: " + datos.getDatosGenerales());
-        System.out.println("Tabla Detalle size: " + (datos.getTablaDetalle() != null ? datos.getTablaDetalle().size() : "null"));
-        
-        byte[] pdfBytes = pdfGeneratorService.generarReporteEstadisticas(datos);
-        
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String filename = "Reportes_Estadisticos " + timestamp + ".pdf";
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", filename);
-        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-        
-        System.out.println("PDF generado exitosamente: " + pdfBytes.length + " bytes");
-        
-        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-        
-    } catch (Exception e) {
-        System.err.println("Error al general el pdf:");
-        e.printStackTrace();
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<byte[]> generarPdf(@RequestBody EstadisticasDTO datos) {
+        try {
+            System.out.println("Título: " + datos.getTitulo());
+            System.out.println("Fecha Inicio: " + datos.getFechaInicio());
+            System.out.println("Fecha Fin: " + datos.getFechaFin());
+            System.out.println("Datos Generales: " + datos.getDatosGenerales());
+            System.out.println("Tabla Detalle size: "
+                    + (datos.getTablaDetalle() != null ? datos.getTablaDetalle().size() : "null"));
+
+            byte[] pdfBytes = pdfGeneratorService.generarReporteEstadisticas(datos);
+
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String filename = "Reportes_Estadisticos " + timestamp + ".pdf";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", filename);
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+            System.out.println("PDF generado exitosamente: " + pdfBytes.length + " bytes");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            System.err.println("Error al general el pdf:");
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-}
-    
+
+    @PostMapping("/generar-pdf-rechazos")
+    public ResponseEntity<byte[]> generarPdfRechazos(@RequestBody EstadisticasDTO datos) {
+        try {
+            System.out.println("Generando reporte de rechazos");
+            System.out.println("Título: " + datos.getTitulo());
+            System.out.println("Motivos de rechazo: "
+                    + (datos.getMotivosRechazo() != null ? datos.getMotivosRechazo().size() : "null"));
+
+            byte[] pdfBytes = pdfGeneratorService.generarReporteRechazos(datos);
+
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String filename = "Reporte_Rechazos_" + timestamp + ".pdf";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", filename);
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+            System.out.println("PDF de rechazos generado: " + pdfBytes.length + " bytes");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            System.err.println("Error al generar PDF de rechazos:");
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/health")
     public ResponseEntity<String> healthCheck() {
         return ResponseEntity.ok("Microservicio de estadísticas funciona correctamente");
