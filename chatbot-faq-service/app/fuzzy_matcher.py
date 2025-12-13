@@ -103,6 +103,6 @@ def get_fuzzy_response(user_message: str) -> Optional[str]:
     if match:
         matched_question, score, faq = match
         response = faq["answer"]
-        return f"{response}\n\n*Coincidencia: {score:.1f}% con la pregunta: \"{matched_question}\"*"
+        return f"{response}"
 
     return None
