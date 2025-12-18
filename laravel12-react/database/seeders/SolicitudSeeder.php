@@ -52,11 +52,6 @@ class SolicitudSeeder extends Seeder
                 $tieneOtrasMascotas = rand(0, 1);
                 $tuvoAntes = rand(0, 1);
 
-                $comentarioRechazo = null;
-                if ($estado === 'Rechazada') {
-                    $comentarioRechazo = 'No cumple con los requisitos mínimos para adopción.';
-                }
-
                 Solicitud::create([
                     'user_id' => $user->id,
                     'mascota_id' => $mascota->id,
@@ -87,7 +82,6 @@ class SolicitudSeeder extends Seeder
                     'acepta_cuidado_responsable' => rand(0, 1),
                     'acepta_contrato_adopcion' => rand(0, 1),
                     'estado' => $estado,
-                    'comentario_rechazo' => $comentarioRechazo,
                 ]);
             }
         }
