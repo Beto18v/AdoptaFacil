@@ -1,0 +1,8 @@
+# .dockerignore for Java service
+/target
+/.git
+.gitignore
+Dockerfile
+*.iml
+*.log
+*.class
