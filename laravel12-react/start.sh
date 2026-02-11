@@ -17,12 +17,12 @@ chown -R www-data:www-data /app/storage
 
 # Ejecutar las migraciones de la base de datos
 echo "Running database migrations..."
-php /app/artisan migrate --force
+php /var/www/artisan migrate --force
 
 # Crear el enlace simbólico para las imágenes públicas
 echo "Linking storage..."
-php /app/artisan storage:link
+php /var/www/artisan storage:link
 
 # Iniciar el servidor de la aplicación
 echo "Starting Laravel server..."
-php /app/artisan serve --host=0.0.0.0 --port=${PORT:-8000}
+php /var/www/artisan serve --host=0.0.0.0 --port=${PORT:-8000}
