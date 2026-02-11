@@ -17,4 +17,4 @@ COPY --from=vendor /app/vendor ./vendor
 COPY --from=node_modules /app/node_modules ./node_modules
 COPY . .
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www/storage
-CMD ["php-fpm"]
+CMD ["sh", "start.sh"]
