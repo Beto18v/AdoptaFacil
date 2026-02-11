@@ -6,7 +6,7 @@ RUN composer install --no-dev --no-scripts --prefer-dist
 
 FROM node:18 as node_modules
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY . ./
 RUN npm install && npm run build
 
 FROM php:8.2-fpm
