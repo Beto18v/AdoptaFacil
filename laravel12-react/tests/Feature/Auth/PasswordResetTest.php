@@ -60,3 +60,30 @@ test('password can be reset with valid token', function () {
         return true;
     });
 });
+
+test('forgot password returns same response for existing and non-existing email', function () {
+    $user = User::factory()->create();
+    
+    $response1 = $this->post('/forgot-password', ['email' => $user->email]);
+    $response2 = $this->post('/forgot-password', ['email' => 'nonexistent@example.com']);
+
+    $response1->assertSessionHas('status', __('A reset link will be sent if the account exists.'));
+    $response2->assertSessionHas('status', __('A reset link will be sent if the account exists.'));
+    
+    $response1->assertRedirect();
+    $response2->assertRedirect();
+});
+
+test('password reset link request is throttled', function () {
+    $email = 'test@example.com';
+    
+    // Ensure we are guest
+    auth()->logout();
+    
+    for ($i = 0; $i < 5; $i++) {
+        $this->post('/forgot-password', ['email' => $email]);
+    }
+    
+    $response = $this->post('/forgot-password', ['email' => $email]);
+    $response->assertStatus(429);
+});

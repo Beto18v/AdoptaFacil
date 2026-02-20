@@ -100,7 +100,7 @@ export default function GestionUsuarios() {
         const allEmails = [...selectedEmails, ...additionalRecipients];
 
         try {
-            const response = await fetch('http://localhost:8080/api/send-bulk-email', {
+            const response = await fetch('/api/send-bulk-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

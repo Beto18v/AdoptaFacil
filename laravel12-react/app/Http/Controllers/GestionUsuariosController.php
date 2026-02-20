@@ -83,23 +83,12 @@ class GestionUsuariosController extends Controller
 
         Log::info('Usuario creado exitosamente:', ['user_id' => $user->id, 'email' => $user->email]);
 
-        // Enviar email de bienvenida al microservicio
+        // Enviar email de bienvenida usando Laravel nativo
         try {
-            $response = Http::timeout(5)->post('http://127.0.0.1:8080/api/send-welcome-email', [
-                'email' => $user->email,
-                'name' => $user->name,
-            ]);
-
-            if ($response->successful()) {
-                Log::info('Email enviado exitosamente para usuario:', ['user_id' => $user->id]);
-            } else {
-                Log::warning('Error en respuesta del microservicio:', [
-                    'status' => $response->status(),
-                    'body' => $response->body()
-                ]);
-            }
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\WelcomeMail($user));
+            Log::info('Email de bienvenida enviado exitosamente via Laravel para usuario:', ['user_id' => $user->id]);
         } catch (\Exception $e) {
-            Log::error('Error enviando email de bienvenida: ' . $e->getMessage());
+            Log::error('Error enviando email de bienvenida via Laravel: ' . $e->getMessage());
         }
 
         return redirect()->back()->with('success', 'Usuario creado exitosamente');

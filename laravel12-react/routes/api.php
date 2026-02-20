@@ -3,8 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DescripcionMascotaController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\DonationController;
 use App\Http\Controllers\ShelterController;
 
 /*
@@ -28,22 +26,7 @@ Route::prefix('descripciones')->group(function () {
     Route::get('/verificar-servicio', [DescripcionMascotaController::class, 'verificarServicio']);
 });
 
-// Rutas para gestión de usuarios (para integración con Spring Boot)
-Route::prefix('users')->group(function () {
-    Route::post('/validate-email', [UserController::class, 'validateEmail']);
-    Route::post('/reset-password', [UserController::class, 'resetPassword']);
-});
-
 // Rutas API removidas - las donaciones se manejan en routes/web.php
 
 // Ruta para obtener refugios destacados por cantidad de mascotas
 Route::get('/top-shelters', [ShelterController::class, 'topShelters']);
-
-/*
-Endpoints disponibles:
-- POST /api/descripciones/generar
-- GET /api/descripciones/verificar-servicio
-- POST /api/users/validate-email
-- POST /api/users/reset-password
-- GET /api/top-shelters
-*/

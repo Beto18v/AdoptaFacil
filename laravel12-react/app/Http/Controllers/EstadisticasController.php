@@ -15,13 +15,6 @@ use Carbon\Carbon;
 
 class EstadisticasController extends Controller
 {
-    private $microserviceUrl;
-    
-    public function __construct()
-    {
-        $this->microserviceUrl = env('MICROSERVICE_ESTADISTICAS_URL', 'http://localhost:8080');
-    }
-
     public function index()
     {
         // Estadisticas generales
@@ -34,15 +27,20 @@ class EstadisticasController extends Controller
         $startDate = Carbon::now()->subMonths(12);
         $monthlyAdoptions = Solicitud::where('estado', 'Aprobada')
             ->where('created_at', '>=', $startDate)
-            ->select(
-                DB::raw('EXTRACT(YEAR FROM created_at)::integer as year'),
-                DB::raw('EXTRACT(MONTH FROM created_at)::integer as month'),
-                DB::raw('COUNT(*) as count')
-            )
-            ->groupBy(DB::raw('EXTRACT(YEAR FROM created_at)'), DB::raw('EXTRACT(MONTH FROM created_at)'))
-            ->orderBy('year')
-            ->orderBy('month')
-            ->get();
+            ->get()
+            ->groupBy(function($date) {
+                return Carbon::parse($date->created_at)->format('Y-m');
+            })
+            ->map(function ($group) {
+                $first = $group->first();
+                $date = Carbon::parse($first->created_at);
+                return (object)[
+                    'year' => (int)$date->format('Y'),
+                    'month' => (int)$date->format('m'),
+                    'count' => $group->count()
+                ];
+            })
+            ->values();
 
         $averageMonthly = $monthlyAdoptions->avg('count') ?? 0;
 
@@ -55,13 +53,13 @@ class EstadisticasController extends Controller
             $month = $date->month;
 
             $adoptions = Solicitud::where('estado', 'Aprobada')
-                ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [$year])
-                ->whereRaw('EXTRACT(MONTH FROM created_at) = ?', [$month])
+                ->whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
                 ->count();
 
             $returns = Solicitud::where('estado', 'Rechazada')
-                ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [$year])
-                ->whereRaw('EXTRACT(MONTH FROM created_at) = ?', [$month])
+                ->whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
                 ->count();
 
             $totalMonth = $adoptions + $returns;
@@ -158,49 +156,11 @@ class EstadisticasController extends Controller
             'distribucionEspecies' => $estadisticas['distribucionEspecies'] ?? [] // distribucion por especie
         ];
 
-        Log::info('Generando PDF de estadísticas', [
-            'url' => $this->microserviceUrl,
-            'fecha_inicio' => $fechaInicio,
-            'fecha_fin' => $fechaFin,
-            'distribucion_especies' => $estadisticas['distribucionEspecies'] ?? [] // Para debug
-        ]);
-        
-        $response = Http::timeout(60)
-            ->withHeaders([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/pdf'
-            ])
-            ->post($this->microserviceUrl . '/api/estadisticas/generar-pdf', $datosPdf);
-        
-        if ($response->successful()) {
-            $filename = 'reporte_adopciones_' . date('Ymd_His') . '.pdf';
-            
-            Log::info('PDF generado exitosamente', ['filename' => $filename]);
-            
-            return response($response->body(), 200)
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
-                ->header('Cache-Control', 'no-cache, must-revalidate');
-        } else {
-            Log::error('Error del microservicio al generar PDF', [
-                'status' => $response->status(),
-                'body' => $response->body()
-            ]);
-            
-            return response()->json([
-                'message' => 'Error al generar el reporte PDF. Por favor, intente nuevamente.'
-            ], 500);
-        }
-        
-    } catch (\Illuminate\Http\Client\ConnectionException $e) {
-        Log::error('Error de conexión con microservicio de PDF', [
-            'error' => $e->getMessage(),
-            'url' => $this->microserviceUrl
-        ]);
-        
-        return response()->json([
-            'message' => 'No se pudo conectar con el servicio de reportes. Verifique que el microservicio esté activo en ' . $this->microserviceUrl
-        ], 503);
+        // 5. Generar PDF localmente usando DomPDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.reporte_estadisticas', $datosPdf);
+        $filename = 'reporte_adopciones_' . date('Ymd_His') . '.pdf';
+
+        return $pdf->download($filename);
         
     } catch (\Illuminate\Validation\ValidationException $e) {
         return response()->json([
@@ -209,8 +169,9 @@ class EstadisticasController extends Controller
         ], 422);
         
     } catch (\Exception $e) {
-        Log::error('Excepción al generar PDF de estadísticas', [
-            'error' => $e->getMessage(),
+        \Illuminate\Support\Facades\Log::error('PDF Generation Error: ' . $e->getMessage(), [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
             'trace' => $e->getTraceAsString()
         ]);
         
@@ -272,44 +233,16 @@ class EstadisticasController extends Controller
             'motivosRechazo' => $motivosRechazo,
         ];
 
-        Log::info('Generando PDF de motivos de rechazo', [
-            'url' => $this->microserviceUrl,
-            'fecha_inicio' => $fechaInicio,
-            'fecha_fin' => $fechaFin,
-            'total_motivos' => count($motivosRechazo)
-        ]);
-        
-        $response = Http::timeout(60)
-            ->withHeaders([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/pdf'
-            ])
-            ->post($this->microserviceUrl . '/api/estadisticas/generar-pdf-rechazos', $datosPdf);
-        
-        if ($response->successful()) {
-            $filename = 'reporte_rechazos_' . date('Ymd_His') . '.pdf';
-            
-            Log::info('PDF de rechazos generado exitosamente', ['filename' => $filename]);
-            
-            return response($response->body(), 200)
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
-                ->header('Cache-Control', 'no-cache, must-revalidate');
-        } else {
-            Log::error('Error del microservicio al generar PDF de rechazos', [
-                'status' => $response->status(),
-                'body' => $response->body()
-            ]);
-            
-            return response()->json([
-                'message' => 'Error al generar el reporte PDF de rechazos.'
-            ], 500);
-        }
+        // 5. Generar PDF localmente usando DomPDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.reporte_rechazos', $datosPdf);
+        $filename = 'reporte_rechazos_' . date('Ymd_His') . '.pdf';
+
+        return $pdf->download($filename);
         
     } catch (\Exception $e) {
-        Log::error('Excepción al generar PDF de rechazos', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
+        \Illuminate\Support\Facades\Log::error('PDF Rechazos Error: ' . $e->getMessage(), [
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
         ]);
         
         return response()->json([
@@ -352,13 +285,13 @@ class EstadisticasController extends Controller
         $monthName = ucfirst($currentDate->locale('es')->translatedFormat('F'));
 
         $adoptions = Solicitud::where('estado', 'Aprobada')
-            ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [$year])
-            ->whereRaw('EXTRACT(MONTH FROM created_at) = ?', [$month])
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
             ->count();
 
         $returns = Solicitud::where('estado', 'Rechazada')
-            ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [$year])
-            ->whereRaw('EXTRACT(MONTH FROM created_at) = ?', [$month])
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
             ->count();
 
         $totalMonth = $adoptions + $returns;

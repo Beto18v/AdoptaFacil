@@ -36,6 +36,7 @@ use Inertia\Inertia;
 class ProductController extends Controller
 {
     use AuthorizesRequests;
+    use \App\Traits\SecureFileUpload;
 
     /**
      * Vista pública de productos para navegación general
@@ -182,8 +183,10 @@ class ProductController extends Controller
         // Usar primera imagen como imagen principal (compatibilidad con sistema anterior)
         if ($request->hasFile('imagenes') && count($request->file('imagenes')) > 0) {
             $firstImage = $request->file('imagenes')[0];
-            $path = $firstImage->store('productos', 'public');
-            $producto->imagen = $path;
+            $path = $this->uploadSecurely($firstImage, 'productos', 'public');
+            if ($path) {
+                $producto->imagen = $path;
+            }
         }
 
         $producto->save();
@@ -191,12 +194,15 @@ class ProductController extends Controller
         // Guardar todas las imágenes en tabla de relación product_images
         if ($request->hasFile('imagenes')) {
             foreach ($request->file('imagenes') as $index => $imagen) {
-                $path = $imagen->store('productos', 'public');
-                ProductImage::create([
-                    'product_id' => $producto->id,
-                    'image_path' => $path,
-                    'order' => $index + 1, // Orden de las imágenes
-                ]);
+                $path = $this->uploadSecurely($imagen, 'productos', 'public');
+                
+                if ($path) {
+                    ProductImage::create([
+                        'product_id' => $producto->id,
+                        'image_path' => $path,
+                        'order' => $index + 1, // Orden de las imágenes
+                    ]);
+                }
             }
         }
 
@@ -238,8 +244,10 @@ class ProductController extends Controller
         // Actualizar imagen principal si se proporciona nueva
         if ($request->hasFile('imagenes') && count($request->file('imagenes')) > 0) {
             $firstImage = $request->file('imagenes')[0];
-            $path = $firstImage->store('productos', 'public');
-            $product->imagen = $path;
+            $path = $this->uploadSecurely($firstImage, 'productos', 'public');
+            if ($path) {
+                $product->imagen = $path;
+            }
         }
 
         $product->save();
@@ -247,12 +255,15 @@ class ProductController extends Controller
         // Agregar nuevas imágenes (manteniendo las existentes por ahora)
         if ($request->hasFile('imagenes')) {
             foreach ($request->file('imagenes') as $index => $imagen) {
-                $path = $imagen->store('productos', 'public');
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_path' => $path,
-                    'order' => $product->images()->count() + $index + 1,
-                ]);
+                $path = $this->uploadSecurely($imagen, 'productos', 'public');
+                
+                if ($path) {
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'image_path' => $path,
+                        'order' => $product->images()->count() + $index + 1,
+                    ]);
+                }
             }
         }
 

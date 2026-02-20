@@ -173,11 +173,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /**
      * Gestión de usuarios (solo para admin)
      */
-    Route::get('gestion-usuarios', [GestionUsuariosController::class, 'index'])->name('gestion.usuarios');
-    Route::post('gestion-usuarios', [GestionUsuariosController::class, 'store'])->name('gestion.usuarios.store');
-    Route::put('gestion-usuarios/{user}', [GestionUsuariosController::class, 'update'])->name('gestion.usuarios.update');
-    Route::delete('gestion-usuarios/{user}', [GestionUsuariosController::class, 'destroy'])->name('gestion.usuarios.destroy');
-    Route::post('gestion-usuarios/send-bulk-email', [GestionUsuariosController::class, 'sendBulkEmail'])->name('gestion.usuarios.send-bulk-email');
+    /**
+     * Gestión de usuarios (solo para admin)
+     */
+    Route::middleware(['admin'])->group(function () {
+        Route::get('gestion-usuarios', [GestionUsuariosController::class, 'index'])->name('gestion.usuarios');
+        Route::post('gestion-usuarios', [GestionUsuariosController::class, 'store'])->name('gestion.usuarios.store');
+        Route::put('gestion-usuarios/{user}', [GestionUsuariosController::class, 'update'])->name('gestion.usuarios.update');
+        Route::delete('gestion-usuarios/{user}', [GestionUsuariosController::class, 'destroy'])->name('gestion.usuarios.destroy');
+        Route::post('gestion-usuarios/send-bulk-email', [GestionUsuariosController::class, 'sendBulkEmail'])->name('gestion.usuarios.send-bulk-email');
+    });
 
     /*
     |--------------------------------------------------------------------------

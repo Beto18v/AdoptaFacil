@@ -120,26 +120,12 @@ class CommunityController extends Controller
                     'description' => $request->content,
                 ];
 
-                // Envio al microservicio de java
-                $response = \Illuminate\Support\Facades\Http::post(
-                    'http://127.0.0.1:8080/api/send-comunidad',
-                    $payload
-                );
-
-                if ($response->failed()) {
-                    \Log::error('Error en respuesta del microservicio java :', [
-                        'status' => $response->status(),
-                        'body' => $response->body(),
-                    ]);
-                } else {
-                    \Log::info('Campaña enviada a usuarios tipo cliente correctamente.', [
-                        'status' => $response->status(),
-                        'total_emails' => count($emails),
-                    ]);
-                }
+                \Log::info('Campaña detectada. Notificaciones bulk deshabilitadas por migración.', [
+                    'total_emails' => count($emails),
+                ]);
 
             } catch (\Exception $e) {
-                    \Log::error('Error al enviar correos con la info de la campaña :', [
+                    \Log::error('Error al procesar campaña :', [
                     'error' => $e->getMessage(),
                     ]);
                 }

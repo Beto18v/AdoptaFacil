@@ -74,15 +74,19 @@ class RegisteredUserController extends Controller
             ]);
         }
 
-        // 6. Enviar email de bienvenida al microservicio
+        // 6. Enviar email de bienvenida de forma determinista
         try {
-            Http::post('http://localhost:8080/api/send-welcome-email', [
-                'email' => $user->email,
-                'name' => $user->name,
-            ]);
+            $mail = \Illuminate\Support\Facades\Mail::to($user->email);
+            $welcomeMail = new \App\Mail\WelcomeMail($user);
+
+            if (config('queue.default') === 'sync') {
+                $mail->send($welcomeMail);
+            } else {
+                $mail->queue($welcomeMail);
+            }
         } catch (\Exception $e) {
             // Log del error pero no fallar el registro
-            Log::error('Error enviando email de bienvenida: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::warning('Error enviando email de bienvenida: ' . $e->getMessage());
         }
 
         // 7. Iniciamos sesión y redirigimos

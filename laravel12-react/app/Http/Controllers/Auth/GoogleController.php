@@ -45,10 +45,7 @@ class GoogleController extends Controller
             // Enviar email de bienvenida solo si es nuevo usuario
             if ($isNewUser) {
                 try {
-                    Http::post('http://localhost:8080/api/send-welcome-email', [
-                        'email' => $user->email,
-                        'name' => $user->name,
-                    ]);
+                    \Illuminate\Support\Facades\Mail::to($user)->send(new \App\Mail\WelcomeMail($user));
                 } catch (\Exception $e) {
                     Log::error('Error enviando email de bienvenida (Google): ' . $e->getMessage());
                 }

@@ -54,59 +54,46 @@ export default function ResetPassword({ email }: ResetPasswordProps) {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/api/reset-password', {
+            const response = await fetch('/reset-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
                 },
                 body: JSON.stringify({
                     email: data.email,
                     token: data.token,
-                    newPassword: data.newPassword,
-                    confirmPassword: data.confirmPassword,
+                    password: data.newPassword,
+                    password_confirmation: data.confirmPassword,
                 }),
             });
 
-            let result;
-            const contentType = response.headers.get('content-type');
-
-            if (contentType && contentType.includes('application/json')) {
-                result = await response.json();
-            } else {
-                result = { message: await response.text() };
-            }
+            const result = await response.json();
 
             if (response.ok) {
-                setMessage('Contraseña actualizada exitosamente.');
-                // Limpiar el formulario después de éxito
+                setMessage(result.status || 'Contraseña actualizada exitosamente.');
                 setData({
                     email: '',
                     token: '',
                     newPassword: '',
                     confirmPassword: '',
                 });
-                // Redirigir al dashboard después de un breve delay para mostrar el mensaje
                 setTimeout(() => {
-                    router.visit(route('dashboard'));
+                    router.visit(route('login'));
                 }, 1500);
             } else {
-                // Manejar diferentes tipos de errores del servidor
-                if (response.status === 400) {
-                    if (result.message) {
-                        setErrors({ general: result.message });
-                    } else {
-                        setErrors({ general: 'Datos inválidos. Verifica la información e intenta de nuevo.' });
-                    }
-                } else if (response.status === 500) {
-                    setErrors({ general: 'Error interno del servidor. Inténtalo de nuevo.' });
+                if (response.status === 422) {
+                    setErrors(result.errors || { general: result.message });
+                } else if (response.status === 429) {
+                    setErrors({ general: 'Demasiados intentos. Por favor espera.' });
                 } else {
-                    setErrors({ general: result.message || 'Error desconocido. Inténtalo de nuevo.' });
+                    setErrors({ general: result.message || 'Error al actualizar la contraseña.' });
                 }
             }
         } catch (error) {
-            // Error de conexión de red
             console.error('Error de conexión:', error);
-            setErrors({ general: 'Error de conexión. Verifica que el servidor esté ejecutándose.' });
+            setErrors({ general: 'Error de conexión con el servidor.' });
         } finally {
             setProcessing(false);
         }

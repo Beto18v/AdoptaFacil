@@ -29,7 +29,7 @@ AdoptaFácil es una plataforma modular que integra funcionalidades de red social
 - **Frontend:** React 18, TypeScript, Tailwind CSS
 - **Bridge:** Inertia.js (SPA/SSR)
 - **Base de Datos:** MySQL/PostgreSQL
-- **Microservicios:** FastAPI (Python), Spring Boot (Java)
+- **Microservicios:** FastAPI (Python)
 - **Pagos:** MercadoPago SDK
 - **Mapas:** Integración de geolocalización
 
@@ -49,7 +49,6 @@ AdoptaFácil es una plataforma modular que integra funcionalidades de red social
 
 | Servicio                | Tecnología   | Descripción breve                                 | Documentación técnica                  |
 |------------------------ |-------------|--------------------------------------------------|----------------------------------------|
-| Mail Service            | Spring Boot | Envío de emails transaccionales y masivos         | [mail-service/README.md](../services/mail-service/README.md) |
 | Pet Detail Service      | FastAPI     | Generación de descripciones emocionales de mascotas| [pet-detail-service/README.md](../services/pet-detail-service/README.md) |
 | Chatbot FAQ Service     | FastAPI     | Chatbot de preguntas frecuentes                   | [chatbot-faq-service/README.md](../services/chatbot-faq-service/README.md) |
 

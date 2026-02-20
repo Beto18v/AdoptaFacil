@@ -4,7 +4,7 @@ import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import Logo from '../../../../public/Logo/Logo.png';
@@ -16,55 +16,31 @@ export default function ForgotPassword({ status }: { status?: string }) {
     const [errors, setErrors] = useState<{ email?: string }>({});
     const [message, setMessage] = useState<string>('');
 
-    const submit: FormEventHandler = async (e) => {
+    const submit: FormEventHandler = (e) => {
         e.preventDefault();
         setProcessing(true);
         setErrors({});
         setMessage('');
 
-        try {
-            const response = await fetch('http://localhost:8080/api/forgot-password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: data.email }),
-            });
-
-            let result;
-            const contentType = response.headers.get('content-type');
-
-            if (contentType && contentType.includes('application/json')) {
-                result = await response.json();
-            } else {
-                result = { message: await response.text() };
-            }
-
-            if (response.ok) {
-                setMessage('Se ha enviado un código de recuperación a tu email.');
-            } else {
-                // Manejar diferentes tipos de errores del servidor
-                if (response.status === 400) {
-                    setErrors({ email: result.message || 'El email no está registrado en el sistema.' });
-                } else if (response.status === 500) {
-                    setErrors({ email: 'Error interno del servidor. Inténtalo de nuevo.' });
-                } else {
-                    setErrors({ email: result.message || 'Error desconocido. Inténtalo de nuevo.' });
-                }
-            }
-        } catch (error) {
-            // Error de conexión de red
-            console.error('Error de conexión:', error);
-            setErrors({ email: 'Error de conexión. Verifica que el servidor esté ejecutándose.' });
-        } finally {
-            setProcessing(false);
-        }
+        router.post('/forgot-password', data, {
+            onSuccess: () => {
+                setMessage('Se ha enviado un enlace de recuperación si el correo existe.');
+                setProcessing(false);
+            },
+            onError: (errors) => {
+                setErrors(errors);
+                setProcessing(false);
+            },
+            onFinish: () => {
+                setProcessing(false);
+            },
+        });
     };
 
     // Lógica de traducción
     let statusMessage = status;
     if (status === 'A reset link will be sent if the account exists.') {
-        statusMessage = 'Se enviará un enlace de restablecimiento si la cuenta existe.';
+        statusMessage = '';
     }
 
     return (

@@ -45,6 +45,8 @@ use Illuminate\Support\Facades\Gate;
  */
 class MascotaController extends Controller
 {
+    use \App\Traits\SecureFileUpload;
+
     /**
      * Vista de mascotas para clientes
      */
@@ -75,7 +77,10 @@ class MascotaController extends Controller
         // Primera imagen como imagen principal (compatibilidad con sistema anterior)
         if ($request->hasFile('imagenes') && count($request->file('imagenes')) > 0) {
             $firstImage = $request->file('imagenes')[0];
-            $data['imagen'] = $firstImage->store('mascotas', 'public');
+            $path = $this->uploadSecurely($firstImage, 'mascotas', 'public');
+            if ($path) {
+                $data['imagen'] = $path;
+            }
         }
 
         $mascota = Mascota::create($data);
@@ -83,12 +88,15 @@ class MascotaController extends Controller
         // Guardar todas las imágenes en tabla mascota_images con orden
         if ($request->hasFile('imagenes')) {
             foreach ($request->file('imagenes') as $index => $imagen) {
-                $path = $imagen->store('mascotas', 'public');
-                \App\Models\MascotaImage::create([
-                    'mascota_id' => $mascota->id,
-                    'imagen_path' => $path,
-                    'orden' => $index + 1, // Orden para galería
-                ]);
+                $path = $this->uploadSecurely($imagen, 'mascotas', 'public');
+                
+                if ($path) {
+                    \App\Models\MascotaImage::create([
+                        'mascota_id' => $mascota->id,
+                        'imagen_path' => $path,
+                        'orden' => $index + 1, // Orden para galería
+                    ]);
+                }
             }
         }
 
@@ -130,11 +138,14 @@ class MascotaController extends Controller
         // Manejar nuevas imágenes si se proporcionan
         if ($request->hasFile('imagenes')) {
             foreach ($request->file('imagenes') as $index => $imagen) {
-                $path = $imagen->store('mascotas', 'public');
-                $mascota->images()->create([
-                    'imagen_path' => $path,
-                    'orden' => $mascota->images()->count() + $index + 1,
-                ]);
+                $path = $this->uploadSecurely($imagen, 'mascotas', 'public');
+                
+                if ($path) {
+                    $mascota->images()->create([
+                        'imagen_path' => $path,
+                        'orden' => $mascota->images()->count() + $index + 1,
+                    ]);
+                }
             }
         }
 
